@@ -4,9 +4,6 @@ import ChatPrivado from "../src/Pages/Privado/index";
 import ChatGrupo from "../src/Pages/Grupo/index";
 import Atendimento from "../src/Pages/Atendimento/index";
 import Profissional from "../src/Pages/Profissional";
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import NavigationBar from '../navBar';
-
 
 const AuthStack = createNativeStackNavigator();
 
@@ -57,11 +54,6 @@ export default function Signed() {
                     fontWeight: 'bold'
                 }
             }} />
-            <TouchableOpacity style={styles.btnSair} onPress={Deslogar}>
-                <Text style={{ color: "#FFF" }}>Sair</Text>
-            </TouchableOpacity>
-            <NavigationBar currentPage='Chat Privado' />
-
         </AuthStack.Navigator>
 
     );
