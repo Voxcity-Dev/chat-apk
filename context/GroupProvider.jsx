@@ -1,20 +1,18 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import { UserContext } from "./UserProvider";
+import apiUser from "../apiUser";
 
 export const GroupContext = createContext({});
 
 export const GroupProvider = ({children}) => {
-    const { user, pref } = useContext(UserContext);
-    const [groups, setGroups] = useState(pref.services.voxchat.grupos.filter(group => group.users.includes(user._id)));
-    const [grpNotRead, setGrpNotRead] = useState(0);
-
- 
+    const { user, pref, token } = useContext(UserContext);
+    const [groups, setGroups] = useState([...pref.services.voxchat.grupos.filter(grp => grp.usuarios.includes(user._id))]);
 
     async function loadAllMessagesGroups() {
-        let grps = (context.user.email.includes('voxcity.suporte@voxcity.com.br')  )
-            ? context.pref.services.voxchat.grupos : context.pref.services.voxchat.grupos.filter(grp=>grp.usuarios.includes(context.user._id))
+        let grps = (user.email.includes('voxcity.suporte@voxcity.com.br')  )
+            ? pref.services.voxchat.grupos : pref.services.voxchat.grupos.filter(grp=>grp.usuarios.includes(user._id))
         let groupsId = grps.map(g=>g._id)
-        await ApiUsers.post('/user/myGroupsLastMessages', { groups: groupsId }).then(resp => {
+        await apiUser.post('/user/myGroupsLastMessages', { groups: groupsId }).then(resp => {
             let messages = resp.data
             let newGroups = grps
             if(messages.length === 0){                
@@ -34,12 +32,11 @@ export const GroupProvider = ({children}) => {
                             group.allMessages = messages[i].messagesRoll
                             group.lastMessage ={ message: lastMessage.message, createdAt: lastMessage.createdAt }
                             group.allMessages.forEach(message => {
-                                if (!message.seen.includes(context.user._id)) {
+                                if (!message.seenBy.includes(user._id)) {
                                     counter++
                                 }
                             })
                             group.unseen = counter
-
                         }
                     }
                     group.allMessages = group.allMessages || []
@@ -66,12 +63,14 @@ export const GroupProvider = ({children}) => {
             setGroups(newGroups)
         }).catch(err => { console.log(err) })
     }
+
     useEffect(() => {
         loadAllMessagesGroups()
-    }, [context.token])
+    }, [token])
+
 
     return (
-        <GroupContext.Provider value={{groups}}>
+        <GroupContext.Provider value={{groups,setGroups}}>
             {children}
         </GroupContext.Provider>
     )

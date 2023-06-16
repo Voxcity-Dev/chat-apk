@@ -1,19 +1,25 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { StyleSheet, View, Text} from 'react-native';
 import NavigationBar from '../navBar';
 import Contatos from '../../Contatos/index';
 
 export default function ChatGrupo() {
 
+  const [view, setView] = useState("lista")
+
+  const views = {
+    lista:   <Contatos tipo="grupo"/>,
+    // chat: <Chat/>
+}
+
 
   return (
     <View style={styles.container}>
-
-      <Contatos tipo="grupo" style={{width:"100%"}}/>
-
+      {views[view]}
       <NavigationBar currentPage='Chat Grupo'/>
-        
     </View>
+
+
 
   )
 }

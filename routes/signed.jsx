@@ -4,6 +4,7 @@ import ChatPrivado from "../src/Pages/Privado/index";
 import ChatGrupo from "../src/Pages/Grupo/index";
 import Atendimento from "../src/Pages/Atendimento/index";
 import Profissional from "../src/Pages/Profissional";
+import ChatComponent from "../src/Chat";
 
 const AuthStack = createNativeStackNavigator();
 
@@ -45,6 +46,17 @@ export default function Signed() {
             }} />
             <AuthStack.Screen name="Profissional" component={Profissional} options={{
                 headerBackVisible: false,
+                headerStyle: {
+                    backgroundColor: '#142a4c',
+                },
+                headerTitleAlign: 'center',
+                headerTintColor: '#FFF',
+                headerTitleStyle: {
+                    fontWeight: 'bold'
+                }
+            }} />
+            <AuthStack.Screen name="Chat" component={ChatComponent} options={{
+                headerBackVisible: true,
                 headerStyle: {
                     backgroundColor: '#142a4c',
                 },

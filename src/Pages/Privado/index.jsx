@@ -11,7 +11,7 @@ export default function ChatPrivado() {
 
     const views = {
         lista:   <Contatos tipo="privado"/>,
-        chat: <Chat/>
+        // chat: <Chat/>
     }
 
   return (

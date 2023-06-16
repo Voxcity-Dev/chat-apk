@@ -1,28 +1,30 @@
 import React ,{ useContext, useEffect, useState }from 'react'
 import { View,ScrollView,StyleSheet,Text,Image, TouchableOpacity } from 'react-native';
-import { UserContext } from '../../../context/UserProvider';
+import { GroupContext } from '../../../context/GroupProvider';
 
 export default function GrupoList() {
-    const {pref} = useContext(UserContext);
+    const { groups } = useContext(GroupContext);
     const [grupos, setGrupos] = useState([]);
 
     useEffect(() => {
-      if(!pref.services) return;
-      let newGrupos = pref ? pref.services.voxchat.grupos : [];
-      setGrupos(newGrupos);
-    }, [pref])
+        setGrupos(groups)
+    }, [grupos])
     
 
   return (
     <View style={styles.container}>
         <ScrollView>
             {
-                grupos ? Object.keys(grupos).map((key,index) => {
+                grupos ? grupos.map((grupo,index) => {
                     return <TouchableOpacity style={styles.container} key={index}>
-                            {grupos[key].foto ? <Image source={{ uri: grupos[key].foto }} style={styles.image}/> : <Image source={require('../../../assets/avatar2.png')} style={styles.image}/> }
-                            <Text>{grupos[key].nome}</Text>
+                            {grupo.foto ? <Image source={{ uri: grupo.foto }} style={styles.image}/> : <Image source={require('../../../assets/avatar2.png')} style={styles.image}/> }
+                            <Text>{grupo.nome}</Text>
+                            {
+                                grupo.unseen > 0 ? <Text style={styles.notification}>{grupo.unseen}</Text> : <Text></Text>
+                            }
                         </TouchableOpacity>
-                }): <Text>Sem Grupos</Text>
+                }
+                ): <Text>Sem Grupos</Text>
             }
             
         </ScrollView>
@@ -48,4 +50,15 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 100,
     },
+    notification:{
+        backgroundColor: '#9ac31c',
+        color: '#FFF',
+        marginLeft: 10,
+        borderRadius: 25,
+        width: 20,
+        height: 20,
+        textAlign: 'center',
+        lineHeight: 20,
+        fontSize: 14,
+    }
 });

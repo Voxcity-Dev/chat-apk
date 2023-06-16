@@ -5,13 +5,14 @@ import GrupoList from './Grupo/index';
 
 export default function Contatos(props) {
   let pages = {
-    privado: <PrivadoList style={{width:"100%"}}/>,
+    privado: <PrivadoList />,
+    grupo: <GrupoList />,
   }
 
   return (
     <View style={styles.container}>
       {
-        props.tipo === 'privado' ? <PrivadoList style={{width:"100%"}}/> : props.tipo === 'grupo' ? <GrupoList style={{width:"100%"}}/> : <Text>Erro</Text>
+        props.tipo === 'privado' ? pages.privado : pages.grupo
       }
         
     </View>
