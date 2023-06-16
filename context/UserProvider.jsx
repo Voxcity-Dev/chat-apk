@@ -38,11 +38,11 @@ export const UserProvider = ({children}) => {
         setSigned(false);
     }
 
-    function loadAttendance() {
-        apiUser.post('/atendimentos').then(resp => {
-            seAttendance(resp.data)
-        }).catch(err => {} )
-    }
+    // function loadAttendance() {
+    //     apiUser.post('/atendimentos').then(resp => {
+    //         seAttendance(resp.data)
+    //     }).catch(err => {} )
+    // }
 
     async function loadMessagesAndSetContacts(repscontacts,respUser){
         return await apiUser.get('/user/lastmessages').then(resp => {
@@ -60,8 +60,6 @@ export const UserProvider = ({children}) => {
                         for (let i = 0; i < messages.length; i++) {
                             let lastMessage = messages[i].messagesRoll[messages[i].messagesRoll.length - 1]
                             if (messages[i].between.includes(contact._id)) {
-                                let counter = getNotRead(messages[i].messagesRoll,respUser)
-                                contact.unseen = counter
                                 contact.allMessages = messages[i].messagesRoll
                                 contact.lastMessage ={ message: lastMessage.message, createdAt: lastMessage.createdAt }
                                 let count = 0
@@ -97,30 +95,7 @@ export const UserProvider = ({children}) => {
         }).catch(err => {} )
     }
 
-    function getNotRead(arrMsgs,respUser){
-        let count = []      
-        arrMsgs.forEach(msg => {          
-            if (!msg.seenBy.includes(respUser._id)) count.push(msg)
-        })
-        return count
-    } 
-
-    function isGroup(contact){
-        return Object.keys(contact).includes('usuarios') ?  "Grupo":"Privado" 
-    }
-
-    function includesMyId(array){
-        return array.includes(user._id)
-    }
-
-    function amITalkingTo(id){
-        return talking === id
-    }
-
-
-
-
-
+   
     return(
         <UserContext.Provider value={{signed, user, setUser,Logar,Deslogar,loading,pref,contacts,setContacts}}>
             {children}
