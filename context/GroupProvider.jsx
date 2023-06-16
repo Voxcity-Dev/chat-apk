@@ -64,9 +64,12 @@ export const GroupProvider = ({children}) => {
                 return 0
             })
             setGroups(newGroups)
-            countAllContactsTotalNotRead()
         }).catch(err => { console.log(err) })
     }
+    useEffect(() => {
+        loadAllMessagesGroups()
+    }, [context.token])
+
     return (
         <GroupContext.Provider value={{}}>
             {children}

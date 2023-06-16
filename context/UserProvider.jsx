@@ -10,6 +10,7 @@ export const UserProvider = ({children}) => {
     const [pref, setPref ] = useState({});
     const [loading, setLoading] = useState(false);
     const [contacts, setContacts] = useState([]);
+    const [token, setToken] = useState('');
 
 
     const Logar = async (email,senha,conta) => {
@@ -23,6 +24,7 @@ export const UserProvider = ({children}) => {
                 setUser(response.data.user);
                 setPref(response.data.pref);
                 apiUser.defaults.headers.common['authorization'] = "Bearer " + response.data.accessToken;
+                setToken(response.data.accessToken);
                 await loadMessagesAndSetContacts(response.data.pref.users,response.data.user)
                 setSigned(true);
                 setLoading(false);
@@ -97,7 +99,7 @@ export const UserProvider = ({children}) => {
 
    
     return(
-        <UserContext.Provider value={{signed, user, setUser,Logar,Deslogar,loading,pref,contacts,setContacts}}>
+        <UserContext.Provider value={{signed, user, setUser,Logar,Deslogar,loading,pref,contacts,setContacts,token}}>
             {children}
         </UserContext.Provider>
     );
