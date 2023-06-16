@@ -1,4 +1,4 @@
-import React ,{ useContext }from 'react';
+import React ,{ useContext, useEffect, useState }from 'react'
 import { UserContext } from '../../../context/UserProvider';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import NavigationBar from '../navBar';
