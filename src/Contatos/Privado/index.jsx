@@ -1,14 +1,11 @@
 import React ,{ useContext, useEffect, useState }from 'react'
 import { View,ScrollView,StyleSheet,Text,Image, TouchableOpacity } from 'react-native';
 import { UserContext } from '../../../context/UserProvider';
-import { ContactContext } from '../../../context/ContacProvider';
 
 export default function PrivadoList() {
     const userContext = useContext(UserContext);
-    const {setPvtNotRead} = useContext(ContactContext);
     
     const [contacts, setContacts] = useState([])
-    const [onShow, setOnShow] = useState([])
     const [onlyOnce, setOnlyOnce] = useState(false)
     const [loading, setLoading] = useState(true)
     const [selected, setSelected] = useState(false)
@@ -20,19 +17,17 @@ export default function PrivadoList() {
     }, [contacts])
 
 
-
-
   return (
     <View style={styles.container}>
         <ScrollView>
             {
-                infoContact.onShow ? infoContact.onShow.map((contact,index) => {
-                    if (user._id === contact._id) return null
+                contacts ? contacts.map((contact,index) => {
+                    if (userContext.user._id === contact._id) return null
                     return <TouchableOpacity style={styles.container} key={index}>
                             {contact.foto ? <Image source={{ uri: contact.foto }} style={styles.image}/> : <Image source={require('../../../assets/avatar2.png')} style={styles.image}/> }
                             <Text>{contact.nome}</Text>
                             {
-                                contact.unseen && contact.unseen.length > 0 ? <Text style={styles.notification}>{contact.unseen.length}</Text> : <Text></Text>
+                                contact.unseenMessages > 0 ? <Text style={styles.notification}>{contact.unseenMessages}</Text> : <Text></Text>
                             }
                         </TouchableOpacity>
                 }
