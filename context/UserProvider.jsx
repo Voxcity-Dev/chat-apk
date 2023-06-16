@@ -68,7 +68,7 @@ export const UserProvider = ({children}) => {
                                 contact.allMessages.forEach(msg => {
                                     if (!msg.seenBy.includes(respUser._id)) count++
                                 })
-                                contact.unseenMessages = 0
+                                contact.unseenMessages = count
                             }
                         }
                         contact.allMessages = contact.allMessages ? contact.allMessages : []
