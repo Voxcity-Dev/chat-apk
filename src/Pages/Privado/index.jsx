@@ -7,17 +7,17 @@ import Contatos from '../../Contatos/index';
 export default function ChatPrivado() {
     const {Deslogar} = useContext(UserContext);
 
+    const [view, setView] = useState("lista")
+
+    const views = {
+        lista:   <Contatos tipo="privado"/>,
+        chat: <Chat/>
+    }
+
   return (
     <View style={styles.container}>
-
-      <Contatos tipo="privado" style={{width:"100%"}}/>
-
-      <TouchableOpacity style={styles.btnSair} onPress={Deslogar}>
-          <Text style={{color:"#FFF"}}>Sair</Text>
-      </TouchableOpacity>
-
-      <NavigationBar currentPage='Chat Privado'/>
-
+      {views[view]}
+     
     </View>
 
   )
