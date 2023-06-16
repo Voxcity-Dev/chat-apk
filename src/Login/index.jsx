@@ -1,13 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { StyleSheet, View,Image, TouchableOpacity,Text,ActivityIndicator } from 'react-native';
-import { userContext } from '../../context/userContext';
+import { UserContext } from '../../context/UserProvider';
 import Conta from './inputs/conta';
 import Email from './inputs/email';
 import Senha from './inputs/senha';
 
 
 export default function Login() {
-  const {Logar,loading} = useContext(userContext);
+  const {Logar,loading} = useContext(UserContext);
   const [login, setLogin] = useState({conta: '', email: '', senha: ''})
   const allInputs = { 
     conta: <Conta captureText={captureText}/>,

@@ -1,10 +1,10 @@
 import React,{useContext} from 'react'
-import { userContext } from '../context/userContext';
+import { UserContext } from '../context/UserProvider';
 import Signed from './signed';
 import Unsigned from './unsigned';
 
 const AppRoutes = () => {
-    const {signed}  = useContext(userContext);
+    const {signed}  = useContext(UserContext);
 
     if(signed){
         return (

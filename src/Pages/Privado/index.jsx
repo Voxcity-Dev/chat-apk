@@ -1,13 +1,11 @@
-import React ,{ useContext, useEffect, useState }from 'react'
-import { userContext } from '../../../context/userContext';
+import React ,{ useContext }from 'react';
+import { UserContext } from '../../../context/UserProvider';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import NavigationBar from '../navBar';
 import Contatos from '../../Contatos/index';
 
 export default function ChatPrivado() {
-    const {Deslogar,user,pref} = useContext(userContext);
-
-
+    const {Deslogar} = useContext(UserContext);
 
   return (
     <View style={styles.container}>

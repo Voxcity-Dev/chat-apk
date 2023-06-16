@@ -1,12 +1,12 @@
 import React,{useState,useContext,useEffect} from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { userContext } from '../../context/userContext';
+import { UserContext } from '../../context/UserProvider';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from '@rneui/themed';
 
 
 export default function NavigationBar({ currentPage }) {
-  const {user} = useContext(userContext);
+  const {user} = useContext(UserContext);
   const [myLinks, setMyLinks] = useState([]);
 
   const navigation = useNavigation();

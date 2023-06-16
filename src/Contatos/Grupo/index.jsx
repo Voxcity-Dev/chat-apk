@@ -1,14 +1,14 @@
 import React ,{ useContext, useEffect, useState }from 'react'
 import { View,ScrollView,StyleSheet,Text,Image, TouchableOpacity } from 'react-native';
-import { userContext } from '../../../context/userContext';
+import { UserContext } from '../../../context/UserProvider';
 
 export default function GrupoList() {
-    const {pref} = useContext(userContext);
+    const {pref} = useContext(UserContext);
     const [grupos, setGrupos] = useState([]);
 
     useEffect(() => {
       if(!pref.services) return;
-      let newGrupos = pref.services.voxchat.grupos;
+      let newGrupos = pref ? pref.services.voxchat.grupos : [];
       setGrupos(newGrupos);
     }, [pref])
     

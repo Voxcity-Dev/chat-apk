@@ -1,4 +1,4 @@
-import React ,{ useContext, useEffect, useState }from 'react'
+import React from 'react'
 import { View,StyleSheet,Text } from 'react-native';
 import PrivadoList from './Privado/index';
 import GrupoList from './Grupo/index';
