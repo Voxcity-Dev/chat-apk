@@ -4,56 +4,21 @@ import { UserContext } from '../../../context/UserProvider';
 import { ContactContext } from '../../../context/ContacProvider';
 
 export default function PrivadoList() {
-    const {pref,contacts,setContacts,user} = useContext(UserContext);
+    const userContext = useContext(UserContext);
     const {setPvtNotRead} = useContext(ContactContext);
-    const [infoContact, setInfoContact] = useState( {
-        contacts: [],
-        onShow: [],
-        onlyOnce: false,
-        loading: true,
-        selected: false,
-        initialized: false
-    })
+    
+    const [contacts, setContacts] = useState([])
+    const [onShow, setOnShow] = useState([])
+    const [onlyOnce, setOnlyOnce] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const [selected, setSelected] = useState(false)
+    const [initialized, setInitialized] = useState(false)
+
 
     useEffect(() => {
-        getContacts()
+        setContacts(userContext.contacts)
     }, [contacts])
 
-
-    // function unseenByContact(id) {
-    //     let newContacts = contacts.map(contact => {
-    //         if (contact._id === user._id) return contact
-    //         if (contact._id === id) {
-    //             contact.unseen = []
-    //         }
-    //         return contact
-    //     })
-    //     setContacts(newContacts)
-    //     this.setState({ contacts: newContacts, onShow: newContacts }, () => {
-
-    //     })
-    //     countAllContactsTotalNotRead()
-    // }
-
-    function countAllContactsTotalNotRead() {
-        let count = 0
-        contacts.forEach(contact => {
-            if (contact?._id === user?._id) return
-            // if (this.props.selected?._id === contact?._id) contact.unseen = []
-            if (contact.unseen) {
-                count += contact.unseen.length
-            }
-        })
-        setContacts(contacts)
-        setInfoContact({ contacts: contacts, onShow: infoContact.onShow })
-        setPvtNotRead(count)
-    }
-
-    function getContacts() {
-       setInfoContact({ onShow: contacts, contacts: contacts, loading: false }, () => {
-            countAllContactsTotalNotRead();
-        })
-    }
 
 
 

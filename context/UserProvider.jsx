@@ -64,6 +64,11 @@ export const UserProvider = ({children}) => {
                                 contact.unseen = counter
                                 contact.allMessages = messages[i].messagesRoll
                                 contact.lastMessage ={ message: lastMessage.message, createdAt: lastMessage.createdAt }
+                                let count = 0
+                                contact.allMessages.forEach(msg => {
+                                    if (!msg.seenBy.includes(respUser._id)) count++
+                                })
+                                contact.unseenMessages = 0
                             }
                         }
                         contact.allMessages = contact.allMessages ? contact.allMessages : []
