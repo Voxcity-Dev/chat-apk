@@ -17,7 +17,7 @@ export default function ChatPrivado() {
   return (
     <View style={styles.container}>
       {views[view]}
-     
+      <NavigationBar currentPage='Chat Privado'/>
     </View>
 
   )

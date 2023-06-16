@@ -71,7 +71,7 @@ export const GroupProvider = ({children}) => {
     }, [context.token])
 
     return (
-        <GroupContext.Provider value={{}}>
+        <GroupContext.Provider value={{groups}}>
             {children}
         </GroupContext.Provider>
     )
