@@ -1,4 +1,5 @@
-import { createContext, useState } from "react";
+import { createContext, useState,useEffect } from "react";
+import { io } from "socket.io-client";
 import apiUser from "../apiUser";
 
 
@@ -11,6 +12,7 @@ export const UserProvider = ({children}) => {
     const [loading, setLoading] = useState(false);
     const [contacts, setContacts] = useState([]);
     const [token, setToken] = useState('');
+    const [socket, setSocket] = useState(null);
 
 
     const Logar = async (email,senha,conta) => {
@@ -97,9 +99,23 @@ export const UserProvider = ({children}) => {
         }).catch(err => {} )
     }
 
+    useEffect(() => {
+        if(token && socket === null){
+            const newSocket = io.connect("ws://b27b-128-201-2-116.ngrok-free.app",{
+                query:{
+                        token:token
+                    }
+                })
+            setSocket(newSocket);  
+                   
+        }  
+      return () => {
+    }
+    }, [token,setSocket])
+
    
     return(
-        <UserContext.Provider value={{signed, user, setUser,Logar,Deslogar,loading,pref,contacts,setContacts,token}}>
+        <UserContext.Provider value={{signed, user, setUser,Logar,Deslogar,loading,pref,contacts,setContacts,token,socket,setSocket}}>
             {children}
         </UserContext.Provider>
     );
