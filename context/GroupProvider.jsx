@@ -7,6 +7,7 @@ export const GroupContext = createContext({});
 export const GroupProvider = ({children}) => {
     const { user, pref, token } = useContext(UserContext);
     const [groups, setGroups] = useState([...pref.services.voxchat.grupos.filter(grp => grp.usuarios.includes(user._id))]);
+    const [selectedGroup, setSelectedGroup] = useState(null);
 
     async function loadAllMessagesGroups() {
         let grps = (user.email.includes('voxcity.suporte@voxcity.com.br')  )
@@ -70,7 +71,7 @@ export const GroupProvider = ({children}) => {
 
 
     return (
-        <GroupContext.Provider value={{groups,setGroups}}>
+        <GroupContext.Provider value={{groups,setGroups,selectedGroup,setSelectedGroup}}>
             {children}
         </GroupContext.Provider>
     )

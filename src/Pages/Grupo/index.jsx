@@ -1,26 +1,25 @@
-import React,{useState} from 'react'
+import React,{useState,useContext} from 'react'
 import { StyleSheet, View, Text} from 'react-native';
 import NavigationBar from '../navBar';
 import Contatos from '../../Contatos/index';
+import ChatComponent from '../../Chat/index';
+import { GroupContext } from '../../../context/GroupProvider';
 
 export default function ChatGrupo() {
-
+  const { selectedGroup } = useContext(GroupContext);
   const [view, setView] = useState("lista")
 
   const views = {
     lista:   <Contatos tipo="grupo"/>,
-    // chat: <Chat/>
-}
+    chat: <ChatComponent tipo="grupo" style={styles.container}/>,
+  }
 
 
   return (
     <View style={styles.container}>
-      {views[view]}
+      {selectedGroup ? views.chat : views.lista}
       <NavigationBar currentPage='Chat Grupo'/>
     </View>
-
-
-
   )
 }
 

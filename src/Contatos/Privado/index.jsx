@@ -1,17 +1,12 @@
 import React ,{ useContext, useEffect, useState }from 'react'
 import { View,ScrollView,StyleSheet,Text,Image, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../../../context/UserProvider';
+import { ContactContext } from '../../../context/ContacProvider';
 
 export default function PrivadoList() {
     const userContext = useContext(UserContext);
-    const navigation = useNavigation();
-    
+    const contactContext = useContext(ContactContext);
     const [contacts, setContacts] = useState([])
-    const [onlyOnce, setOnlyOnce] = useState(false)
-    const [loading, setLoading] = useState(true)
-    const [selected, setSelected] = useState(false)
-    const [initialized, setInitialized] = useState(false)
 
 
     useEffect(() => {
@@ -19,7 +14,8 @@ export default function PrivadoList() {
     }, [contacts])
 
     function handleSelectContact(contact){
-        navigation.navigate("Chat")
+        let selectedContact = {...contact}
+        contactContext.setSelectedContact(selectedContact)
     }
 
   return (
@@ -28,7 +24,7 @@ export default function PrivadoList() {
             {
                 contacts ? contacts.map((contact,index) => {
                     if (userContext.user._id === contact._id) return null
-                    return <TouchableOpacity style={styles.container} key={index} onPress={handleSelectContact}>
+                    return <TouchableOpacity style={styles.container} key={index} onPress={()=>handleSelectContact(contact)}>
                             {contact.foto ? <Image source={{ uri: contact.foto }} style={styles.image}/> : <Image source={require('../../../assets/avatar2.png')} style={styles.image}/> }
                             <Text>{contact.nome}</Text>
                             {

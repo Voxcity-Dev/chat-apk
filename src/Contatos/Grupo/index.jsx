@@ -3,12 +3,17 @@ import { View,ScrollView,StyleSheet,Text,Image, TouchableOpacity } from 'react-n
 import { GroupContext } from '../../../context/GroupProvider';
 
 export default function GrupoList() {
-    const { groups } = useContext(GroupContext);
+    const { groups,setSelectedGroup } = useContext(GroupContext);
     const [grupos, setGrupos] = useState([]);
 
     useEffect(() => {
         setGrupos(groups)
     }, [grupos])
+
+    function handleSelectGroup(group){  
+        let selectedGroup = {...group}
+        setSelectedGroup(selectedGroup)
+    }
     
 
   return (
@@ -16,7 +21,7 @@ export default function GrupoList() {
         <ScrollView>
             {
                 grupos ? grupos.map((grupo,index) => {
-                    return <TouchableOpacity style={styles.container} key={index}>
+                    return <TouchableOpacity style={styles.container} key={index} onPress={() => handleSelectGroup(grupo)}>
                             {grupo.foto ? <Image source={{ uri: grupo.foto }} style={styles.image}/> : <Image source={require('../../../assets/avatar2.png')} style={styles.image}/> }
                             <Text>{grupo.nome}</Text>
                             {

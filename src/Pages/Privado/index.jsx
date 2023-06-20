@@ -2,21 +2,23 @@ import React ,{ useContext, useEffect, useState }from 'react'
 import { UserContext } from '../../../context/UserProvider';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import NavigationBar from '../navBar';
+import { ContactContext } from '../../../context/ContacProvider';
 import Contatos from '../../Contatos/index';
+import ChatComponent from '../../Chat/index';
 
 export default function ChatPrivado() {
+    const { selectedContact } = useContext(ContactContext);
     const {Deslogar} = useContext(UserContext);
-
     const [view, setView] = useState("lista")
 
     const views = {
-        lista:   <Contatos tipo="privado"/>,
-        // chat: <Chat/>
+      lista:   <Contatos tipo="privado"/>,
+      chat: <ChatComponent tipo="privado" style={styles.container}/>,
     }
 
   return (
     <View style={styles.container}>
-      {views[view]}
+      {selectedContact ? views.chat : views.lista}
       <NavigationBar currentPage='Chat Privado'/>
     </View>
 
