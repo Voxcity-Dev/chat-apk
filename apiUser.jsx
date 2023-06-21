@@ -1,7 +1,10 @@
 import axios from 'axios';
+import { REACT_APP_BASE_URL } from '@env';
+
+console.log(REACT_APP_BASE_URL)
 
 const apiUser = axios.create({
-    baseURL: "https://b27b-128-201-2-116.ngrok-free.app",
+    baseURL: REACT_APP_BASE_URL,
     headers: {
         'Acess-Control-Allow-Origin': '*',
     }

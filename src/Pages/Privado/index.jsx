@@ -1,6 +1,6 @@
-import React ,{ useContext, useEffect, useState }from 'react'
+import React ,{ useContext, useState }from 'react'
 import { UserContext } from '../../../context/UserProvider';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import NavigationBar from '../navBar';
 import { ContactContext } from '../../../context/ContacProvider';
 import Contatos from '../../Contatos/index';
@@ -10,7 +10,7 @@ export default function ChatPrivado() {
     const { selectedContact } = useContext(ContactContext);
     const {Deslogar} = useContext(UserContext);
     const [view, setView] = useState("lista")
-
+    
     const views = {
       lista:   <Contatos tipo="privado"/>,
       chat: <ChatComponent tipo="privado" style={styles.container}/>,

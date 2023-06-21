@@ -1,16 +1,18 @@
 import React ,{ useContext, useEffect, useState }from 'react'
 import { StyleSheet, View, Text} from 'react-native';
 import NavigationBar from '../navBar';
+import { UserContext } from '../../../context/UserProvider';
+import { Button } from '@rneui/base';
 
 export default function Profissional() {
+    const {Deslogar} = useContext(UserContext);
 
 
   return (
     <View style={styles.container}>
-
-        <Text>Profissional</Text>
-        <NavigationBar currentPage='Profissional'/>
-        
+      <Text>Profissional</Text>
+      <Button style={styles.btnSair} onPress={Deslogar}>Sair</Button>
+      <NavigationBar currentPage='Profissional'/>
     </View>
 
   )
