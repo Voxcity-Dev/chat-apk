@@ -11,11 +11,11 @@ const AppRoutes = () => {
     if(signed){
         return (
             
-            <GroupProvider>
-                <ContacProvider>
+            <ContacProvider>
+                <GroupProvider>
                     <Signed />
-                </ContacProvider>
-            </GroupProvider>
+                </GroupProvider>
+            </ContacProvider>
         );
     }else{
         return (

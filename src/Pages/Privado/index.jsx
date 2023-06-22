@@ -19,9 +19,8 @@ export default function ChatPrivado() {
   return (
     <View style={styles.container}>
       {selectedContact ? views.chat : views.lista}
-      {
-        !selectedContact ? <NavigationBar currentPage='Chat Privado'/> : null
-      }
+      
+      {!selectedContact ? <NavigationBar currentPage='Chat Privado'/> : null}
     </View>
 
   )

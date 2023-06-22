@@ -137,7 +137,7 @@ export const ContacProvider = ({children}) => {
     }, [context.contacts])
 
     function initSocket() {
-        console.log("online")
+        console.log("socket online")
         socket.on("status", data => {
             updateStatusCont(data)
         })

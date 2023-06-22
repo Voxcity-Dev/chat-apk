@@ -19,9 +19,7 @@ export default function ChatGrupo() {
     <View style={styles.container}>
       {selectedGroup ? views.chat : views.lista}
       
-      {
-        !selectedGroup ? <NavigationBar currentPage='Chat Grupo'/> : null
-      }
+      {!selectedGroup ? <NavigationBar currentPage='Chat Grupo'/> : null}
     </View>
   )
 }

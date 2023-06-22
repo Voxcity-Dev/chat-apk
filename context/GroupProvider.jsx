@@ -5,9 +5,11 @@ import apiUser from "../apiUser";
 export const GroupContext = createContext({});
 
 export const GroupProvider = ({children}) => {
-    const { user, pref, token } = useContext(UserContext);
+    const { user, pref, token, socket } = useContext(UserContext);
     const [groups, setGroups] = useState([...pref.services.voxchat.grupos.filter(grp => grp.usuarios.includes(user._id))]);
     const [selectedGroup, setSelectedGroup] = useState(null);
+    const [grpNotRead, setGrpNotRead] = useState(0);
+    const socketIo = socket
 
     async function loadAllMessagesGroups() {
         let grps = (user.email.includes('voxcity.suporte@voxcity.com.br')  )
@@ -68,6 +70,167 @@ export const GroupProvider = ({children}) => {
     useEffect(() => {
         loadAllMessagesGroups()
     }, [token])
+
+    function unseenByGroup(id) {
+        let newGroups = groups.map(group => {
+            if (group._id === id) {
+                group.unseen = []
+            }
+            return group
+        })
+        setGroups(newGroups)
+        countAllContactsTotalNotRead()
+    }
+
+    function findGrpAndAddNewUsers(groupId,newUsers){
+        let newGroups = groups.map(group => {
+            if (group._id === groupId) {
+                group.usuarios = [...group.usuarios, ...newUsers]
+            }
+            return group
+        }
+        )
+        setGroups(newGroups)
+    }
+    function findGrpAndRemoveNewUsers(groupId,newUsers){
+        let newGroups = groups.map(group => {
+            if (group._id === groupId) {
+                group.usuarios = group.usuarios.filter(user => !newUsers.includes(user))
+            }
+            return group
+        }
+        )
+        setGroups(newGroups)
+    }
+
+    function editGroup(group) {
+        let newGroups = groups.map(grp => {
+            if (grp._id === group._id) {
+                grp = group
+            }
+            return grp
+        })
+        setGroups(newGroups)
+    }
+
+    function addGroup(group, id) {
+        let newState = [...groups];
+        newState.push(group);
+        setGroups(newState);
+    }
+
+    function delGroup(group) {
+        let newState = [...groups];
+        newState = newState.filter(grp => grp._id !== group._id);
+        setGroups(newState);
+    }
+
+    function countAllContactsTotalNotRead() {
+        let count = 0
+        
+        groups.forEach(contact => {
+            if (contact.unseen) count += contact.unseen.length
+        })
+        setGrpNotRead(count)
+    }
+
+    function newLastMsgGroup(message){
+        // if(message.msg.from !== user._id){
+        //     let notify = document.getElementById('noti-sound')
+        //     notify.play()
+        // }
+        let to = message.between
+        let newGroups = groups.map(group => {
+            if (group._id === to) {
+                group.lastMessage = message.msg
+                group.allMessages.push(message.msg)
+                let selectId = selectedGroup?._id
+                console.log('selectId',selectId)
+                if (user._id !== message.from && group.unseen !== undefined && selectId !== to) {
+                    let exist = group.unseen.filter(unseen => { return message.msg._id === unseen._id })
+                    if (exist.length === 0) {
+                        group.unseen.push(message.msg)
+                    }
+                }
+            }
+            return group
+        })
+        //order by last day
+        newGroups.sort((a, b) => {
+            if (!a.lastMessage) {
+                return 1
+            }
+            if (!b.lastMessage) {
+                return -1
+            }
+            let dateA = Date.parse(a.lastMessage.createdAt)
+            let dateB = Date.parse(b.lastMessage.createdAt)
+            if (dateA > dateB) {
+                return -1
+            }
+            if (dateA < dateB) {
+                return 1
+            }
+            return 0
+        })
+        setGroups(newGroups)
+        countAllContactsTotalNotRead()
+    }
+
+    function initSocket() {
+        socketIo.on('lastMsg group', (message) => {
+           newLastMsgGroup(message)
+        })
+        socketIo.on('new contactGroup', (group) => {
+            addGroup(group)
+            countAllContactsTotalNotRead()
+        })
+        socketIo.on('del contactGroup', (group) => {
+            delGroup(group)
+            countAllContactsTotalNotRead()
+        })
+        socketIo.on('add user to contactGroup', ( { groupId, users }) => {
+            findGrpAndAddNewUsers(groupId, users)
+            countAllContactsTotalNotRead()
+        })
+        socketIo.on('remove user from contactGroup', ( { groupId, users }) => {
+            findGrpAndRemoveNewUsers(groupId, users)    
+            countAllContactsTotalNotRead()
+        })
+        socketIo.on('update contactGroup', (group) => {
+            editGroup(group)
+            countAllContactsTotalNotRead()
+        })
+        socketIo.on('update nomeGroup', (group) => {
+            editgGroupName(group._id, group.nome)
+            countAllContactsTotalNotRead()
+        })
+    }
+
+    function editgGroupName(id, nome) {
+        let newGroups = groups.map(group => {
+            if (group._id === id) {
+                group.nome = nome
+            }
+            return group
+        }
+        )
+        setGroups(newGroups)
+    }
+
+    useEffect(() => {
+        console.log('socket groups')
+        if(socketIo) initSocket()
+        return () =>{
+            socketIo.off('lastMsg group')
+            socketIo.off('new contactGroup')
+            socketIo.off('del contactGroup')
+            socketIo.off('new userGroup')
+            socketIo.off('remove userGroup')
+            socketIo.off('editGroup')
+        }
+    }, [socketIo])
+
 
 
     return (
