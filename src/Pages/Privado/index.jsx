@@ -12,8 +12,8 @@ export default function ChatPrivado() {
     const [view, setView] = useState("lista")
     
     const views = {
-      lista:   <Contatos tipo="privado"/>,
-      chat: <ChatComponent tipo="privado" style={styles.container}/>,
+      lista:   <Contatos tipo="private"/>,
+      chat: <ChatComponent tipo="private" style={styles.container}/>,
     }
 
   return (
@@ -28,6 +28,7 @@ export default function ChatPrivado() {
 
 const styles = StyleSheet.create({
     container: {
+        height:"100%",
         flex: 1,
         backgroundColor: '#FFF',
         alignItems: 'flex-start',

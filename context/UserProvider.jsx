@@ -48,6 +48,14 @@ export const UserProvider = ({children}) => {
     //     }).catch(err => {} )
     // }
 
+    function getNotRead(arrMsgs,respUser){
+        let count = []      
+        arrMsgs.forEach(msg => {          
+            if (!msg.seenBy.includes(respUser._id)) count.push(msg)
+        })
+        return count
+    } 
+
     async function loadMessagesAndSetContacts(repscontacts,respUser){
         return await apiUser.get('/user/lastmessages').then(resp => {
                 let messages = resp.data
@@ -71,6 +79,7 @@ export const UserProvider = ({children}) => {
                                     if (!msg.seenBy.includes(respUser._id)) count++
                                 })
                                 contact.unseenMessages = count
+                                contact.unseen = getNotRead(contact.allMessages,respUser)
                             }
                         }
                         contact.allMessages = contact.allMessages ? contact.allMessages : []

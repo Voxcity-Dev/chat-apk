@@ -10,8 +10,8 @@ export default function ChatGrupo() {
   const [view, setView] = useState("lista")
 
   const views = {
-    lista:   <Contatos tipo="grupo"/>,
-    chat: <ChatComponent tipo="grupo" style={styles.container}/>,
+    lista:   <Contatos tipo="group"/>,
+    chat: <ChatComponent tipo="group" style={styles.container}/>,
   }
 
 

@@ -4,6 +4,7 @@ import Signed from './signed';
 import Unsigned from './unsigned';
 import { GroupProvider } from '../context/GroupProvider';
 import { ContacProvider } from '../context/ContacProvider';
+import { AttendanceProvider } from '../context/AttendanceProvider';
 
 const AppRoutes = () => {
     const {signed}  = useContext(UserContext);
@@ -13,7 +14,9 @@ const AppRoutes = () => {
             
             <ContacProvider>
                 <GroupProvider>
-                    <Signed />
+                    <AttendanceProvider>
+                        <Signed />
+                    </AttendanceProvider>
                 </GroupProvider>
             </ContacProvider>
         );

@@ -3,7 +3,7 @@ import { View,ScrollView,StyleSheet,Text,Image, TouchableOpacity } from 'react-n
 import { GroupContext } from '../../../context/GroupProvider';
 
 export default function GrupoList() {
-    const { groups,setSelectedGroup } = useContext(GroupContext);
+    const { groups,setSelectedGroup,socketIo,unseenByGroup } = useContext(GroupContext);
     const [grupos, setGrupos] = useState([]);
 
     useEffect(() => {
@@ -13,8 +13,20 @@ export default function GrupoList() {
     function handleSelectGroup(group){  
         let selectedGroup = {...group}
         setSelectedGroup(selectedGroup)
+        handleUnseenMessages(group)
     }
     
+    function handleUnseenMessages(group){
+        grupos?.forEach(grupx => {
+            if (grupx._id === group._id) {
+                let messagesRead = group.unseen                                                                             
+                socketIo.emit('read cont messages',{contact:group._id, messages:messagesRead ,type:"group"})
+                unseenByGroup(group._id)                                        
+                group.unseenMessages = []   
+            }
+            return group
+        })
+    }
 
   return (
     <View style={styles.container}>
@@ -25,7 +37,7 @@ export default function GrupoList() {
                             {grupo.foto ? <Image source={{ uri: grupo.foto }} style={styles.image}/> : <Image source={require('../../../assets/avatar2.png')} style={styles.image}/> }
                             <Text>{grupo.nome}</Text>
                             {
-                                grupo.unseen > 0 ? <Text style={styles.notification}>{grupo.unseen}</Text> : <Text></Text>
+                                grupo.unseenMessages > 0 ? <Text style={styles.notification}>{grupo.unseenMessages}</Text> : <Text></Text>
                             }
                         </TouchableOpacity>
                 }

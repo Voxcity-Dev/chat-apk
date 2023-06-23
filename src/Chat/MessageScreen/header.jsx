@@ -1,5 +1,5 @@
 import React, { useState, useEffect,useContext } from 'react';
-import { View, FlatList, TouchableOpacity, Text, StyleSheet,Image } from 'react-native';
+import { View, Text, StyleSheet,Image } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { UserContext } from '../../../context/UserProvider';
 import { ContactContext } from '../../../context/ContacProvider';
@@ -7,7 +7,7 @@ import { GroupContext } from '../../../context/GroupProvider';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
 import { useNavigation } from '@react-navigation/native';
 
-export default function MessageScreen(props) {
+export default function Header(props) {
   const { user } = useContext(UserContext);
   const { selectedContact,setSelectedContact } = useContext(ContactContext);
   const { selectedGroup,setSelectedGroup } = useContext(GroupContext);
@@ -29,29 +29,6 @@ export default function MessageScreen(props) {
     }
   }, [selectedContact, selectedGroup]);
 
-
-  const renderMessage = ({ item, index }) => {
-    if (index < messages.length - visibleMessages) {
-      return null; // Não renderizar mensagem além do limite visível
-    }
-    let isSentMessage;
-    if (selectedContact) {
-      isSentMessage = item.from !== selectedContact._id;
-    } else if (selectedGroup) {
-      isSentMessage = item.from == user._id;
-    }
-
-    return (
-      <View style={[styles.messageContainer, isSentMessage ? styles.sentMessage : styles.receivedMessage]}>
-        <Text style={{ fontSize: 12, textAlign: 'right' }}>{item.fromUsername}</Text>
-        <Text style={styles.messageText}>{item.message}</Text>
-      </View>
-    );
-  };
-
-  const loadMoreMessages = () => {
-    setVisibleMessages((prevVisibleMessages) => prevVisibleMessages + 10);
-  };
 
   function backToContacts(){
     navigation.navigate('Chat Privado')
@@ -101,22 +78,10 @@ export default function MessageScreen(props) {
               <Image source={require('../../../assets/avatar2.png')} style={{ width: 40, height: 40, borderRadius: 20 }} />
             )
           }
-          <Text style={styles.contactNameText}>{selectedAtendimento.pushname} - {selectedAtendimento.status}</Text>
+          <Text style={styles.contactNameText}>{selectedAtendimento.puushname ? selectedAtendimento.pushname : selectedAtendimento.telefone}</Text>
         </View>
       )}
 
-      {visibleMessages < messages.length && (
-        <TouchableOpacity onPress={loadMoreMessages}>
-          <Icon name='arrow-up-outline' type='ionicon'style={styles.icone} color={"#142a4c"}/>
-        </TouchableOpacity>
-      )}
-
-      <FlatList
-        data={messages}
-        renderItem={renderMessage}
-        keyExtractor={(item) => item._id}
-        contentContainerStyle={styles.messageList}
-      />
 
     </View>
   );

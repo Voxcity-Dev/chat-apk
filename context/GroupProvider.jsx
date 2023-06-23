@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, useCallback } from "react";
 import { UserContext } from "./UserProvider";
 import apiUser from "../apiUser";
 
@@ -39,7 +39,7 @@ export const GroupProvider = ({children}) => {
                                     counter++
                                 }
                             })
-                            group.unseen = counter
+                            group.unseenMessages = counter
                         }
                     }
                     group.allMessages = group.allMessages || []
@@ -92,6 +92,7 @@ export const GroupProvider = ({children}) => {
         )
         setGroups(newGroups)
     }
+
     function findGrpAndRemoveNewUsers(groupId,newUsers){
         let newGroups = groups.map(group => {
             if (group._id === groupId) {
@@ -125,16 +126,16 @@ export const GroupProvider = ({children}) => {
         setGroups(newState);
     }
 
-    function countAllContactsTotalNotRead() {
+    const countAllContactsTotalNotRead = useCallback(() => {
         let count = 0
         
         groups.forEach(contact => {
             if (contact.unseen) count += contact.unseen.length
         })
         setGrpNotRead(count)
-    }
+    }, [groups])
 
-    function newLastMsgGroup(message){
+    const newLastMsgGroup = useCallback(message => {
         // if(message.msg.from !== user._id){
         //     let notify = document.getElementById('noti-sound')
         //     notify.play()
@@ -145,13 +146,14 @@ export const GroupProvider = ({children}) => {
                 group.lastMessage = message.msg
                 group.allMessages.push(message.msg)
                 let selectId = selectedGroup?._id
-                console.log('selectId',selectId)
                 if (user._id !== message.from && group.unseen !== undefined && selectId !== to) {
                     let exist = group.unseen.filter(unseen => { return message.msg._id === unseen._id })
                     if (exist.length === 0) {
                         group.unseen.push(message.msg)
                     }
                 }
+                let count = group.unseenMessages + 1;
+                group.unseenMessages = count
             }
             return group
         })
@@ -175,7 +177,7 @@ export const GroupProvider = ({children}) => {
         })
         setGroups(newGroups)
         countAllContactsTotalNotRead()
-    }
+    }, [groups, selectedGroup, user._id])
 
     function initSocket() {
         socketIo.on('lastMsg group', (message) => {
@@ -234,7 +236,7 @@ export const GroupProvider = ({children}) => {
 
 
     return (
-        <GroupContext.Provider value={{groups,setGroups,selectedGroup,setSelectedGroup}}>
+        <GroupContext.Provider value={{groups,setGroups,selectedGroup,setSelectedGroup,socketIo,unseenByGroup}}>
             {children}
         </GroupContext.Provider>
     )

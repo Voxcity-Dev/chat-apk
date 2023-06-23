@@ -40,6 +40,8 @@ export const ContacProvider = ({children}) => {
                     if (exist.length === 0) {
                         contact.unseen.push(lastMessage)
                     }
+                    let count = contact.unseenMessages + 1;
+                    contact.unseenMessages = count
                 }
             }
             return contact
@@ -160,10 +162,10 @@ export const ContacProvider = ({children}) => {
         socket.on("lastMsg Cont", data => {
             lastMsgCont(data)
         })
-        socket.on("disconnect", () => {
-            console.log("disconnected")
-            setReconnectAlert(true)
-        })
+        // socket.on("disconnect", () => {
+        //     console.log("disconnected")
+        //     setReconnectAlert(true)
+        // })
         socket.on("reconnect", () => {
             // setReconnectAlert(false)
             console.log("reconnected");

@@ -16,6 +16,17 @@ export default function PrivadoList() {
     function handleSelectContact(contact) {
         let selectedContact = { ...contact };
         contactContext.setSelectedContact(selectedContact);
+        handleUnseenMessages(contact);
+    }
+
+    function handleUnseenMessages(contact) {
+        contactContext.contacts.forEach((cont)=> {
+            if (cont._id === contact._id) {
+                let messagesRead = cont;
+                messagesRead.unseenMessages = 0;
+                userContext.socket.emit('read cont messages', { contact: cont._id, messages: messagesRead.unseen });
+            }
+        })
     }
 
     return (

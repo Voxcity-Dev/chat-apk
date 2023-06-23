@@ -12,7 +12,7 @@ export default function Contatos(props) {
   return (
     <View style={styles.container}>
       {
-        props.tipo === 'privado' ? pages.privado : pages.grupo
+        props.tipo === 'private' ? pages.privado : pages.grupo
       }
         
     </View>
