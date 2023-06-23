@@ -6,6 +6,7 @@ import { ContactContext } from '../../../context/ContacProvider';
 import { GroupContext } from '../../../context/GroupProvider';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
 import { useNavigation } from '@react-navigation/native';
+import Header from './header';
 
 export default function MessageScreen(props) {
   const { user } = useContext(UserContext);
@@ -14,7 +15,19 @@ export default function MessageScreen(props) {
   const { selectedAtendimento,setSelectedAtendimento } = useContext(AttendanceContext);
   const [visibleMessages, setVisibleMessages] = useState(10);
   const [messages, setMessages] = useState([]);
-  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (props.tipo === 'private') {
+      const newMessages = selectedContact.allMessages|| [];
+      setMessages(newMessages);
+    } else if (props.tipo === 'group') {
+      const newMessages = selectedGroup.allMessages || [];
+      setMessages(newMessages);
+    }else if(props.tipo === 'att'){
+      const newMessages = selectedAtendimento.allMessages || [];
+      setMessages(newMessages);
+    }
+  }, [selectedContact, selectedGroup]);
 
   useEffect(() => {
     if (props.tipo === 'private') {
@@ -40,6 +53,9 @@ export default function MessageScreen(props) {
     } else if (selectedGroup) {
       isSentMessage = item.from == user._id;
     }
+    else if(selectedAtendimento){
+      isSentMessage = item.from === user._id;
+    }
 
     return (
       <View style={[styles.messageContainer, isSentMessage ? styles.sentMessage : styles.receivedMessage]}>
@@ -49,67 +65,11 @@ export default function MessageScreen(props) {
     );
   };
 
-  const loadMoreMessages = () => {
-    setVisibleMessages((prevVisibleMessages) => prevVisibleMessages + 10);
-  };
-
-  function backToContacts(){
-    navigation.navigate('Chat Privado')
-    setSelectedContact(null)
-  };
-   function backToGroups(){
-    setSelectedGroup(null)
-    navigation.navigate('Chat Grupo')
-  };
-
-  function backToAtendimentos(){
-    setSelectedAtendimento(null)
-    navigation.navigate('Atendimento')
-  };
 
   return (
     <View style={{ flex: 1,width:"100%" }}>
-      
-      {selectedGroup && (
-        <View style={styles.groupNameContainer}>
-          <Icon name='arrow-back-outline' type='ionicon'style={styles.icone} color={"#FFF"} onPress={backToGroups}/>
-          {selectedGroup.foto ? (
-            <Image source={{ uri: selectedGroup.foto }} style={{ width: 40, height: 40, borderRadius: 20 }} />) : (
-              <Image source={require('../../../assets/avatar2.png')} style={{ width: 40, height: 40, borderRadius: 20 }} />
-            )
-          }          
-          <Text style={styles.groupNameText}>{selectedGroup.nome}</Text>
-        </View>
-      )}
-      {selectedContact && (
-        <View style={styles.contactNameContainer}>
-          <Icon name='arrow-back-outline' type='ionicon'style={styles.icone} color={"#FFF"} onPress={backToContacts}/>  
-          {selectedContact.foto ? (
-            <Image source={{ uri: selectedContact.foto }} style={{ width: 40, height: 40, borderRadius: 20 }} />) : (
-              <Image source={require('../../../assets/avatar2.png')} style={{ width: 40, height: 40, borderRadius: 20 }} />
-            )
-          }
-          <Text style={styles.contactNameText}>{selectedContact.nome} - {selectedContact.status}</Text>
-        </View>
-      )}
 
-      {selectedAtendimento && (
-        <View style={styles.contactNameContainer}>
-          <Icon name='arrow-back-outline' type='ionicon'style={styles.icone} color={"#FFF"} onPress={backToAtendimentos}/>
-          {selectedAtendimento.foto ? (
-            <Image source={{ uri: selectedAtendimento.foto }} style={{ width: 40, height: 40, borderRadius: 20 }} />) : (
-              <Image source={require('../../../assets/avatar2.png')} style={{ width: 40, height: 40, borderRadius: 20 }} />
-            )
-          }
-          <Text style={styles.contactNameText}>{selectedAtendimento.pushname} - {selectedAtendimento.status}</Text>
-        </View>
-      )}
-
-      {visibleMessages < messages.length && (
-        <TouchableOpacity onPress={loadMoreMessages}>
-          <Icon name='arrow-up-outline' type='ionicon'style={styles.icone} color={"#142a4c"}/>
-        </TouchableOpacity>
-      )}
+      <Header />      
 
       <FlatList
         data={messages}

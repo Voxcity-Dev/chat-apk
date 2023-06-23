@@ -1,10 +1,12 @@
-import React,{useContext} from 'react'
+import React,{useContext,useState} from 'react'
 import { View,StyleSheet,Text, TouchableOpacity,Image } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
+import NovoAtendimento from './novoAtendimento';
 
 export default  function MeusAtendimentos (props) {
   const { setSelectedAtendimento } = useContext(AttendanceContext);
+  const [novoAtendimento, setNovoAtendimento] = useState(false);
 
   function countAndSlice(message) {
     if (!message) return ""

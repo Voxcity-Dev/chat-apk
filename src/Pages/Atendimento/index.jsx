@@ -16,7 +16,9 @@ export default function Atendimento() {
   return (
     <View style={styles.container}>
 
-      <View style={styles.buttonContainer}>
+      {
+        !selectedAtendimento ? 
+        <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.buttonBox} onPress={() => selectAtendimento("meus")}>
           <Icon name="person-sharp" type="ionicon" size={25} color={type === "meus" ? "#142a4c" : "#9ac31c" } />
         </TouchableOpacity>
@@ -29,7 +31,8 @@ export default function Atendimento() {
           <Icon name="people-sharp" type="ionicon" size={25} color={type === "potencial" ? "#142a4c" : "#9ac31c" } />
         </TouchableOpacity>
 
-      </View>
+      </View> : null
+      }
 
       <Atendimentos type={type}/>
 
