@@ -5,7 +5,6 @@ import { UserContext } from '../../../context/UserProvider';
 import { ContactContext } from '../../../context/ContacProvider';
 import { GroupContext } from '../../../context/GroupProvider';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
-import { useNavigation } from '@react-navigation/native';
 import Header from './header';
 
 export default function MessageScreen(props) {
@@ -16,18 +15,6 @@ export default function MessageScreen(props) {
   const [visibleMessages, setVisibleMessages] = useState(10);
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
-    if (props.tipo === 'private') {
-      const newMessages = selectedContact.allMessages|| [];
-      setMessages(newMessages);
-    } else if (props.tipo === 'group') {
-      const newMessages = selectedGroup.allMessages || [];
-      setMessages(newMessages);
-    }else if(props.tipo === 'att'){
-      const newMessages = selectedAtendimento.allMessages || [];
-      setMessages(newMessages);
-    }
-  }, [selectedContact, selectedGroup]);
 
   useEffect(() => {
     if (props.tipo === 'private') {
@@ -65,11 +52,21 @@ export default function MessageScreen(props) {
     );
   };
 
+  const loadMoreMessages = () => {
+    setVisibleMessages((prevVisibleMessages) => prevVisibleMessages + 10);
+  };
+
 
   return (
     <View style={{ flex: 1,width:"100%" }}>
 
-      <Header />      
+      <Header />     
+
+      {visibleMessages < messages.length && (
+        <TouchableOpacity onPress={loadMoreMessages}>
+          <Icon name='arrow-up-outline' type='ionicon'style={styles.icone} color={"#142a4c"}/>
+        </TouchableOpacity>
+      )}
 
       <FlatList
         data={messages}

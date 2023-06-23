@@ -1,5 +1,5 @@
-import React ,{ useContext, useEffect, useState } from 'react'
-import { StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import React ,{ useContext,  useState } from 'react'
+import { StyleSheet, View,  TouchableOpacity} from 'react-native';
 import NavigationBar from '../navBar';
 import { Icon } from '@rneui/themed';
 import Atendimentos from '../../Atendimento';

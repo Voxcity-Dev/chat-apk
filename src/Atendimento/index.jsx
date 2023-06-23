@@ -30,9 +30,10 @@ export default  function Atendimentos (props) {
     });
     setAtendimentosPotencial(newAttendances);
   }, [attendances]);
+
  
   const views = {
-    "espera": <AtendimentosEspera atendimentos={atendimentosEspera}/>,
+    "espera": <AtendimentosEspera atendimentos={atendimentosEspera} />,
     "potencial": <AtendimentosPotencial atendimentos={atendimentosPotencial}/>,
     "meus": <MeusAtendimentos atendimentos={atendimentos}/>
   }
