@@ -40,6 +40,7 @@ export default  function MeusAtendimentos (props) {
 
   return (
    <View style={styles.container}>
+    <Text style={{color:"#142a4c",fontSize:16,fontWeight:"bold",textAlign:"center",marginTop:10,borderBottomWidth:1,borderColor:"#142a4c",width:"50%"}}>Meus Atendimentos</Text>
     {/* {
       novoAtendimento ? <NovoAtendimento setNovoAtendimento={setNovoAtendimento}/> : 
       <View >
@@ -74,6 +75,10 @@ export default  function MeusAtendimentos (props) {
           }
           )
         }
+
+        {
+          props.atendimentos.length === 0 ? <Text style={{color:"#142a4c",fontSize:12,textAlign:"center"}}>Nenhum atendimento encontrado</Text> : null
+        }
       </View>
     //}
         
@@ -87,6 +92,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF',
     color: '#111',
+    alignItems:"center",
   },
   buttonBox:{
     width:"100%",
@@ -95,7 +101,6 @@ const styles = StyleSheet.create({
     alignItems:"center",
     justifyContent:"center",
     flexDirection:"row",
-    backgroundColor:"#F8f8f8",
     padding:10,
   },
   buttonText:{
@@ -119,7 +124,6 @@ const styles = StyleSheet.create({
     justifyContent:"flex-start",
     flexDirection:"row",
     color:"#142a4c",
-    backgroundColor:"#F8F8F8",
     padding:10,
   },    
   contactInfo:{

@@ -44,12 +44,12 @@ export const AttendanceProvider = ({children}) => {
         if(!context.user.admin){
             let mygroups = atendentes.filter((grp) => grp.usuarios.includes(context.user._id));
             let myattswaitin = attendances.filter((att) => mygroups.some((grp) => grp._id === att.grupo) && att.waiting);
-            setMyWaitingAtt(myattswaitin.length);
+            setMyWaitingAtt(myattswaitin);
     
         }
         else{
             let myattswaitin = attendances.filter((att) => att.waiting && !att.atendente);
-            setMyWaitingAtt(myattswaitin.length);            
+            setMyWaitingAtt(myattswaitin);            
         }
     }
     
@@ -173,10 +173,10 @@ export const AttendanceProvider = ({children}) => {
     },[attendances])
 
     const receiveMessage = useCallback((data) => {
-        if(data.contact && data.contact.atendente == context.user._id && data.msg.from !== context.user._id) {
-            let notify = document.getElementById('noti-sound')
-            notify.play()
-       }
+    //     if(data.contact && data.contact.atendente == context.user._id && data.msg.from !== context.user._id) {
+    //         let notify = document.getElementById('noti-sound')
+    //         notify.play()
+    //    }
         let objMessage = data.msg
         let newContatct = true
         let newAttendances = [...attendances].map(att => {
@@ -241,8 +241,8 @@ export const AttendanceProvider = ({children}) => {
         setAttendances(newAttendances);
         let newWaiting = newAttendances.filter((att) => mygroups.some((grp) => grp._id === att.grupo) && att.waiting);
         if( newWaiting.length>oldWaiting.length  ) {        
-            let notify = document.getElementById('new-att-sound')
-            notify.play()                              
+            // let notify = document.getElementById('new-att-sound')
+            // notify.play()                              
         }
     },[attendances, context])
 

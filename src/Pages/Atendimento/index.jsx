@@ -1,13 +1,19 @@
-import React ,{ useContext,  useState } from 'react'
-import { StyleSheet, View,  TouchableOpacity} from 'react-native';
+import React ,{ useContext,  useEffect,  useState } from 'react'
+import { StyleSheet, View,  TouchableOpacity,Text} from 'react-native';
 import NavigationBar from '../navBar';
 import { Icon } from '@rneui/themed';
 import Atendimentos from '../../Atendimento';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
 
 export default function Atendimento() {
-  const { selectedAtendimento } = useContext(AttendanceContext);
+  const { selectedAtendimento,myWaitingAtt } = useContext(AttendanceContext);
   const [type, setType] = useState("meus");
+  const [ waiting, setWaiting ] = useState();
+
+  useEffect(() => {
+    let newWaiting = myWaitingAtt.length
+    setWaiting(newWaiting);
+  }, [myWaitingAtt]);
 
   function selectAtendimento(type){
     setType(type);
@@ -25,6 +31,7 @@ export default function Atendimento() {
 
         <TouchableOpacity style={styles.buttonBox} onPress={() => selectAtendimento("espera")}>
           <Icon name="time-sharp" type="ionicon" size={25} color={type === "espera" ? "#142a4c" : "#9ac31c" } />
+          {waiting > 0 ? <Text style={styles.notification}>{waiting}</Text> : null}
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.buttonBox} onPress={() => selectAtendimento("potencial")}>
@@ -68,8 +75,18 @@ const styles = StyleSheet.create({
       width:"33.3%",
       display:"flex",
       alignItems:"center",
+      flexDirection:"row",
       justifyContent:"center",
       backgroundColor:"#F8f8f8",
-    }
+    },
+      notification: {
+      backgroundColor: 'red',
+      color: '#FFF',
+      borderRadius: 25,
+      width: 10,
+      height: 10,
+      textAlign: 'center',
+      fontSize: 8,
+  },
   });
 

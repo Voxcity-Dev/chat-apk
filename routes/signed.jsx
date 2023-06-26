@@ -7,6 +7,7 @@ import Profissional from "../src/Pages/Profissional";
 import ChatComponent from "../src/Chat";
 import Contatos from "../src/Contatos";
 import PrivadoList from "../src/Contatos/Privado";
+import Transferir from "../src/Chat/MessageScreen/transferirAtt";
 
 const AuthStack = createNativeStackNavigator();
 
@@ -81,6 +82,17 @@ export default function Signed() {
             }} />
             <AuthStack.Screen name="PrivadoList" component={PrivadoList} options={{
                 headerBackVisible: false,
+                headerStyle: {
+                    backgroundColor: '#142a4c',
+                },
+                headerTitleAlign: 'center',
+                headerTintColor: '#FFF',
+                headerTitleStyle: {
+                    fontWeight: 'bold'
+                }
+            }} />
+            <AuthStack.Screen name="Transferir Atendimento" component={Transferir} options={{
+                headerBackVisible: true,
                 headerStyle: {
                     backgroundColor: '#142a4c',
                 },

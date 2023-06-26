@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import MessageScreen from './MessageScreen/messageScreen';
 import MessageSender from './MessageSender/messageSender';

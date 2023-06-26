@@ -121,6 +121,8 @@ export const UserProvider = ({children}) => {
     }
     }, [token,setSocket])
 
+
+
    
     return(
         <UserContext.Provider value={{signed, user, setUser,Logar,Deslogar,loading,pref,contacts,setContacts,token,socket,setSocket}}>

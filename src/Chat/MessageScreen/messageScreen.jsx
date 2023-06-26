@@ -9,30 +9,30 @@ import Header from './header';
 
 export default function MessageScreen(props) {
   const { user } = useContext(UserContext);
-  const { selectedContact,setSelectedContact } = useContext(ContactContext);
-  const { selectedGroup,setSelectedGroup } = useContext(GroupContext);
-  const { selectedAtendimento,setSelectedAtendimento } = useContext(AttendanceContext);
+  const { selectedContact } = useContext(ContactContext);
+  const { selectedGroup } = useContext(GroupContext);
+  const { selectedAtendimento } = useContext(AttendanceContext);
   const [visibleMessages, setVisibleMessages] = useState(10);
   const [messages, setMessages] = useState([]);
 
 
   useEffect(() => {
+    let newMessages = [];
     if (props.tipo === 'private') {
-      const newMessages = selectedContact.allMessages|| [];
-      setMessages(newMessages);
+      newMessages = selectedContact.allMessages || [];
     } else if (props.tipo === 'group') {
-      const newMessages = selectedGroup.allMessages || [];
-      setMessages(newMessages);
-    }else if(props.tipo === 'att'){
-      const newMessages = selectedAtendimento.allMessages || [];
-      setMessages(newMessages);
+      newMessages = selectedGroup.allMessages || [];
+    } else if (props.tipo === 'att') {
+      newMessages = selectedAtendimento.allMessages || [];
     }
-  }, [selectedContact, selectedGroup]);
+    setMessages(newMessages);
+  }, [selectedContact, selectedGroup, selectedAtendimento, props.tipo]);
+  
 
 
   const renderMessage = ({ item, index }) => {
     if (index < messages.length - visibleMessages) {
-      return null; // Não renderizar mensagem além do limite visível
+      return null;
     }
     let isSentMessage;
     if (selectedContact) {
@@ -43,9 +43,8 @@ export default function MessageScreen(props) {
     else if(selectedAtendimento){
       isSentMessage = item.from === user._id;
     }
-
     return (
-      <View style={[styles.messageContainer, isSentMessage ? styles.sentMessage : styles.receivedMessage]}>
+      <View key={index} style={[styles.messageContainer, isSentMessage ? styles.sentMessage : styles.receivedMessage]}>
         <Text style={{ fontSize: 12, textAlign: 'right' }}>{item.fromUsername}</Text>
         <Text style={styles.messageText}>{item.message}</Text>
       </View>

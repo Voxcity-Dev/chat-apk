@@ -9,7 +9,7 @@ import Chat from '../Chat/index';
 
 export default  function Atendimentos (props) {
   const {user} = useContext(UserContext);
-  const {attendances,waitingAttendances, selectedAtendimento} = useContext(AttendanceContext);
+  const {attendances,myWaitingAtt, selectedAtendimento, setSelectedAtendimento} = useContext(AttendanceContext);
   const [atendimentos, setAtendimentos] = useState([]);
   const [atendimentosEspera, setAtendimentosEspera] = useState([]);
   const [atendimentosPotencial, setAtendimentosPotencial] = useState([]);
@@ -20,9 +20,9 @@ export default  function Atendimentos (props) {
   }, [attendances]);
 
   useEffect(() => {
-    let newAtendimentosEspera = waitingAttendances
+    let newAtendimentosEspera = myWaitingAtt
     setAtendimentosEspera(newAtendimentosEspera);
-  }, [waitingAttendances]);
+  }, [myWaitingAtt]);
 
   useEffect(() => {
     let newAttendances = attendances.filter((att) =>{
@@ -33,7 +33,7 @@ export default  function Atendimentos (props) {
 
  
   const views = {
-    "espera": <AtendimentosEspera atendimentos={atendimentosEspera} />,
+    "espera": <AtendimentosEspera atendimentos={atendimentosEspera} setSelectedAtendimento={setSelectedAtendimento} type={props.type}/>,
     "potencial": <AtendimentosPotencial atendimentos={atendimentosPotencial}/>,
     "meus": <MeusAtendimentos atendimentos={atendimentos}/>
   }
@@ -46,12 +46,12 @@ export default  function Atendimentos (props) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      width:"100%",
-      flex: 1,
-      backgroundColor: '#FFF',
-      color: '#111',
-    }
+  container: {
+    width:"100%",
+    flex: 1,
+    backgroundColor: '#FFF',
+    color: '#111',
+  }
 
 });
 
