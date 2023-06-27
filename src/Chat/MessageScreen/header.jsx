@@ -78,7 +78,7 @@ export default function Header() {
           }
           <Text style={styles.contactNameText}>{selectedAtendimento.pushname ? selectedAtendimento.pushname : selectedAtendimento.telefone}</Text>
 
-          <View style={{flexDirection:"row",alignItems:"center",justifyContent:"flex-end",width:"30%"}}>
+          <View style={{flexDirection:"row",alignItems:"center",justifyContent:"flex-end",width:"40%"}}>
             <Icon name='checkmark-done-outline' type='ionicon' color={"#FFF"} onPress={()=>{finishAtendimento(selectedAtendimento)}}/>
             <Icon name="swap-horizontal-outline" style={{marginLeft:10,marginRight:0}} type="ionicon" size={25} color={"#FFF"} onPress={()=> transferAtendimento()} />
           </View>

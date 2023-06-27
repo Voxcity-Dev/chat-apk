@@ -49,8 +49,7 @@ export default function AtendimentosEspera(props) {
     let newContact = JSON.parse(JSON.stringify(att));
     delete newContact.allMessages;
     newContact.historico = history;
-    apiUser
-      .post("/atendimentos/pickup", { contact: newContact })
+    apiUser.post("/atendimentos/pickup", { contact: newContact })
       .then((res) => {
         alert("Atendimento transferido com sucesso!");
       })
@@ -59,42 +58,25 @@ export default function AtendimentosEspera(props) {
 
   return (
     <View style={styles.container}>
-      <Text style={{ color:"#142a4c",fontSize:16,fontWeight:"bold",textAlign:"center",marginTop:10,borderBottomWidth:1,borderColor:"#142a4c",width:"50%"}}>Atendimentos em Espera</Text>
+      <Text style={styles.text}>Atendimentos em Espera</Text>
       {props.atendimentos.map((att, i) => {
         let lastHist = att?.historico[att.historico.length - 1];
         let waitingTime = new Date(lastHist?.data);
-        let formatedDate =
-          timeHasZero(waitingTime.getDate()) +
-          "/" +
-          timeHasZero(waitingTime.getMonth() + 1) +
-          "/" +
-          timeHasZero(waitingTime.getFullYear());
-        let formatedTime =
-          timeHasZero(waitingTime.getHours()) +
-          ":" +
-          timeHasZero(waitingTime.getMinutes());
-        let redirectedGrp = userContext?.pref.services.voxbot.atendentes.find(
-          (grp) => grp._id === att.grupo
-        );
-        let attend =
-          userContext?.pref.users.find((user) => user._id === lastHist?.user)
-            ?.nome || " Pelo Robô";
-
+        let formatedDate = timeHasZero(waitingTime.getDate()) +
+          "/" + timeHasZero(waitingTime.getMonth() + 1) +
+          "/" + timeHasZero(waitingTime.getFullYear());
+        let formatedTime = timeHasZero(waitingTime.getHours()) + ":" + timeHasZero(waitingTime.getMinutes());
+        let redirectedGrp = userContext?.pref.services.voxbot.atendentes.find((grp) => grp._id === att.grupo);
+        let attend = userContext?.pref.users.find((user) => user._id === lastHist?.user)?.nome || " Pelo Robô";
         let isCardShown = showCard[att._id] || false;
 
         return (
           <View style={{ width: "100%" }} key={i}>
-            <TouchableOpacity
-              style={styles.contactBox}
-              onPress={() => showCardFunc(att)}
-            >
+            <TouchableOpacity style={styles.contactBox} onPress={() => showCardFunc(att)} >
               {att.foto ? (
                 <Image style={styles.image} source={{ uri: att.foto }} />
               ) : (
-                <Image
-                  style={styles.image}
-                  source={require('../../../assets/avatar2.png')}
-                />
+                <Image style={styles.image} source={require('../../../assets/avatar2.png')}/>
               )}
               <View style={styles.contactInfo}>
                 <Text style={styles.buttonText}>{nameInsert(att)}</Text>
@@ -105,16 +87,16 @@ export default function AtendimentosEspera(props) {
             </TouchableOpacity>
 
             {isCardShown ? (
-              <View style={{ width: "50%", height: 50, backgroundColor: "#F8F8F8",display:"flex",flexDirection:"row",alignItems:"center"}}>
+              <View style={styles.transferContainer}>
                 <TouchableOpacity style={styles.transferBox} onPress={() => setShowCard((prevState) => ({ ...prevState, [att._id]: false, }))}>
-                  <Icon name="close-circle-outline" type="ionicon" size={25} color={"#142a4c"} />
+                  <Icon name="close-circle-outline" type="ionicon" size={25} color={"#9ac31c"} />
                   <Text style={{color:"#142a4c",fontWeight:"bold",marginLeft:4}}>Cancelar</Text>
                 </TouchableOpacity>
 
                 {!att.atendente && (
                   <TouchableOpacity style={styles.transferBox} onPress={() => handleSelectedAtendimento(att)}>
-                    <Icon name="swap-horizontal-outline" type="ionicon" size={25} color={"#142a4c"} />
-                    <Text style={{color:"#142a4c",fontWeight:"bold",marginLeft:4}} >Transferir</Text>
+                    <Icon name="swap-horizontal-outline" type="ionicon" size={25} color={"#9ac31c"} />
+                    <Text style={{color:"#142a4c",fontWeight:"bold",marginLeft:4}} >Pegar Atendimento</Text>
                   </TouchableOpacity>
                 )}
               </View>
@@ -173,5 +155,31 @@ const styles = StyleSheet.create({
     alignItems: "center", 
     justifyContent: "center",
     flexDirection:"row"
+  },
+  text: {
+    color: "#142a4c",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 10,
+    borderBottomWidth: 1,
+    borderColor: "#9ac31c",
+    width: "50%",
+  },
+  transferContainer:{
+    width: "50%",
+    height: 50,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    flexDirection: "row",
+  },
+  transferBox:{
+    width: "100%",
+    height: 30,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
   }
 });

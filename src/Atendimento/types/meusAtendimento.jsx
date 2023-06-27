@@ -40,7 +40,7 @@ export default  function MeusAtendimentos (props) {
 
   return (
    <View style={styles.container}>
-    <Text style={{color:"#142a4c",fontSize:16,fontWeight:"bold",textAlign:"center",marginTop:10,borderBottomWidth:1,borderColor:"#142a4c",width:"50%"}}>Meus Atendimentos</Text>
+    <Text style={styles.text}>Meus Atendimentos</Text>
     {/* {
       novoAtendimento ? <NovoAtendimento setNovoAtendimento={setNovoAtendimento}/> : 
       <View >
@@ -130,5 +130,17 @@ const styles = StyleSheet.create({
     width:"100%",
     height:100,
     marginLeft:20,
-  }
+  },
+  text:{
+    color:"#142a4c",
+    fontSize:16,
+    fontWeight:"bold",
+    marginTop:10,
+    marginLeft:10,
+    width:"50%",
+    borderBottomWidth:1,
+    borderColor:"#9ac31c",
+    textAlign:"center"
+  },
+
 });

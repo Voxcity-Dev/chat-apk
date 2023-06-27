@@ -34,8 +34,8 @@ export default  function Atendimentos (props) {
  
   const views = {
     "espera": <AtendimentosEspera atendimentos={atendimentosEspera} setSelectedAtendimento={setSelectedAtendimento} type={props.type}/>,
-    "potencial": <AtendimentosPotencial atendimentos={atendimentosPotencial}/>,
-    "meus": <MeusAtendimentos atendimentos={atendimentos}/>
+    "potencial": <AtendimentosPotencial atendimentos={atendimentosPotencial} setSelectedAtendimento={setSelectedAtendimento}/>,
+    "meus": <MeusAtendimentos atendimentos={atendimentos} />
   }
     
   return (
