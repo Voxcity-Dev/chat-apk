@@ -6,14 +6,22 @@ import Atendimentos from '../../Atendimento';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
 
 export default function Atendimento() {
-  const { selectedAtendimento,myWaitingAtt } = useContext(AttendanceContext);
+  const { selectedAtendimento,myWaitingAtt,attendances } = useContext(AttendanceContext);
   const [type, setType] = useState("meus");
   const [ waiting, setWaiting ] = useState();
+  const [ atendimentosPotencial, setAtendimentosPotencial ] = useState();
 
   useEffect(() => {
     let newWaiting = myWaitingAtt.length
     setWaiting(newWaiting);
   }, [myWaitingAtt]);
+
+  useEffect(() => {
+    let newAttendances = attendances.filter((att) =>{
+      return !att.waiting && !att.atendente && att.historico[att.historico.length - 1]?.action !== 'Finalizado' && new Date(att.lastMessage?.createdAt).getTime() > new Date(Date.now() - (1000 * 60 * 60 * 24)).getTime()
+    });
+    setAtendimentosPotencial(newAttendances.length);
+  }, [attendances]);
 
   function selectAtendimento(type){
     setType(type);
@@ -36,6 +44,7 @@ export default function Atendimento() {
 
         <TouchableOpacity style={styles.buttonBox} onPress={() => selectAtendimento("potencial")}>
           <Icon name="people-sharp" type="ionicon" size={25} color={type === "potencial" ? "#142a4c" : "#9ac31c" } />
+          {atendimentosPotencial > 0 ? <Text style={styles.notification}>{atendimentosPotencial}</Text> : null}
         </TouchableOpacity>
 
       </View> : null

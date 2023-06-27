@@ -1,5 +1,5 @@
 import React, { useState,useContext,useEffect } from 'react';
-import { View,StyleSheet,Text } from 'react-native';
+import { View,StyleSheet } from 'react-native';
 import AtendimentosEspera from './types/espera';
 import MeusAtendimentos from './types/meusAtendimento';
 import AtendimentosPotencial from './types/potencial';
