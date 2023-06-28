@@ -45,7 +45,7 @@ export default function MessageScreen(props) {
     }
     return (
       <View key={index} style={[styles.messageContainer, isSentMessage ? styles.sentMessage : styles.receivedMessage]}>
-        <Text style={{ fontSize: 12, textAlign: 'right' }}>{item.fromUsername}</Text>
+        <Text style={{ fontSize: 12, textAlign: 'right' }}>{item.from === user._id ? null : item.fromUsername }</Text>
         <Text style={styles.messageText}>{item.message}</Text>
       </View>
     );

@@ -22,13 +22,12 @@ export default function Transferir() {
 
     function transferContactToGroup(grupo){
         let newContact = JSON.parse(JSON.stringify(selectedAtendimento))
-        delete newContact.allMessages;
         apiUser.post("/atendimentos/waiting", { contact: newContact, grupo }).then((res) => {
+            console.log(res.data);
             alert("Contato transferido para a lista de espera do grupo " + grupo.nome + " com sucesso!");
         }).catch(err => console.log(err));
         setSelectedAtendimento(null)
         navigation.navigate('Atendimento')
-
     }
 
     function transferContactToAtendente(atendente){
@@ -49,8 +48,7 @@ export default function Transferir() {
             <ScrollView style={{ width: "100%",height:"30%" }}>
                 {
                     attendances?.map((atendente, index) => {
-
-                        return(
+                        return (
                             <View key={index} style={styles.blocoContato}>
                                 {
                                     atendente.foto ? (
@@ -69,7 +67,6 @@ export default function Transferir() {
                                 </TouchableOpacity>
                             </View>
                         )
-
                     })
                 }
             </ScrollView>

@@ -33,21 +33,20 @@ export default function Atendimento() {
       {
         !selectedAtendimento ? 
         <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.buttonBox} onPress={() => selectAtendimento("meus")}>
-          <Icon name="person-sharp" type="ionicon" size={25} color={type === "meus" ? "#142a4c" : "#9ac31c" } />
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonBox} onPress={() => selectAtendimento("meus")}>
+            <Icon name="person-sharp" type="ionicon" size={25} color={type === "meus" ? "#142a4c" : "#9ac31c" } />
+          </TouchableOpacity>
 
-        <TouchableOpacity style={styles.buttonBox} onPress={() => selectAtendimento("espera")}>
-          <Icon name="time-sharp" type="ionicon" size={25} color={type === "espera" ? "#142a4c" : "#9ac31c" } />
-          {waiting > 0 ? <Text style={styles.notification}>{waiting}</Text> : null}
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonBox} onPress={() => selectAtendimento("espera")}>
+            <Icon name="time-sharp" type="ionicon" size={25} color={type === "espera" ? "#142a4c" : "#9ac31c" } />
+            {waiting > 0 ? <Text style={styles.notification}>{waiting}</Text> : null}
+          </TouchableOpacity>
 
-        <TouchableOpacity style={styles.buttonBox} onPress={() => selectAtendimento("potencial")}>
-          <Icon name="people-sharp" type="ionicon" size={25} color={type === "potencial" ? "#142a4c" : "#9ac31c" } />
-          {atendimentosPotencial > 0 ? <Text style={styles.notification}>{atendimentosPotencial}</Text> : null}
-        </TouchableOpacity>
-
-      </View> : null
+          <TouchableOpacity style={styles.buttonBox} onPress={() => selectAtendimento("potencial")}>
+            <Icon name="people-sharp" type="ionicon" size={25} color={type === "potencial" ? "#142a4c" : "#9ac31c" } />
+            {atendimentosPotencial > 0 ? <Text style={styles.notification}>{atendimentosPotencial}</Text> : null}
+          </TouchableOpacity>
+        </View> : null
       }
 
       <Atendimentos type={type}/>

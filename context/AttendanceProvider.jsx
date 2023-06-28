@@ -252,4 +252,3 @@ export const AttendanceProvider = ({children}) => {
         </AttendanceContext.Provider>
     )
 }
-

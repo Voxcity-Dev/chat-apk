@@ -1,14 +1,12 @@
 import React, { useState, useContext,useEffect } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { UserContext } from '../../../context/UserProvider';
 import { ContactContext } from '../../../context/ContacProvider';
 import { GroupContext } from '../../../context/GroupProvider';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
+import AudioRecorder from './audioRecorder';
+import apiUser from '../../../apiUser';
 import { Icon } from '@rneui/themed';
-import AudioRecorderPlayer, {
-  AudioEncoderAndroidType,
-  AudioSourceAndroidType,
-} from 'react-native-audio-recorder-player';
 
 export default function MessageSender(props) {
   const { socket } = useContext(UserContext);
@@ -20,66 +18,49 @@ export default function MessageSender(props) {
   const [typing, setTyping] = useState(false);
   const [files, setFiles] = useState({})
   const [audio, setAudio] = useState(null);
-  const [recording, setRecording] = useState(false);
-  const [audioPath, setAudioPath] = useState('');
+
 
     useEffect(() => {
       if(selectedContact && props.tipo === "private"){
           let newCont = selectedContact ? { ...selectedContact } : {};
           setContact(newCont);
       }
-      if(selectedGroup && props.tipo === "group"){
-          let newCont = selectedGroup ? { ...selectedGroup } : {};
-          setContact(newCont);
-      }
-      if(selectedAtendimento && props.tipo === "att"){
-          let newCont = selectedAtendimento ? { ...selectedAtendimento } : {};
-          setContact(newCont);
-      }
     }, [selectedContact]);
+
+    useEffect(() => {
+      if(selectedGroup && props.tipo === "group"){
+        let newCont = selectedGroup ? { ...selectedGroup } : {};
+        setContact(newCont);
+      }
+    }, [selectedGroup]);
+
+    useEffect(() => {
+      if(selectedAtendimento && props.tipo === "att"){
+        let newCont = selectedAtendimento ? { ...selectedAtendimento } : {};
+        setContact(newCont);
+      }
+    }, [selectedAtendimento]);
 
   function changeMessage(text) {
     let message = text
     let newMessage = message
     newMessage = message
     setMessage(newMessage)
-        if(props.tipo=== "privado" && !typing){
-            socket.emit("typing", {to:contact._id})
-            setTyping(true)
-            setTimeout(() => {
-                setTyping(false)
-            }, 3000);
-        }
+      if(props.tipo=== "privado" && !typing){
+        socket.emit("typing", {to:contact._id})
+        setTyping(true)
+        setTimeout(() => {
+            setTyping(false)
+        }, 3000);
+      }
     }
 
     function messageExist() {
-        if (message.trim().length > 0) return true
-        // if (files.length > 0) return true
-        // if (audio) return true
-        return false
+      if (message.trim().length > 0) return true
+      // if (files.length > 0) return true
+      if (audio) return true
+      return false
     }
-
-    const startRecording = async () => {
-      try {
-        const path = await AudioRecorder.startRecording();
-        console.log('Gravação iniciada:', path);
-        setAudioPath(path);
-        setRecording(true);
-      } catch (error) {
-        console.log('Erro ao iniciar a gravação:', error);
-      }
-    };
-  
-    const stopRecording = async () => {
-      try {
-        const path = await AudioRecorder.stopRecording();
-        console.log('Gravação finalizada:', path);
-        setRecording(false);
-        setAudioPath(path);
-      } catch (error) {
-        console.log('Erro ao parar a gravação:', error);
-      }
-    };
 
     function sendMessage(e) {
       e.preventDefault()
@@ -97,22 +78,21 @@ export default function MessageSender(props) {
       formData.append('to',deepCloneContact._id)
       //prepare to send message and files e audio
       
-      
       if (audio) {
-        // formData.append('audio', audio);
-        // if(props.msgType==="att"){
-        //     formData.append('telefone', deepCloneContact.telefone)
-        //     formData.append('bot', deepCloneContact.bot)
-        // }
-        // props.msgType !== "att" ? ApiUsers.post('/upload/audio', formData).then(resp => {
-        //     setFiles({})
-        //     setMessage("")
-        // })
-        // : ApiUsers.post('/whats/upload/audio', formData).then(resp => {
-        //     setFiles({})
-        //     setMessage("")
-        // })
-      }
+        formData.append('audio', {url:audio,name:"name_name",type:"audio/mpeg"});
+        if(props.tipo ==="att"){
+          formData.append('telefone', deepCloneContact.telefone)
+          formData.append('bot', deepCloneContact.bot)
+        }
+        props.tipo !== "att" ? apiUser.post('/upload/audio', formData._parts).then(resp => {
+          setFiles({})
+          setMessage("")
+        }).catch(err => console.log(err))
+        : apiUser.post('/whats/upload/audio', formData).then(resp => {
+          setFiles({})
+          setMessage("")
+        }).catch(err => console.log(err))
+    }
       
       
       else if (files.length > 0) {
@@ -142,29 +122,22 @@ export default function MessageSender(props) {
       setAudio(null)
   }
 
-
+  
 
   return (
 
       
     <View style={{ flexDirection: 'row', alignItems: 'center',width:"100%"}}>
-      <TextInput
-        style={styles.textInput}
-        placeholder="Digite uma mensagem"
-        value={message}
-        onChangeText={(text)=>changeMessage(text)}
-      />
+      <TextInput style={styles.textInput} placeholder="Digite uma mensagem" value={message} onChangeText={(text)=>changeMessage(text)}/>
       <View style={styles.iconsView}>
         <TouchableOpacity style={styles.iconsStyle} onPress={(e)=> sendMessage(e)} >
-            <Icon name="send-sharp" type="ionicon" size={25} color={"#9ac31c"} />
+          <Icon name="send-sharp" type="ionicon" size={25} color={"#9ac31c"} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.iconsStyle} >
-            <Icon name="mic-sharp" type="ionicon" size={25} color={"#9ac31c"} />
-        </TouchableOpacity>
+        <AudioRecorder audio={audio} setAudio={setAudio} />
 
         <TouchableOpacity style={styles.iconsStyle} >
-            <Icon name="attach-sharp" type="ionicon" size={25} color={"#9ac31c"} />
+          <Icon name="attach-sharp" type="ionicon" size={25} color={"#9ac31c"} />
         </TouchableOpacity>
       </View>
     </View>
@@ -183,7 +156,7 @@ const styles = StyleSheet.create({
   textInput: {
     paddingHorizontal: 10,
     height: 40,
-    width:"75%",
+    width:"70%",
     borderColor: '#142a4c',
     borderTopWidth: 1,
   },
@@ -191,7 +164,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   iconsView:{
-    width:"25%",
+    width:"30%",
     height:40,
     display:"flex",
     flexDirection:"row",
@@ -200,7 +173,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderLeftWidth: 1,
    },
-    iconsStyle:{
-        marginHorizontal:5,
-    }
+  iconsStyle:{
+    marginHorizontal:5,
+  }
 });

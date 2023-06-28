@@ -8,6 +8,7 @@ const apiUser = axios.create({
     headers: {
         'Acess-Control-Allow-Origin': '*',
     }
+    
 });
 
 axios.defaults.withCredentials = true;
