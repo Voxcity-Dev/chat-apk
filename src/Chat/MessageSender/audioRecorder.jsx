@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View,  TouchableOpacity, StyleSheet,Pressable } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { Audio } from 'expo-av';
 
@@ -15,6 +15,7 @@ export default function AudioRecorder(props) {
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
+        outputFormat: Audio.RECORDING_OPTION_IOS_OUTPUT_FORMAT_MPEG4AAC,
       });
 
       console.log('Starting recording...');
@@ -68,15 +69,9 @@ export default function AudioRecorder(props) {
 
   return (
     <>
-      {recording ? (
-        <TouchableOpacity style={styles.iconsStyle} title="Stop Recording" onPress={stopRecording}>
-          <Icon name="stop-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity style={styles.iconsStyle} title="Start Recording" onPress={startRecording}>
-          <Icon name="mic-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-        </TouchableOpacity>
-      )}
+        <Pressable title="recording Audio" onPressIn={startRecording} onPressOut={stopRecording} >
+          <Icon name={recording ? 'pause-sharp' : 'mic-sharp' } type="ionicon" size={25} color={'#9ac31c'} />
+        </Pressable>
 
         {props.audio && !isPlaying ? (
         <View style={styles.playStopButtons}>

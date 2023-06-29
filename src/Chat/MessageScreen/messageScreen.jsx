@@ -6,6 +6,9 @@ import { ContactContext } from '../../../context/ContacProvider';
 import { GroupContext } from '../../../context/GroupProvider';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
 import Header from './header';
+import AudioMsg from './types/audio';
+import FileMsg from './types/file';
+import MessagesMsg from './types/messages';
 
 export default function MessageScreen(props) {
   const { user } = useContext(UserContext);
@@ -29,27 +32,34 @@ export default function MessageScreen(props) {
   }, [selectedContact, selectedGroup, selectedAtendimento, props.tipo]);
   
 
-
   const renderMessage = ({ item, index }) => {
     if (index < messages.length - visibleMessages) {
       return null;
     }
+  
     let isSentMessage;
     if (selectedContact) {
       isSentMessage = item.from !== selectedContact._id;
     } else if (selectedGroup) {
-      isSentMessage = item.from == user._id;
-    }
-    else if(selectedAtendimento){
+      isSentMessage = item.from === user._id;
+    } else if (selectedAtendimento) {
       isSentMessage = item.from === user._id;
     }
-    return (
-      <View key={index} style={[styles.messageContainer, isSentMessage ? styles.sentMessage : styles.receivedMessage]}>
-        <Text style={{ fontSize: 12, textAlign: 'right' }}>{item.from === user._id ? null : item.fromUsername }</Text>
-        <Text style={styles.messageText}>{item.message}</Text>
-      </View>
+  
+    const messageComponents = {
+      file: <FileMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,
+      audio: <AudioMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,
+    };
+  
+    const defaultMessageComponent = (
+      <MessagesMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />
     );
+   
+    const MessageComponent = messageComponents[item.msgTypo] || defaultMessageComponent;
+  
+    return MessageComponent;
   };
+  
 
   const loadMoreMessages = () => {
     setVisibleMessages((prevVisibleMessages) => prevVisibleMessages + 10);
@@ -102,10 +112,6 @@ const styles = StyleSheet.create({
   receivedMessage: {
     alignSelf: 'flex-start',
     backgroundColor: '#EDEDED',
-  },
-  messageText: {
-    fontSize: 16,
-    // ...
   },
   groupNameContainer: {
     backgroundColor: '#9ac31c',

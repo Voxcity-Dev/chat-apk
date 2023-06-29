@@ -63,64 +63,66 @@ export default function MessageSender(props) {
     }
 
     function sendMessage(e) {
-      e.preventDefault()
-      if (!messageExist()) return
-      let data = {}
-      let deepCloneContact = JSON.parse(JSON.stringify(contact))
-      delete deepCloneContact.allMessages
+      e.preventDefault();
+      if (!messageExist()) return;
+      
+      let data = {};
+      let deepCloneContact = JSON.parse(JSON.stringify(contact));
+      delete deepCloneContact.allMessages;
       if (props.tipo === "private") data = { message, audio, files, to: deepCloneContact._id }
       if (props.tipo === "group") data = { message, audio, files, to: deepCloneContact }
       if(props.tipo === "att") data = { message, audio, files, to: deepCloneContact }
+      
       let formData = new FormData();
-      formData.append('type', props.tipo);
-      if (props.tipo === "group") formData.append('users', deepCloneContact.usuarios)
-      formData.append('message', message)
-      formData.append('to',deepCloneContact._id)
-      //prepare to send message and files e audio
+      formData.append('message', message);
+      formData.append('audio', audio);
+      formData.append('to', deepCloneContact._id);
+    
+      if (props.tipo === "group") {
+        formData.append('users', deepCloneContact.usuarios);
+      }
+      
+      if (props.tipo === "att") {
+        formData.append('telefone', deepCloneContact.telefone);
+        formData.append('bot', deepCloneContact.bot);
+      }
       
       if (audio) {
-        formData.append('audio', {url:audio,name:"name_name",type:"audio/mpeg"});
-        if(props.tipo ==="att"){
-          formData.append('telefone', deepCloneContact.telefone)
-          formData.append('bot', deepCloneContact.bot)
-        }
-        props.tipo !== "att" ? apiUser.post('/upload/audio', formData._parts).then(resp => {
-          setFiles({})
-          setMessage("")
-        }).catch(err => console.log(err))
-        : apiUser.post('/whats/upload/audio', formData).then(resp => {
-          setFiles({})
-          setMessage("")
-        }).catch(err => console.log(err))
-    }
-      
-      
-      else if (files.length > 0) {
-      //     for (let i = 0; i < files.length; i++) {
-      //         formData.append('files', files[i])
-      //     }
-      //     if(props.msgType==="att"){
-      //         formData.append('telefone', deepCloneContact.telefone)
-      //         formData.append('bot', deepCloneContact.bot)
-      //     }
-      //     props.msgType !== "att" ? ApiUsers.post('/upload/messageFiles', formData).then(resp => {
-      //         setFiles({})
-      //         setMessage("")
-      //     })
-      //     : ApiUsers.post('/whats/upload/files', formData).then(resp => {
-      //         setFiles({})
-      //         setMessage("")
-      //     })
+        let audioConfig = {
+          uri: audio,
+          type: 'audio/m4a',
+          name: 'usuario.m4a',
+        };
+        formData.append('audio', audioConfig);
+        if (props.tipo !== "att") {
+          apiUser.post('/upload/audio', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+          }).then(resp => {
+            setFiles({});
+            setMessage("");
+            setAudio(null);
+          }).catch(err => console.log(err));
 
+        } else {
+          apiUser.post('/whats/upload/audio', formData).then(resp => {
+            setFiles({});
+            setMessage("");
+            setAudio(null);
+          }).catch(err => console.log(err));
+        }
+      } else if (files.length > 0) {
+        // Restante do código...
+      } else {
+        socket.emit("send " + props.tipo, data);
       }
+      
+      setMessage("");
+      setFiles({});
+      setAudio(null);
+    }
     
-      else {
-        socket.emit("send " + props.tipo, data)
-      }
-      setMessage("")
-      setFiles({})
-      setAudio(null)
-  }
 
   
 
