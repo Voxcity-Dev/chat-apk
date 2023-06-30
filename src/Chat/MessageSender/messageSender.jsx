@@ -5,6 +5,7 @@ import { ContactContext } from '../../../context/ContacProvider';
 import { GroupContext } from '../../../context/GroupProvider';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
 import AudioRecorder from './audioRecorder';
+import FileInput from './fileInput';
 import apiUser from '../../../apiUser';
 import { Icon } from '@rneui/themed';
 
@@ -16,7 +17,7 @@ export default function MessageSender(props) {
   const [contact, setContact] = useState({});
   const [message, setMessage] = useState("");
   const [typing, setTyping] = useState(false);
-  const [files, setFiles] = useState({})
+  const [files, setFiles] = useState([])
   const [audio, setAudio] = useState(null);
 
 
@@ -57,7 +58,7 @@ export default function MessageSender(props) {
 
     function messageExist() {
       if (message.trim().length > 0) return true
-      // if (files.length > 0) return true
+      if (files.length > 0) return true
       if (audio) return true
       return false
     }
@@ -86,7 +87,7 @@ export default function MessageSender(props) {
         formData.append('telefone', deepCloneContact.telefone);
         formData.append('bot', deepCloneContact.bot);
       }
-      
+
       if (audio) {
         let audioConfig = {
           uri: audio,
@@ -106,15 +107,51 @@ export default function MessageSender(props) {
           }).catch(err => console.log(err));
 
         } else {
-          apiUser.post('/whats/upload/audio', formData).then(resp => {
+          apiUser.post('/whats/upload/audio', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+          }).then(resp => {
             setFiles({});
             setMessage("");
             setAudio(null);
           }).catch(err => console.log(err));
         }
       } else if (files.length > 0) {
-        // Restante do código...
+        for (let i = 0; i < files.length; i++) {
+          let fileConfig = {
+            uri: files[i].uri,
+            type: files[i].mimeType,
+            name: files[i].name || 'file',
+          }
+          formData.append('files', fileConfig);
+        }
+        if (props.tipo === "att") {
+          formData.append('telefone', deepCloneContact.telefone);
+          formData.append('bot', deepCloneContact.bot);
+        }
+        if (props.tipo !== "att") {
+          apiUser.post('/upload/messageFiles',formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+          }).then(resp => {
+            setFiles([]); // Alterado para um array vazio
+            setMessage("");
+          }).catch(err => console.log(err));
+        } else {
+          apiUser.post('/whats/upload/files', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+          }).then(resp => {
+            setFiles([]); // Alterado para um array vazio
+            setMessage("");
+          }).catch(err => console.log(err));
+        }
+
       } else {
+        console.log("enviando mensagem")
         socket.emit("send " + props.tipo, data);
       }
       
@@ -129,18 +166,16 @@ export default function MessageSender(props) {
   return (
 
       
-    <View style={{ flexDirection: 'row', alignItems: 'center',width:"100%"}}>
+    <View style={{ flexDirection: 'row', alignItems: 'center',width:"100%",justifyContent:"space-evenly"}}>
       <TextInput style={styles.textInput} placeholder="Digite uma mensagem" value={message} onChangeText={(text)=>changeMessage(text)}/>
       <View style={styles.iconsView}>
         <TouchableOpacity style={styles.iconsStyle} onPress={(e)=> sendMessage(e)} >
           <Icon name="send-sharp" type="ionicon" size={25} color={"#9ac31c"} />
         </TouchableOpacity>
 
-        <AudioRecorder audio={audio} setAudio={setAudio} />
+        <FileInput files={files} setFiles={setFiles} />
 
-        <TouchableOpacity style={styles.iconsStyle} >
-          <Icon name="attach-sharp" type="ionicon" size={25} color={"#9ac31c"} />
-        </TouchableOpacity>
+        <AudioRecorder audio={audio} setAudio={setAudio} />
       </View>
     </View>
 
@@ -171,6 +206,7 @@ const styles = StyleSheet.create({
     display:"flex",
     flexDirection:"row",
     alignItems:"center",
+    justifyContent:"space-between",
     borderColor: '#142a4c',
     borderTopWidth: 1,
     borderLeftWidth: 1,
