@@ -29,7 +29,7 @@ export default function GrupoList() {
     }
 
   return (
-    <View style={styles.container}>
+    <View>
         <ScrollView>
             {
                 grupos ? grupos.map((grupo,index) => {
@@ -52,15 +52,15 @@ export default function GrupoList() {
 
 const styles = StyleSheet.create({
     container: {
-        width:"100%",
+        width: '100%',
         flex: 1,
-        flexDirection:"row",
-        backgroundColor: '#FFF',
+        flexDirection: 'row',
+        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'flex-start',
         color: '#FFF',
-        margin:10,
-        gap:20,
+        padding: 10,
+        gap: 20,
     },
     image: {
         width: 50,

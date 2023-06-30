@@ -72,11 +72,11 @@ const styles = StyleSheet.create({
         width: '100%',
         flex: 1,
         flexDirection: 'row',
-        backgroundColor: '#FFF',
+        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'flex-start',
         color: '#FFF',
-        margin: 10,
+        padding: 10,
         gap: 20,
     },
     image: {

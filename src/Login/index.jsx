@@ -29,7 +29,7 @@ export default function Login() {
   
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/VOX-LOGO-Vertical.png')} style={{width: "50%", height:100}}/>
+      <Image source={require('../../assets/VOX-LOGO-Vertical.png')} style={{width: "50%",height:100, maxHeight:400}}/>
       {
         Object.keys(allInputs).map((key,index) => {
           return (
