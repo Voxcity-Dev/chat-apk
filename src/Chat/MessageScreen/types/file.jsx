@@ -14,7 +14,7 @@ export default function FileMsg(props) {
                     return (
                       <TouchableOpacity key={index} onPress={() => Linking.openURL(file.url)}>
                         <Image source={{uri: file.url}} style={{width: 100, height: 100}}/>
-                        <Text>{file.type}</Text>
+                        <Text>{file.name}</Text>
                       </TouchableOpacity>
                     );
                   } else {

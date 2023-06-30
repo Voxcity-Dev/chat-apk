@@ -55,6 +55,7 @@ export default function PrivadoList() {
                                 ) : (
                                     <Text></Text>
                                 )}
+                                
                             </TouchableOpacity>
                         );
                     })
