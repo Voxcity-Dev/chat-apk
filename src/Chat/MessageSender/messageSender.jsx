@@ -76,8 +76,8 @@ export default function MessageSender(props) {
       
       let formData = new FormData();
       formData.append('message', message);
-      formData.append('audio', audio);
       formData.append('to', deepCloneContact._id);
+      formData.append('type', props.tipo);
     
       if (props.tipo === "group") {
         formData.append('users', deepCloneContact.usuarios);
