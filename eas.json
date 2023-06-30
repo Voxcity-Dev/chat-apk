@@ -20,6 +20,9 @@
       "ios": {
         "resourceClass": "m-medium"
       }
+    },
+    "android": {
+      "buildType": "apk"
     }
   },
   "submit": {
