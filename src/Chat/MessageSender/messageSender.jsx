@@ -10,7 +10,7 @@ import apiUser from '../../../apiUser';
 import { Icon } from '@rneui/themed';
 
 export default function MessageSender(props) {
-  const { socket } = useContext(UserContext);
+  const { socket,contacts } = useContext(UserContext);
   const { selectedContact } = useContext(ContactContext);
   const { selectedGroup } = useContext(GroupContext);
   const { selectedAtendimento } = useContext(AttendanceContext);
@@ -70,7 +70,8 @@ export default function MessageSender(props) {
       let data = {};
       let deepCloneContact = JSON.parse(JSON.stringify(contact));
       delete deepCloneContact.allMessages;
-      if (props.tipo === "private") data = { message, audio, files, to: deepCloneContact._id }
+      let expoToken = deepCloneContact.expoToken ? deepCloneContact.expoToken : '';
+      if (props.tipo === "private") data = { message, audio, files, to: deepCloneContact._id, expoToken:expoToken}
       if (props.tipo === "group") data = { message, audio, files, to: deepCloneContact }
       if(props.tipo === "att") data = { message, audio, files, to: deepCloneContact }
       
@@ -151,7 +152,6 @@ export default function MessageSender(props) {
         }
 
       } else {
-        console.log("enviando mensagem")
         socket.emit("send " + props.tipo, data);
       }
       
@@ -160,6 +160,10 @@ export default function MessageSender(props) {
       setAudio(null);
     }
     
+    function findContact(id) {
+      let contact = contacts.find(contact => contact._id === id);
+      return console.log(contact);
+    }
 
   
 

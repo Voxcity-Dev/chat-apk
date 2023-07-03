@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef,useContext } from 'react';
 import { Text, View, Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import apiUser from '../apiUser';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -28,19 +29,37 @@ export default function SendNotifications() {
       console.log(response);
     });
 
+    if(expoPushToken){
+      insertExpoToken();
+    }
+
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current);
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
 
+  function insertExpoToken() {
+    let token = expoPushToken;
+    apiUser.post('/notifications/registerExpoToken', {token})
+    .then((response) => {
+        if(response.data.error){
+            alert(response.data.error);
+        }else{
+            console.log(response.data)
+        }
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+  }
+
   return (
     <View
       style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-around',
+        display: 'none',
       }}>
+
     </View>
   );
 }

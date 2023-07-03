@@ -5,6 +5,7 @@ import NavigationBar from '../navBar';
 import { ContactContext } from '../../../context/ContacProvider';
 import Contatos from '../../Contatos/index';
 import ChatComponent from '../../Chat/index';
+import SendNotifications from '../../useNotifications';
 
 export default function ChatPrivado() {
     const { selectedContact } = useContext(ContactContext);
@@ -21,6 +22,7 @@ export default function ChatPrivado() {
       {selectedContact ? views.chat : views.lista}
       
       {!selectedContact ? <NavigationBar currentPage='Chat Privado'/> : null}
+      <SendNotifications style={{display:"none"}}/>
     </View>
 
   )
