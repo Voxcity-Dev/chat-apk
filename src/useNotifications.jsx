@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef,useContext } from 'react';
-import { Text, View, Platform } from 'react-native';
+import { useState, useEffect, useRef } from 'react';
+import {  View, Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import apiUser from '../apiUser';
