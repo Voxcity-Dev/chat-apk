@@ -11,6 +11,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#FFF"
     },
+    "notification": {
+      "icon": "./assets/icon.png",
+      "color": "#000000",
+      "androidMode": "collapse",
+      "androidCollapsedTitle": "VoxCity Chat APP"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],
