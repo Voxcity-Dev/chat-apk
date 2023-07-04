@@ -28,5 +28,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         color: '#FFF',
         gap:20,
+        marginBottom:40,
     }
 });

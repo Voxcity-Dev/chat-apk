@@ -71,8 +71,19 @@ export default function MessageSender(props) {
       let deepCloneContact = JSON.parse(JSON.stringify(contact));
       delete deepCloneContact.allMessages;
       let expoToken = deepCloneContact.expoToken ? deepCloneContact.expoToken : '';
+      
       if (props.tipo === "private") data = { message, audio, files, to: deepCloneContact._id, expoToken:expoToken}
-      if (props.tipo === "group") data = { message, audio, files, to: deepCloneContact }
+      if (props.tipo === "group"){
+        let tokens = []
+        deepCloneContact.usuarios.forEach(user => {
+          contacts.forEach(contact => {
+            if (contact._id === user) {
+              if (contact.expoToken) tokens.push(contact.expoToken)
+            }
+          })
+        })
+        data = { message, audio, files, to: deepCloneContact, expoTokens: tokens }
+      } 
       if(props.tipo === "att") data = { message, audio, files, to: deepCloneContact }
       
       let formData = new FormData();

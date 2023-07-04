@@ -11,12 +11,15 @@
       "resizeMode": "contain",
       "backgroundColor": "#FFF"
     },
-    "notification": {
-      "icon": "./assets/icon.png",
-      "color": "#000000",
-      "androidMode": "collapse",
-      "androidCollapsedTitle": "VoxCity Chat APP"
-    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#ffffff"
+        }
+      ]
+    ],
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -28,7 +31,10 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.chatAPK"
+      "package": "com.chatAPK",
+      "permissions": [
+        "NOTIFICATIONS"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

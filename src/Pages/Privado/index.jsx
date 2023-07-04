@@ -1,14 +1,69 @@
-import React ,{ useContext, useState }from 'react'
-import { UserContext } from '../../../context/UserProvider';
-import { StyleSheet, View } from 'react-native';
+import React ,{ useContext, useState,useEffect, useRef  }from 'react'
+import { StyleSheet, View ,Platform} from 'react-native';
 import NavigationBar from '../navBar';
 import { ContactContext } from '../../../context/ContacProvider';
 import Contatos from '../../Contatos/index';
 import ChatComponent from '../../Chat/index';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import apiUser from '../../../apiUser';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function ChatPrivado() {
     const { selectedContact } = useContext(ContactContext);
+    const [expoPushToken, setExpoPushToken] = useState('');
+    const [notification, setNotification] = useState(false);
+    const notificationListener = useRef();
+    const responseListener = useRef();
+
+    useEffect(() => {
+      const registerAndInsertToken = async () => {
+        try {
+          const token = await registerForPushNotificationsAsync();
+          setExpoPushToken(token);
+          insertExpoToken(token);
+        } catch (error) {
+          console.log(error);
+        }
+      };
     
+      registerAndInsertToken();
+    
+      notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+        setNotification(notification);
+      });
+    
+      responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+        console.log(response);
+      });
+    
+      return () => {
+        Notifications.removeNotificationSubscription(notificationListener.current);
+        Notifications.removeNotificationSubscription(responseListener.current);
+      };
+    }, []);
+    
+    function insertExpoToken(token) {
+      apiUser
+        .post('/notifications/registerExpoToken', { token })
+        .then(response => {
+          if (response.data.error) {
+            alert(response.data.error);
+          } else {
+            console.log(response.data);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
     const views = {
       lista:   <Contatos tipo="private"/>,
       chat: <ChatComponent tipo="private" style={styles.container}/>,
@@ -22,6 +77,39 @@ export default function ChatPrivado() {
     </View>
 
   )
+}
+
+async function registerForPushNotificationsAsync() {
+  let token;
+
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+      icon: 'ic_launcher',
+    });
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  return token;
 }
 
 const styles = StyleSheet.create({
