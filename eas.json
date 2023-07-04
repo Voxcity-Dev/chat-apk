@@ -4,9 +4,17 @@
   },
   "build": {
     "development": {
-      "developmentClient": true,
       "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:assembleDebug",
+        "notification": {
+          "icon": "./assets/icon.png",
+          "color": "#FF0000"
+        },
+        "buildType": "apk"
+      },
       "ios": {
+        "buildConfiguration": "Debug",
         "resourceClass": "m-medium"
       }
     },
