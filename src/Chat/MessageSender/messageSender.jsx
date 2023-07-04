@@ -20,7 +20,6 @@ export default function MessageSender(props) {
   const [files, setFiles] = useState([])
   const [audio, setAudio] = useState(null);
 
-
     useEffect(() => {
       if(selectedContact && props.tipo === "private"){
           let newCont = selectedContact ? { ...selectedContact } : {};
@@ -170,17 +169,10 @@ export default function MessageSender(props) {
       setFiles({});
       setAudio(null);
     }
-    
-    function findContact(id) {
-      let contact = contacts.find(contact => contact._id === id);
-      return console.log(contact);
-    }
-
-  
+     
 
   return (
 
-      
     <View style={{ flexDirection: 'row', alignItems: 'center',width:"100%",justifyContent:"space-evenly"}}>
       <TextInput style={styles.textInput} placeholder="Digite uma mensagem" value={message} onChangeText={(text)=>changeMessage(text)}/>
       <View style={styles.iconsView}>
