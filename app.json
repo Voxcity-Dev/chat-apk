@@ -1,5 +1,8 @@
 {
   "expo": {
+    "notification": {
+      "icon": "./assets/icon.png"
+    },
     "name": "chat-apk",
     "slug": "chat-apk",
     "version": "1.0.0",
