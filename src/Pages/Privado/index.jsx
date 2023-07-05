@@ -7,6 +7,7 @@ import ChatComponent from '../../Chat/index';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import apiUser from '../../../apiUser';
+import { ExpoPushToken } from 'expo-notifications';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
