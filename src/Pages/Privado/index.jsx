@@ -7,7 +7,6 @@ import ChatComponent from '../../Chat/index';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import apiUser from '../../../apiUser';
-import { ExpoPushToken } from 'expo-notifications';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -24,10 +23,12 @@ export default function ChatPrivado() {
     const notificationListener = useRef();
     const responseListener = useRef();
 
+
     useEffect(() => {
       const registerAndInsertToken = async () => {
         try {
-          const token = await registerForPushNotificationsAsync();
+          const token = (await Notifications.getDevicePushTokenAsync()).data;
+          console.log(token);
           setExpoPushToken(token);
           insertExpoToken(token);
         } catch (error) {
@@ -38,6 +39,7 @@ export default function ChatPrivado() {
       registerAndInsertToken();
     
       notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+        console.log(notification);
         setNotification(notification);
       });
     
@@ -73,8 +75,8 @@ export default function ChatPrivado() {
   return (
     <View style={styles.container}>
       {selectedContact ? views.chat : views.lista}
-      
       {!selectedContact ? <NavigationBar currentPage='Chat Privado'/> : null}
+
     </View>
 
   )
