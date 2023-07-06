@@ -27,10 +27,10 @@ export default function ChatPrivado() {
     useEffect(() => {
       const registerAndInsertToken = async () => {
         try {
-          const token = (await Notifications.getDevicePushTokenAsync()).data;
+          const token = await registerForPushNotificationsAsync();
           console.log(token);
-          setExpoPushToken(token);
           insertExpoToken(token);
+          setExpoPushToken(token);
         } catch (error) {
           console.log(error);
         }
@@ -106,8 +106,9 @@ async function registerForPushNotificationsAsync() {
       alert('Failed to get push token for push notification!');
       return;
     }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
+    if(finalStatus === 'granted'){
+      token = (await Notifications.getDevicePushTokenAsync()).data;
+    }
   } else {
     alert('Must use physical device for Push Notifications');
   }

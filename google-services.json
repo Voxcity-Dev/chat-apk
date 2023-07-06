@@ -1,49 +1,49 @@
 {
   "project_info": {
-    "project_number": "885604179462",
-    "project_id": "chat-apk-6f739",
-    "storage_bucket": "chat-apk-6f739.appspot.com"
+    "project_number": "209749151645",
+    "project_id": "voxcitychat",
+    "storage_bucket": "voxcitychat.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:885604179462:android:469f6ff84d7aced1702d87",
+        "mobilesdk_app_id": "1:209749151645:android:619225b1f623bb89e26974",
         "android_client_info": {
           "package_name": "com.chatAPK"
         }
       },
       "oauth_client": [
         {
-          "client_id": "885604179462-ek49ev7v6akii52n7nbh3stmhrl4o6tl.apps.googleusercontent.com",
+          "client_id": "209749151645-0ker2ksgiu6m92nm64sb8itimoivsu53.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.chatAPK",
-            "certificate_hash": "c21f73b632105b34156bacc415062eb7235f6853"
+            "certificate_hash": "8e13e6dd22acbab85828d5820c62cb7ae71aec5a"
           }
         },
         {
-          "client_id": "885604179462-kl0nei6tjotc5d61g7525u7j3lof2nh7.apps.googleusercontent.com",
+          "client_id": "209749151645-achmsf7nrlf5lp3mosbvkvmus71tirs4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.chatAPK",
-            "certificate_hash": "c7f828bfd2b2bf10b81d9b90cae119b3c7144a16"
+            "certificate_hash": "59efb253b2e0a564a429bb2f9a4c2289ff2401a3"
           }
         },
         {
-          "client_id": "885604179462-slsvsq2jpcgvsu7ba3c712s3i6p9bm3j.apps.googleusercontent.com",
+          "client_id": "209749151645-52vub2n20iu3ds4bk5elgneeqjn6nt43.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCHyYXQW1Dmqkf4bev7smUFU7jE5hlROC8"
+          "current_key": "AIzaSyB9qbfiVrjSByJaB9Dqfw6YNnUJX9aUQSo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "885604179462-slsvsq2jpcgvsu7ba3c712s3i6p9bm3j.apps.googleusercontent.com",
+              "client_id": "209749151645-52vub2n20iu3ds4bk5elgneeqjn6nt43.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
