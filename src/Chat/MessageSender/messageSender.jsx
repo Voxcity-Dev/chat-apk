@@ -65,127 +65,111 @@ export default function MessageSender(props) {
     function sendMessage(e) {
       e.preventDefault();
       if (!messageExist()) return;
-    
-      let { data, deepCloneContact } = createDataObject();
-      let formData = createFormDataObject(deepCloneContact);
-    
-      if (audio) {
-        handleAudioUpload(formData, data);
-      } else if (files.length > 0) {
-        handleFileUpload(formData, data);
-      } else {
-        socket.emit("send " + props.tipo, data);
-      }
-    
-      clearMessageState();
-    }
-    
-    function createDataObject() {
+      
       let data = {};
       let deepCloneContact = JSON.parse(JSON.stringify(contact));
       delete deepCloneContact.allMessages;
       let expoToken = deepCloneContact.expoToken ? deepCloneContact.expoToken : '';
-    
-      if (props.tipo === "private") {
-        data = { message, audio, files, to: deepCloneContact._id, expoToken: expoToken };
-      } else if (props.tipo === "group") {
-        let tokens = getExpoTokens(deepCloneContact.usuarios);
-        data = { message, audio, files, to: deepCloneContact, expoTokens: tokens };
-      } else if (props.tipo === "att") {
-        data = { message, audio, files, to: deepCloneContact };
-      }
-    
-      return { data, deepCloneContact };
-    }
-    
-    function createFormDataObject(deepCloneContact) {
+      if (props.tipo === "private") data = { message, audio, files, to: deepCloneContact._id, expoToken:expoToken}
+      let tokens = []
+      if (props.tipo === "group"){
+        deepCloneContact.usuarios.forEach(user => {
+          contacts.forEach(contact => {
+            if (contact._id === user) {
+              if (contact.expoToken) tokens.push(contact.expoToken)
+            }
+          })
+        })
+        data = { message, audio, files, to: deepCloneContact, expoTokens: tokens }
+      } 
+      if(props.tipo === "att") data = { message, audio, files, to: deepCloneContact }
+      
       let formData = new FormData();
       formData.append('message', message);
       formData.append('to', deepCloneContact._id);
       formData.append('type', props.tipo);
-      formData.append('expoToken', deepCloneContact.expoToken);
+      formData.append('expoToken', expoToken);
     
       if (props.tipo === "group") {
         formData.append('users', deepCloneContact.usuarios);
-        formData.append('expoTokens', tokens);
+        formData.append('expoTokens', tokens)
       }
-    
+      
       if (props.tipo === "att") {
         formData.append('telefone', deepCloneContact.telefone);
         formData.append('bot', deepCloneContact.bot);
       }
-    
-      return formData;
-    }
-    
-    function handleAudioUpload(formData, data) {
-      let audioConfig = {
-        uri: audio,
-        type: 'audio/m4a',
-        name: 'usuario.m4a',
-      };
-      formData.append('audio', audioConfig);
-    
-      let uploadEndpoint = (props.tipo !== "att") ? '/upload/audio' : '/whats/upload/audio';
-      let uploadPromise = apiUser.post(uploadEndpoint, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
+
+      if (audio) {
+        let audioConfig = {
+          uri: audio,
+          type: 'audio/m4a',
+          name: 'usuario.m4a',
+        };
+        formData.append('audio', audioConfig);
+        if (props.tipo !== "att") {
+          apiUser.post('/upload/audio', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+          }).then(resp => {
+            setFiles({});
+            setMessage("");
+            setAudio(null);
+          }).catch(err => console.log(err));
+
+        } else {
+          apiUser.post('/whats/upload/audio', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+          }).then(resp => {
+            setFiles({});
+            setMessage("");
+            setAudio(null);
+          }).catch(err => console.log(err));
         }
-      });
-    
-      uploadPromise.then(resp => {
-        setFiles({});
-        setMessage("");
-        setAudio(null);
-      }).catch(err => console.log(err));
-    }
-    
-    function handleFileUpload(formData, data) {
-      for (let i = 0; i < files.length; i++) {
-        let fileConfig = {
-          uri: files[i].uri,
-          type: files[i].mimeType,
-          name: files[i].name || 'file',
+      } else if (files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+          let fileConfig = {
+            uri: files[i].uri,
+            type: files[i].mimeType,
+            name: files[i].name || 'file',
+          }
+          formData.append('files', fileConfig);
         }
-        formData.append('files', fileConfig);
+        if (props.tipo === "att") {
+          formData.append('telefone', deepCloneContact.telefone);
+          formData.append('bot', deepCloneContact.bot);
+        }
+        if (props.tipo !== "att") {
+          apiUser.post('/upload/messageFiles',formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+          }).then(resp => {
+            setFiles([]); // Alterado para um array vazio
+            setMessage("");
+          }).catch(err => console.log(err));
+        } else {
+          apiUser.post('/whats/upload/files', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+          }).then(resp => {
+            setFiles([]); // Alterado para um array vazio
+            setMessage("");
+          }).catch(err => console.log(err));
+        }
+
+      } else {
+        socket.emit("send " + props.tipo, data);
       }
-    
-      if (props.tipo === "att") {
-        formData.append('telefone', deepCloneContact.telefone);
-        formData.append('bot', deepCloneContact.bot);
-      }
-    
-      let uploadEndpoint = (props.tipo !== "att") ? '/upload/messageFiles' : '/whats/upload/files';
-      let uploadPromise = apiUser.post(uploadEndpoint, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        }
-      });
-    
-      uploadPromise.then(resp => {
-        setFiles([]); // Alterado para um array vazio
-        setMessage("");
-      }).catch(err => console.log(err));
-    }
-    
-    function clearMessageState() {
+      
       setMessage("");
       setFiles({});
       setAudio(null);
     }
-    
-    function getExpoTokens(userIds) {
-      let tokens = [];
-      deepCloneContact.usuarios.forEach(user => {
-        contacts.forEach(contact => {
-          if (contact._id === user && contact.expoToken) {
-            tokens.push(contact.expoToken);
-          }
-        });
-      });
-      return tokens;
-    }
-     
 
   return (
 

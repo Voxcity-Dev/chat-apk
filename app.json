@@ -45,7 +45,8 @@
     },
     "extra": {
       "eas": {
-        "projectId": "3cf0a681-ddae-4010-85ed-7dd8ccdd0d66"
+        "owner": "voxcity",
+        "projectId": "43469edf-0839-41d1-bd57-a3fbdcecf189"
       }
     }
   }

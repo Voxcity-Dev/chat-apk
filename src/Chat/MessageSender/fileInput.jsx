@@ -4,15 +4,6 @@ import { Icon } from "@rneui/themed";
 import * as DocumentPicker from 'expo-document-picker';
 
 export default function FileInput(props) {
-  const [showFiles, setShowFiles] = useState(false);
-
-  useEffect(() => {
-    if (props.files.length > 0) {
-      setShowFiles(true);
-    } else {
-      setShowFiles(false);
-    }
-  }, [props.files]);
 
   const pickDocument = async () => {
     try {
@@ -25,7 +16,6 @@ export default function FileInput(props) {
     }
   };
 
-  console.log(props.files.length);
 
   return (
     <>
@@ -33,7 +23,7 @@ export default function FileInput(props) {
         <Icon name="attach-sharp" type="ionicon" size={25} color={"#9ac31c"} />
       </TouchableOpacity>
       <View style={styles.container}>
-        {showFiles && (
+        {props.files.length > 0 && (
           <View style={styles.filesShow}>
             {props.files.map((file, index) => (
               <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
