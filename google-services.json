@@ -1,49 +1,49 @@
 {
   "project_info": {
-    "project_number": "209749151645",
-    "project_id": "voxcitychat",
-    "storage_bucket": "voxcitychat.appspot.com"
+    "project_number": "1043298733587",
+    "project_id": "voxchat-993ab",
+    "storage_bucket": "voxchat-993ab.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:209749151645:android:619225b1f623bb89e26974",
+        "mobilesdk_app_id": "1:1043298733587:android:014e8808092aba8b8ef9e6",
         "android_client_info": {
-          "package_name": "com.chatAPK"
+          "package_name": "com.VoxChat"
         }
       },
       "oauth_client": [
         {
-          "client_id": "209749151645-0ker2ksgiu6m92nm64sb8itimoivsu53.apps.googleusercontent.com",
+          "client_id": "1043298733587-ihrq00f7i1858peghminsuu507q5lgt0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.chatAPK",
-            "certificate_hash": "8e13e6dd22acbab85828d5820c62cb7ae71aec5a"
+            "package_name": "com.VoxChat",
+            "certificate_hash": "eb5ba98b23b172ddb3c1651ef6ef36442ed5cbda"
           }
         },
         {
-          "client_id": "209749151645-achmsf7nrlf5lp3mosbvkvmus71tirs4.apps.googleusercontent.com",
+          "client_id": "1043298733587-vc7nhm0oeae03dev4evvb6q8tkuochfe.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.chatAPK",
-            "certificate_hash": "59efb253b2e0a564a429bb2f9a4c2289ff2401a3"
+            "package_name": "com.VoxChat",
+            "certificate_hash": "216547f5abcb8c20e291e9546c459fe6c301019b"
           }
         },
         {
-          "client_id": "209749151645-52vub2n20iu3ds4bk5elgneeqjn6nt43.apps.googleusercontent.com",
+          "client_id": "1043298733587-ccb92nelqf78trp1ru2euovogj5rrdst.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB9qbfiVrjSByJaB9Dqfw6YNnUJX9aUQSo"
+          "current_key": "AIzaSyC4UsHry73QUitfmXNIg8ixd50D2CgesUs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "209749151645-52vub2n20iu3ds4bk5elgneeqjn6nt43.apps.googleusercontent.com",
+              "client_id": "1043298733587-ccb92nelqf78trp1ru2euovogj5rrdst.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
