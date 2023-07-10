@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: "flex-start",
       flexDirection: "column",
-      marginLeft: 100,
+      marginLeft: 80,
       marginRight: 100,
     },
     transferBox:{
