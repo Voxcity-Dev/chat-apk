@@ -6,6 +6,7 @@ import { GroupContext } from '../../../context/GroupProvider';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
 import AudioRecorder from './audioRecorder';
 import FileInput from './fileInput';
+import AudioPlayer from './audioPlayer';
 import apiUser from '../../../apiUser';
 import { Icon } from '@rneui/themed';
 
@@ -198,18 +199,33 @@ export default function MessageSender(props) {
           <FileInput files={files} setFiles={setFiles} clearMessage={clearMessage}/>
         </View>
 
+        <View style={styles.fileInputContainer}>
+          <Icon name="camera-sharp" type="ionicon" size={25} color={'#9ac31c'} />
+        </View>
+
       </View>
 
       <View>
+
         {
-          message.length > 0 ? (
-            <TouchableOpacity style={styles.sendButton} onPress={e => sendMessage(e)}>
+          message.length > 0 || files.length > 0 ?
+            <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
               <Icon name="send-sharp" type="ionicon" size={25} color={'#9ac31c'} />
             </TouchableOpacity>
-          ):(
+            :
+          audio ? (
+            <View>
+              <AudioPlayer audio={audio} setAudio={setAudio} />
+              <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+              <Icon name="send-sharp" type="ionicon" size={25} color={'#9ac31c'} />
+            </TouchableOpacity>
+            </View>
+
+          ) : (
             <View style={styles.audioRecorderContainer}>
-              <AudioRecorder audio={audio} setAudio={setAudio} clearMessage={clearMessage} />
-            </View>)
+              <AudioRecorder audio={audio} setAudio={setAudio} />
+            </View>
+          )
         }
       </View>
 
@@ -244,6 +260,9 @@ const styles = StyleSheet.create({
   },
   audioRecorderContainer: {
     marginLeft: 10,
+    backgroundColor: '#142a4c',
+    padding: 5,
+    borderRadius: 50,
   },
   sendButton: {
     marginLeft: 10,

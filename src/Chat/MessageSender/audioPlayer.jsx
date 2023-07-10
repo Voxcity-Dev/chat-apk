@@ -3,40 +3,9 @@ import { View,  TouchableOpacity, StyleSheet,Pressable } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { Audio } from 'expo-av';
 
-export default function AudioRecorder(props) {
-  const [recording, setRecording] = useState(null);
+export default function AudioPlayer(props) {
   const [sound, setSound] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-
-  async function startRecording() {
-    try {
-      console.log('Requesting permissions...');
-      await Audio.requestPermissionsAsync();
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-        outputFormat: Audio.RECORDING_OPTION_IOS_OUTPUT_FORMAT_MPEG4AAC,
-      });
-
-      console.log('Starting recording...');
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY
-      );
-      setRecording(recording);
-      console.log('Recording started');
-    } catch (error) {
-      console.error('Failed to start recording', error);
-    }
-  }
-
-  async function stopRecording() {
-    console.log('Stopping recording...');
-    await recording.stopAndUnloadAsync();
-    const uri = recording.getURI();
-    setRecording(null);
-    console.log('Recording stopped and stored at', uri);
-    props.setAudio(uri);
-  }
 
   async function playAudio() {
     console.log('Playing audio...');
@@ -99,12 +68,9 @@ export default function AudioRecorder(props) {
   }
 
   return (
-    <View style={styles.container}>
-      <Pressable title="Recording Audio" onPressIn={startRecording} onPressOut={stopRecording}>
-        <Icon name={recording ? 'pause-sharp' : 'mic-sharp'} type="ionicon" size={25} color={'#9ac31c'} />
-      </Pressable>
 
-      {props.audio && renderButtons()}
+    <View style={styles.container}>
+        {renderButtons()}
     </View>
   );
 }
