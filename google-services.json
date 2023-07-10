@@ -14,19 +14,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "1043298733587-ihrq00f7i1858peghminsuu507q5lgt0.apps.googleusercontent.com",
+          "client_id": "1043298733587-caeqoth46dh7pjugpau9cdf05v68367f.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.VoxChat",
-            "certificate_hash": "eb5ba98b23b172ddb3c1651ef6ef36442ed5cbda"
+            "certificate_hash": "6ca9c2e07f2212d33f2258f931609ce921dabe65"
           }
         },
         {
-          "client_id": "1043298733587-vc7nhm0oeae03dev4evvb6q8tkuochfe.apps.googleusercontent.com",
+          "client_id": "1043298733587-tofcvs8l72p5sfquc99nmuud0guini40.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.VoxChat",
-            "certificate_hash": "216547f5abcb8c20e291e9546c459fe6c301019b"
+            "certificate_hash": "db8e1944ae62a642028250851e885148d7666ed0"
           }
         },
         {
