@@ -29,15 +29,23 @@ export default function PrivadoList() {
         })
     }
 
+    function formatTimestamp(timestamp) {
+        const date = new Date(timestamp);
+        const hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+    }
+
     return (
         <View style={styles.container}>
             <ScrollView>
                 {contacts ? (
                     contacts.map((contact, index) => {
                         if (userContext.user._id === contact._id) return null;
+
                         return (
                             <TouchableOpacity
-                                style={styles.container}
+                            style={{display:"flex",flexDirection:"row",alignItems:"center",gap:10,padding:15}}
                                 key={index}
                                 onPress={() => handleSelectContact(contact)}
                             >
@@ -49,18 +57,34 @@ export default function PrivadoList() {
                                         style={styles.image}
                                     />
                                 )}
-                                <Text>{contact.nome}</Text>
-                                {contact.unseenMessages > 0 ? (
-                                    <Text style={styles.notification}>{contact.unseenMessages}</Text>
-                                ) : (
-                                    <Text></Text>
-                                )}
+                                <View style={{ display: 'flex',flexDirection:"column",justifyContent:"center" }} >
+                                    <View style={{display:"flex",flexDirection:"row"}}>
+                                        <Text style={{color:"#142a4c",fontSize:16,fontWeight:"800"}}>{contact.nome}</Text>
+
+                                        {contact.unseenMessages > 0 ? (
+                                            <Text style={styles.notification}>{contact.unseenMessages}</Text>
+                                        ) : (
+                                            <Text></Text>
+                                        )}
+                                    </View>
+                                    <View style={{width:"60%",flexDirection:"row",marginTop:5}}>
+                                        {
+                                            contact?.lastMessage?.message !== undefined ?
+                                            <Text style={styles.lastMessage}>{contact.lastMessage?.message}</Text>: <Text style={styles.lastMessage}>Inicie uma conversa.</Text>
+                                        
+                                        }
+                                        {
+                                            contact?.lastMessage?.createdAt !== undefined ?
+                                                <Text style={styles.lastMessage}>{formatTimestamp(contact.lastMessage?.createdAt)}</Text>: <Text></Text>
+                                        }
+                                    </View>
+                                </View>
                                 
                             </TouchableOpacity>
                         );
                     })
                 ) : (
-                    <Text>Sem Contatos</Text>
+                    <Text style={{fontSize:18,color:"#142a4c",textAlign:"center"}}>Sem Contatos</Text>
                 )}
             </ScrollView>
         </View>
@@ -92,7 +116,14 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         textAlign: 'center',
-        lineHeight: 20,
+        fontSize: 14,
+    },
+    lastMessage: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        color: 'gray',
         fontSize: 14,
     },
 });

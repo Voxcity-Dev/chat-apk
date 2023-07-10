@@ -67,78 +67,60 @@ export default function AudioRecorder(props) {
     }
   }
 
-  return (
-    <>
-        <Pressable title="recording Audio" onPressIn={startRecording} onPressOut={stopRecording} >
-          <Icon name={recording ? 'pause-sharp' : 'mic-sharp' } type="ionicon" size={25} color={'#9ac31c'} />
-        </Pressable>
-
-        {props.audio && !isPlaying ? (
+  function renderButtons() {
+    if (props.audio && !isPlaying) {
+      return (
         <View style={styles.playStopButtons}>
-            <TouchableOpacity title="Play Audio" onPress={playAudio}>
-                <Icon name="play-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-            </TouchableOpacity>
-            <TouchableOpacity title="Delete Audio" onPress={deleteAudio}>
-                <Icon name="trash-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-            </TouchableOpacity>
+          <TouchableOpacity title="Play Audio" onPress={playAudio}>
+            <Icon name="play-sharp" type="ionicon" size={25} color={'#9ac31c'} />
+          </TouchableOpacity>
+          <TouchableOpacity title="Delete Audio" onPress={deleteAudio}>
+            <Icon name="trash-sharp" type="ionicon" size={25} color={'#9ac31c'} />
+          </TouchableOpacity>
         </View>
-        ) : props.audio && isPlaying ? (
-            <View style={styles.playStopButtons}>
-                <TouchableOpacity title="Play Audio" onPress={playAudio}>
-                    <Icon name="play-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-                </TouchableOpacity>
-                <TouchableOpacity  title="Stop Audio" onPress={stopAudio}>
-                    <Icon name="pause-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-                </TouchableOpacity>
-                <TouchableOpacity title="Delete Audio" onPress={deleteAudio}>
-                    <Icon name="trash-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-                </TouchableOpacity>
-            </View>
-        ) : null}
-    </>
+      );
+    } else if (props.audio && isPlaying) {
+      return (
+        <View style={styles.playStopButtons}>
+          <TouchableOpacity title="Play Audio" onPress={playAudio}>
+            <Icon name="play-sharp" type="ionicon" size={25} color={'#9ac31c'} />
+          </TouchableOpacity>
+          <TouchableOpacity title="Stop Audio" onPress={stopAudio}>
+            <Icon name="pause-sharp" type="ionicon" size={25} color={'#9ac31c'} />
+          </TouchableOpacity>
+          <TouchableOpacity title="Delete Audio" onPress={deleteAudio}>
+            <Icon name="trash-sharp" type="ionicon" size={25} color={'#9ac31c'} />
+          </TouchableOpacity>
+        </View>
+      );
+    } else {
+      return null;
+    }
+  }
+
+  return (
+    <View style={styles.container}>
+      <Pressable title="Recording Audio" onPressIn={startRecording} onPressOut={stopRecording}>
+        <Icon name={recording ? 'pause-sharp' : 'mic-sharp'} type="ionicon" size={25} color={'#9ac31c'} />
+      </Pressable>
+
+      {props.audio && renderButtons()}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    width: '100%',
-    position: 'absolute',
-    bottom: 0,
-  },
-  textInput: {
-    paddingHorizontal: 10,
-    height: 40,
-    width: '75%',
-    borderColor: '#142a4c',
-    borderTopWidth: 1,
-  },
-  messageList: {
-    flexGrow: 1,
-  },
-  iconsView: {
-    width: '25%',
-    height: 40,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: '#142a4c',
-    borderTopWidth: 1,
-    borderLeftWidth: 1,
-  },
-  iconsStyle: {
-    marginHorizontal: 5,
+    position: 'relative',
   },
   playStopButtons: {
     position: 'absolute',
-    bottom: 40,
-    width: '120%',
-    height: 40,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#142a4c',
-    display: 'flex',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 });

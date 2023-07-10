@@ -4,7 +4,6 @@ import { Icon } from "@rneui/themed";
 import * as DocumentPicker from 'expo-document-picker';
 
 export default function FileInput(props) {
-
   const pickDocument = async () => {
     try {
       let result = await DocumentPicker.getDocumentAsync({});
@@ -16,6 +15,10 @@ export default function FileInput(props) {
     }
   };
 
+  const removeFile = (index) => {
+    props.setFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
+    props.clearMessage(); // Call the clearMessage function
+  }
 
   return (
     <>
@@ -28,7 +31,7 @@ export default function FileInput(props) {
             {props.files.map((file, index) => (
               <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={{ color: "#FFF" }}>Arquivo em anexo: {file.name}</Text>
-                <TouchableOpacity style={{ margin: 10 }} onPress={() => props.setFiles(prevFiles => prevFiles.filter((_, i) => i !== index))}>
+                <TouchableOpacity style={{ margin: 10 }} onPress={() => removeFile(index)}>
                   <Icon name="close-sharp" type="ionicon" size={25} color={"#9ac31c"} />
                 </TouchableOpacity>
               </View>
@@ -60,8 +63,8 @@ const styles = StyleSheet.create({
   filesShow: {
     position: 'absolute',
     bottom: 40,
-    right: 0,
-    width: '300%',
+    right: -60,
+    width:400,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
