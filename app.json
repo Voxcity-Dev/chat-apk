@@ -35,7 +35,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.Voxchat",
+      "package": "com.VoxChat",
       "permissions": [
         "NOTIFICATIONS"
       ]
