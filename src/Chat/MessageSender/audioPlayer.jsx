@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { View,  TouchableOpacity, StyleSheet,Pressable } from 'react-native';
+import React, { useState } from 'react';
+import { View,  TouchableOpacity, StyleSheet} from 'react-native';
 import { Icon } from '@rneui/themed';
 import { Audio } from 'expo-av';
 

@@ -54,6 +54,12 @@ export default function MessageSender(props) {
     }
   }
 
+  function clearMessage() {
+    setMessage('');
+    setFiles({});
+    setAudio(null);
+  }
+
   function messageExist() {
     if (message.trim().length > 0) return true;
     if (files.length > 0) return true;
@@ -61,10 +67,7 @@ export default function MessageSender(props) {
     return false;
   }
 
-  function sendMessage(e) {
-    e.preventDefault();
-    if (!messageExist()) return;
-
+  function prepareMessageData() {
     let data = {};
     let deepCloneContact = JSON.parse(JSON.stringify(contact));
     delete deepCloneContact.allMessages;
@@ -83,23 +86,64 @@ export default function MessageSender(props) {
       data = { message, audio, files, to: deepCloneContact, expoTokens: tokens };
     }
     if (props.tipo === 'att') data = { message, audio, files, to: deepCloneContact };
-
+  
+    return { data, deepCloneContact, expoToken, tokens };
+  }
+  
+  function uploadAudio(formData, tipo) {
+    if (tipo !== 'att') {
+      return apiUser.post('/upload/audio', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    } else {
+      return apiUser.post('/whats/upload/audio', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    }
+  }
+  
+  function uploadFiles(formData, tipo) {
+    if (tipo !== 'att') {
+      return apiUser.post('/upload/messageFiles', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    } else {
+      return apiUser.post('/whats/upload/files', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    }
+  }
+  
+  function sendMessage(e) {
+    e.preventDefault();
+    if (!messageExist()) return;
+  
+    const { data, deepCloneContact, expoToken, tokens } = prepareMessageData();
+  
     let formData = new FormData();
     formData.append('message', message);
     formData.append('to', deepCloneContact._id);
     formData.append('type', props.tipo);
     formData.append('expoToken', expoToken);
-
+  
     if (props.tipo === 'group') {
       formData.append('users', deepCloneContact.usuarios);
       formData.append('expoTokens', tokens);
     }
-
+  
     if (props.tipo === 'att') {
       formData.append('telefone', deepCloneContact.telefone);
       formData.append('bot', deepCloneContact.bot);
     }
-
+  
     if (audio) {
       let audioConfig = {
         uri: audio,
@@ -107,33 +151,13 @@ export default function MessageSender(props) {
         name: 'usuario.m4a',
       };
       formData.append('audio', audioConfig);
-      if (props.tipo !== 'att') {
-        apiUser
-          .post('/upload/audio', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
-          .then(resp => {
-            setFiles({});
-            setMessage('');
-            setAudio(null);
-          })
-          .catch(err => console.log(err));
-      } else {
-        apiUser
-          .post('/whats/upload/audio', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
-          .then(resp => {
-            setFiles({});
-            setMessage('');
-            setAudio(null);
-          })
-          .catch(err => console.log(err));
-      }
+      uploadAudio(formData, props.tipo)
+        .then(resp => {
+          setFiles({});
+          setMessage('');
+          setAudio(null);
+        })
+        .catch(err => console.log(err));
     } else if (files.length > 0) {
       for (let i = 0; i < files.length; i++) {
         let fileConfig = {
@@ -147,43 +171,19 @@ export default function MessageSender(props) {
         formData.append('telefone', deepCloneContact.telefone);
         formData.append('bot', deepCloneContact.bot);
       }
-      if (props.tipo !== 'att') {
-        apiUser
-          .post('/upload/messageFiles', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
-          .then(resp => {
-            setFiles([]); // Alterado para um array vazio
-            setMessage('');
-          })
-          .catch(err => console.log(err));
-      } else {
-        apiUser
-          .post('/whats/upload/files', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
-          .then(resp => {
-            setFiles([]); // Alterado para um array vazio
-            setMessage('');
-          })
-          .catch(err => console.log(err));
-      }
+      uploadFiles(formData, props.tipo)
+        .then(resp => {
+          setFiles([]); // Alterado para um array vazio
+          setMessage('');
+        })
+        .catch(err => console.log(err));
     } else {
       socket.emit('send ' + props.tipo, data);
     }
-
+  
     clearMessage();
   }
-
-  function clearMessage() {
-    setMessage('');
-    setFiles({});
-    setAudio(null);
-  }
+  
 
   return (
     <View style={styles.container}>
@@ -199,9 +199,9 @@ export default function MessageSender(props) {
           <FileInput files={files} setFiles={setFiles} clearMessage={clearMessage}/>
         </View>
 
-        <View style={styles.fileInputContainer}>
+        {/* <View style={styles.fileInputContainer}>
           <Icon name="camera-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-        </View>
+        </View> */}
 
       </View>
 

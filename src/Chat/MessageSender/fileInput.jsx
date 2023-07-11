@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { View, TouchableOpacity, StyleSheet, Pressable, Text } from "react-native";
+import React from "react";
+import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
 import { Icon } from "@rneui/themed";
 import * as DocumentPicker from 'expo-document-picker';
 
@@ -17,7 +17,7 @@ export default function FileInput(props) {
 
   const removeFile = (index) => {
     props.setFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
-    props.clearMessage(); // Call the clearMessage function
+    props.clearMessage(); 
   }
 
   return (

@@ -36,6 +36,14 @@ export default function GrupoList() {
     return `${hours}:${minutes}`;
   }
 
+  function limitMessage(message) {
+    if (message.length > 30) {
+        return message.substring(0, 30) + '...';
+    } else {
+        return message;
+    }
+}
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -62,7 +70,7 @@ export default function GrupoList() {
                   <Text style={{ color: '#142a4c', fontSize: 16, fontWeight: '800' }}>{grupo.nome}</Text>
                   <View style={{ width: '60%', flexDirection: 'row', marginTop: 5 }}>
                     {grupo.lastMessage?.message !== undefined ? (
-                      <Text style={styles.lastMessage}>{grupo.lastMessage.message}</Text>
+                      <Text style={styles.lastMessage}>{limitMessage(grupo.lastMessage.message)}</Text>
                     ) : (
                       <Text style={styles.lastMessage}>Inicie uma conversa.</Text>
                     )}

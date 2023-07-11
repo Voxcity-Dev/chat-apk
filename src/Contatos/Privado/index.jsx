@@ -36,6 +36,14 @@ export default function PrivadoList() {
         return `${hours}:${minutes}`;
     }
 
+    function limitMessage(message) {
+        if (message.length > 30) {
+            return message.substring(0, 30) + '...';
+        } else {
+            return message;
+        }
+    }
+
     return (
         <View style={styles.container}>
             <ScrollView>
@@ -67,15 +75,15 @@ export default function PrivadoList() {
                                             <Text></Text>
                                         )}
                                     </View>
-                                    <View style={{width:"60%",flexDirection:"row",marginTop:5}}>
+                                    <View style={{width:"80%",flexDirection:"row",marginTop:5}}>
                                         {
                                             contact?.lastMessage?.message !== undefined ?
-                                            <Text style={styles.lastMessage}>{contact.lastMessage?.message}</Text>: <Text style={styles.lastMessage}>Inicie uma conversa.</Text>
+                                            <Text style={styles.lastMessage}>{limitMessage(contact.lastMessage?.message)}</Text>: <Text style={styles.lastMessage}>Inicie uma conversa.</Text>
                                         
                                         }
                                         {
                                             contact?.lastMessage?.createdAt !== undefined ?
-                                                <Text style={styles.lastMessage}>{formatTimestamp(contact.lastMessage?.createdAt)}</Text>: <Text></Text>
+                                                <Text style={{fontSize:12,color:"gray"}}>{formatTimestamp(contact.lastMessage?.createdAt)}</Text>: <Text></Text>
                                         }
                                     </View>
                                 </View>
