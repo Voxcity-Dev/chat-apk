@@ -31,9 +31,24 @@ export default function GrupoList() {
 
   function formatTimestamp(timestamp) {
     const date = new Date(timestamp);
+    const currentDate = new Date();
+    const timeDiff = currentDate.getTime() - date.getTime();
     const hours = date.getHours();
     const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
+  
+    if (timeDiff >= 48 * 60 * 60 * 1000) {
+      // Já passou mais de 48 horas
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+  
+      return `${day}/${month}/${year}`;
+    } else if(timeDiff >= 24 * 60 * 60 * 1000) {
+        // Já passou mais de 24 horas
+        return `Ontem`;
+      } else {
+        return `${"        "}${hours}:${minutes}`;
+      }
   }
 
   function limitMessage(message) {
@@ -68,7 +83,7 @@ export default function GrupoList() {
                 )}
                 <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                   <Text style={{ color: '#142a4c', fontSize: 16, fontWeight: '800' }}>{grupo.nome}</Text>
-                  <View style={{ width: '60%', flexDirection: 'row', marginTop: 5 }}>
+                  <View style={{ width: '55%', flexDirection: 'row', marginTop: 5,alignSelf:"flex-start" }}>
                     {grupo.lastMessage?.message !== undefined ? (
                       <Text style={styles.lastMessage}>{limitMessage(grupo.lastMessage.message)}</Text>
                     ) : (
@@ -132,5 +147,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     color: 'gray',
     fontSize: 14,
+    margin:"auto",
   },
 });

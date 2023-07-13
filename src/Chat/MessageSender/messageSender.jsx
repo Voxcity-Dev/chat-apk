@@ -167,10 +167,6 @@ export default function MessageSender(props) {
         };
         formData.append('files', fileConfig);
       }
-      if (props.tipo === 'att') {
-        formData.append('telefone', deepCloneContact.telefone);
-        formData.append('bot', deepCloneContact.bot);
-      }
       uploadFiles(formData, props.tipo)
         .then(resp => {
           setFiles([]); // Alterado para um array vazio
@@ -187,41 +183,41 @@ export default function MessageSender(props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Digite uma mensagem"
-          value={message}
-          onChangeText={text => changeMessage(text)}
-        />
-
-        <View style={styles.fileInputContainer}>
-          <FileInput files={files} setFiles={setFiles} clearMessage={clearMessage}/>
+      {
+        audio ? (
+          <AudioPlayer style={styles.inputContainer}audio={audio} setAudio={setAudio} />
+        ) : (
+          <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Digite uma mensagem"
+            value={message}
+            onChangeText={text => changeMessage(text)}
+          />
+  
+          <View style={styles.fileInputContainer}>
+            <FileInput files={files} setFiles={setFiles} clearMessage={clearMessage}/>
+          </View>
+  
+          {/* <View style={styles.fileInputContainer}>
+            <Icon name="camera-sharp" type="ionicon" size={25} color={'#9ac31c'} />
+          </View> */}
+  
         </View>
-
-        {/* <View style={styles.fileInputContainer}>
-          <Icon name="camera-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-        </View> */}
-
-      </View>
+        )
+      }
 
       <View>
 
         {
-          message.length > 0 || files.length > 0 ?
-            <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-              <Icon name="send-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-            </TouchableOpacity>
-            :
-          audio ? (
-            <View>
-              <AudioPlayer audio={audio} setAudio={setAudio} />
+          message.length > 0 || files.length > 0 || audio ?
+              <View style={styles.boxSendButton}>
               <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-              <Icon name="send-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-            </TouchableOpacity>
+                <Icon name="send-sharp" type="ionicon" color={'#9ac31c'} />
+              </TouchableOpacity>
             </View>
-
-          ) : (
+            :
+            (
             <View style={styles.audioRecorderContainer}>
               <AudioRecorder audio={audio} setAudio={setAudio} />
             </View>
@@ -237,6 +233,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent:'flex-end',
     width: '100%',
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -266,5 +263,13 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     marginLeft: 10,
-  },  
+  },
+  boxSendButton:{
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#142a4c',
+    borderRadius: 50,
+  }
 });

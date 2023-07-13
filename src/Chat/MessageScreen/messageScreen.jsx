@@ -1,5 +1,5 @@
 import React, { useState, useEffect,useContext } from 'react';
-import { View, FlatList, TouchableOpacity, Text, StyleSheet,Image } from 'react-native';
+import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { UserContext } from '../../../context/UserProvider';
 import { ContactContext } from '../../../context/ContacProvider';
@@ -43,7 +43,7 @@ export default function MessageScreen(props) {
     } else if (selectedGroup) {
       isSentMessage = item.from === user._id;
     } else if (selectedAtendimento) {
-      isSentMessage = item.from === user._id;
+      isSentMessage = item.from !== selectedAtendimento.telefone
     }
   
     const messageComponents = {

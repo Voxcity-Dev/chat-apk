@@ -38,73 +38,11 @@ export default function AudioRecorder(props) {
     props.setAudio(uri);
   }
 
-  async function playAudio() {
-    console.log('Playing audio...');
-    try {
-      const { sound } = await Audio.Sound.createAsync({ uri: props.audio });
-      setSound(sound);
-      setIsPlaying(true);
-      await sound.playAsync();
-    } catch (error) {
-      console.error('Failed to play audio', error);
-    }
-  }
-
-  async function stopAudio() {
-    console.log('Stopping audio...');
-    if (sound) {
-      await sound.stopAsync();
-      await sound.unloadAsync();
-      setSound(null);
-      setIsPlaying(false);
-    }
-  }
-
-  function deleteAudio() {
-    if (props.audio) {
-      props.setAudio(null);
-      setIsPlaying(false);
-    }
-  }
-
-  function renderButtons() {
-    if (props.audio && !isPlaying) {
-      return (
-        <View style={styles.playStopButtons}>
-          <TouchableOpacity title="Play Audio" onPress={playAudio}>
-            <Icon name="play-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-          </TouchableOpacity>
-          <TouchableOpacity title="Delete Audio" onPress={deleteAudio}>
-            <Icon name="trash-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-          </TouchableOpacity>
-        </View>
-      );
-    } else if (props.audio && isPlaying) {
-      return (
-        <View style={styles.playStopButtons}>
-          <TouchableOpacity title="Play Audio" onPress={playAudio}>
-            <Icon name="play-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-          </TouchableOpacity>
-          <TouchableOpacity title="Stop Audio" onPress={stopAudio}>
-            <Icon name="pause-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-          </TouchableOpacity>
-          <TouchableOpacity title="Delete Audio" onPress={deleteAudio}>
-            <Icon name="trash-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-          </TouchableOpacity>
-        </View>
-      );
-    } else {
-      return null;
-    }
-  }
-
-  return (
+   return (
     <View style={styles.container}>
       <Pressable title="Recording Audio" onPressIn={startRecording} onPressOut={stopRecording}>
         <Icon name={recording ? 'pause-sharp' : 'mic-sharp'} type="ionicon" size={25} color={'#9ac31c'} />
       </Pressable>
-
-      {props.audio && renderButtons()}
     </View>
   );
 }

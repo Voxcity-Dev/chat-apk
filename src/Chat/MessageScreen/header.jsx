@@ -69,7 +69,7 @@ export default function Header() {
       )}
 
       {selectedAtendimento && (
-        <View style={styles.contactNameContainer}>
+        <View style={styles.attNameContainer}>
           <Icon name='arrow-back-outline' type='ionicon'style={styles.icone} color={"#FFF"} onPress={backToAtendimentos}/>
           {selectedAtendimento.foto ? (
             <Image source={{ uri: selectedAtendimento.foto }} style={{ width: 40, height: 40, borderRadius: 20 }} />) : (
@@ -78,7 +78,7 @@ export default function Header() {
           }
           <Text style={styles.contactNameText}>{selectedAtendimento.pushname ? selectedAtendimento.pushname : selectedAtendimento.telefone}</Text>
 
-          <View style={{flexDirection:"row",alignItems:"center",justifyContent:"flex-end",width:"40%"}}>
+          <View style={{flexDirection:"row",alignItems:"center",justifyContent:"flex-end",width:"20%",marginLeft:30}}>
             <Icon name='checkmark-done-outline' type='ionicon' color={"#FFF"} onPress={()=>{finishAtendimento(selectedAtendimento)}}/>
             <Icon name="swap-horizontal-outline" style={{marginLeft:10,marginRight:0}} type="ionicon" size={25} color={"#FFF"} onPress={()=> transferAtendimento()} />
           </View>
@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
     border: 'none',
   },
   contactNameText: {
+    maxWidth:"60%",
     color: 'white',
     fontWeight: 'bold',
     fontSize: 18,
@@ -131,5 +132,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: '#FFF',
     zIndex: 9999,
+  },
+  attNameContainer:{
+    backgroundColor: '#9ac31c',
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    border: 'none',
   },
 });

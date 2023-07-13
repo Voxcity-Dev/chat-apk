@@ -31,10 +31,25 @@ export default function PrivadoList() {
 
     function formatTimestamp(timestamp) {
         const date = new Date(timestamp);
+        const currentDate = new Date();
+        const timeDiff = currentDate.getTime() - date.getTime();
         const hours = date.getHours();
         const minutes = date.getMinutes().toString().padStart(2, '0');
-        return `${hours}:${minutes}`;
-    }
+      
+        if (timeDiff >= 48 * 60 * 60 * 1000) {
+          // Já passou mais de 48 horas
+          const day = date.getDate().toString().padStart(2, '0');
+          const month = (date.getMonth() + 1).toString().padStart(2, '0');
+          const year = date.getFullYear();
+      
+          return `${day}/${month}/${year}`;
+        } else if(timeDiff >= 24 * 60 * 60 * 1000) {
+            // Já passou mais de 24 horas
+            return `Ontem`;
+          } else {
+            return `${"        "}${hours}:${minutes}`;
+          }
+      }
 
     function limitMessage(message) {
         if (message.length > 30) {
@@ -75,7 +90,7 @@ export default function PrivadoList() {
                                             <Text></Text>
                                         )}
                                     </View>
-                                    <View style={{width:"80%",flexDirection:"row",marginTop:5}}>
+                                    <View style={{width:"70%",flexDirection:"row",marginTop:5,alignSelf:'baseline'}}>
                                         {
                                             contact?.lastMessage?.message !== undefined ?
                                             <Text style={styles.lastMessage}>{limitMessage(contact.lastMessage?.message)}</Text>: <Text style={styles.lastMessage}>Inicie uma conversa.</Text>
@@ -83,7 +98,7 @@ export default function PrivadoList() {
                                         }
                                         {
                                             contact?.lastMessage?.createdAt !== undefined ?
-                                                <Text style={{fontSize:12,color:"gray"}}>{formatTimestamp(contact.lastMessage?.createdAt)}</Text>: <Text></Text>
+                                                <Text style={{fontSize:14,color:"gray"}}>{formatTimestamp(contact.lastMessage?.createdAt)}</Text>: <Text></Text>
                                         }
                                     </View>
                                 </View>
@@ -133,5 +148,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         color: 'gray',
         fontSize: 14,
+        alignSelf:"flex-end"
     },
 });
