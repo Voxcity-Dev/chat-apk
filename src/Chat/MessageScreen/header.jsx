@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { View, Text, StyleSheet,Image } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, BackHandler } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { ContactContext } from '../../../context/ContacProvider';
 import { GroupContext } from '../../../context/GroupProvider';
@@ -8,37 +8,60 @@ import { useNavigation } from '@react-navigation/native';
 import apiUser from '../../../apiUser';
 
 export default function Header() {
-  const { selectedContact,setSelectedContact } = useContext(ContactContext);
-  const { selectedGroup,setSelectedGroup } = useContext(GroupContext);
-  const { selectedAtendimento,setSelectedAtendimento } = useContext(AttendanceContext);
+  const { selectedContact, setSelectedContact } = useContext(ContactContext);
+  const { selectedGroup, setSelectedGroup } = useContext(GroupContext);
+  const { selectedAtendimento, setSelectedAtendimento } = useContext(AttendanceContext);
   const navigation = useNavigation();
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
-  function backToContacts(){
-    navigation.navigate('Chat Privado')
-    setSelectedContact(null)
-  };
-   function backToGroups(){
-    setSelectedGroup(null)
-    navigation.navigate('Chat Grupo')
+    return () => {
+      backHandler.remove();
+    };
+  }, []);
+
+  const handleBackPress = () => {
+    if (selectedContact) {
+      backToContacts();
+      return true;
+    } else if (selectedGroup) {
+      backToGroups();
+      return true;
+    } else if (selectedAtendimento) {
+      backToAtendimentos();
+      return true;
+    }
+
+    return false;
   };
 
-  function backToAtendimentos(){
-    setSelectedAtendimento(null)
-    navigation.navigate('Atendimento')
-  };
+  function backToContacts() {
+    navigation.navigate('Chat Privado');
+    setSelectedContact(null);
+  }
 
-  function finishAtendimento(selectedContact){
-    let newContact = JSON.parse(JSON.stringify(selectedContact))
+  function backToGroups() {
+    setSelectedGroup(null);
+    navigation.navigate('Chat Grupo');
+  }
+
+  function backToAtendimentos() {
+    setSelectedAtendimento(null);
+    navigation.navigate('Atendimento');
+  }
+
+  function finishAtendimento(selectedContact) {
+    let newContact = JSON.parse(JSON.stringify(selectedContact));
     delete newContact.allMessages;
     apiUser.post("/atendimentos/finish", { contact: newContact }).then((res) => {
       alert("Atendimento finalizado com sucesso!");
-      setSelectedAtendimento(null)
+      setSelectedAtendimento(null);
     });
   }
 
-  function transferAtendimento(){
-    navigation.navigate('Transferir Atendimento')
+  function transferAtendimento() {
+    navigation.navigate('Transferir Atendimento');
   }
 
   return (

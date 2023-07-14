@@ -14,6 +14,7 @@ export const UserProvider = ({children}) => {
     const [contacts, setContacts] = useState([]);
     const [token, setToken] = useState('');
     const [socket, setSocket] = useState(null);
+    const [remindMe, setRemindMe] = useState(false);
     
     const Logar = async (email,senha,conta) => {
         setLoading(true);
@@ -30,6 +31,20 @@ export const UserProvider = ({children}) => {
                 await loadMessagesAndSetContacts(response.data.pref.users,response.data.user)
                 setSigned(true);
                 setLoading(false);
+                if(remindMe){
+                    apiUser.get('/mobile/remember', {
+                        params: {
+                          accessToken: token
+                        }
+                      })
+                        .then(resp => {
+                          console.log(resp.data);
+
+                        })
+                        .catch(err => {
+                          console.log(err);
+                        });
+                }
             }
         })
         .catch((error) => {
@@ -125,7 +140,7 @@ export const UserProvider = ({children}) => {
 
    
     return(
-        <UserContext.Provider value={{signed, user, setUser,Logar,Deslogar,loading,pref,contacts,setContacts,token,socket,setSocket}}>
+        <UserContext.Provider value={{signed, user, setUser,Logar,Deslogar,loading,pref,contacts,setContacts,token,socket,setSocket,remindMe,setRemindMe}}>
             {children}
         </UserContext.Provider>
     );

@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { StyleSheet, View,Image, TouchableOpacity,Text,ActivityIndicator } from 'react-native';
+import { CheckBox } from 'react-native-elements';
 import { UserContext } from '../../context/UserProvider';
 import Conta from './inputs/conta';
 import Email from './inputs/email';
@@ -7,7 +8,7 @@ import Senha from './inputs/senha';
 
 
 export default function Login() {
-  const {Logar,loading} = useContext(UserContext);
+  const {Logar,loading,remindMe,setRemindMe} = useContext(UserContext);
   const [login, setLogin] = useState({conta: '', email: '', senha: ''})
   const allInputs = { 
     conta: <Conta captureText={captureText}/>,
@@ -26,6 +27,11 @@ export default function Login() {
     Logar(login.email, login.senha, login.conta);
   }
 
+
+  const handleCheckBoxToggle = () => {
+    setRemindMe(!remindMe);
+  };
+
   
   return (
     <View style={styles.container}>
@@ -43,6 +49,21 @@ export default function Login() {
       <TouchableOpacity style={styles.btnEntrar} onPress={handleLogin}>
         {loading ? <ActivityIndicator size="small" color="#9ac31c" /> : <Text style={{color:"#FFF"}}>Entrar</Text>}
       </TouchableOpacity>
+
+      <View style={{display:"flex",flexDirection:"row",alignItems:"center",marginTop:10}}>
+        <CheckBox
+          center
+          title='Lembrar-me'
+          checkedColor='#9ac31c'
+          uncheckedColor='#142a4c'
+          containerStyle={{backgroundColor:"#FFF",borderWidth:0}}
+          textStyle={{color:"#142a4c"}}
+          checked={remindMe}
+          onPress={handleCheckBoxToggle}
+        />
+      </View>
+
+      
     </View>
 
   );
