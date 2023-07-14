@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, FlatList, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { UserContext } from '../../../context/UserProvider';
 import { ContactContext } from '../../../context/ContacProvider';
@@ -15,54 +15,62 @@ export default function MessageScreen(props) {
   const { selectedContact } = useContext(ContactContext);
   const { selectedGroup } = useContext(GroupContext);
   const { selectedAtendimento } = useContext(AttendanceContext);
-  const [visibleMessages, setVisibleMessages] = useState(10);
+  const [visibleMessages, setVisibleMessages] = useState(20);
   const [messages, setMessages] = useState([]);
-  const [allMessages, setAllMessages] = useState([]);
+  const [contact, setContact] = useState({});
 
+  useEffect(() => {
+    let newContact = {};
+    if (props.tipo === 'private') {
+      newContact = selectedContact
+    } else if (props.tipo === 'group') {
+      newContact = selectedGroup
+    } else if (props.tipo === 'att') {
+      newContact = selectedAtendimento
+    }
+    setContact(newContact);
+  })
 
   useEffect(() => {
     let newMessages = [];
-    if (props.tipo === 'private') {
-      newMessages = selectedContact.allMessages || [];
-    } else if (props.tipo === 'group') {
-      newMessages = selectedGroup.allMessages || [];
-    } else if (props.tipo === 'att') {
-      newMessages = selectedAtendimento.allMessages || [];
+    newMessages = [...contact.allMessages] || [];
+    if(newMessages.length > 0){
+      newMessages = newMessages.slice(0,visibleMessages)
     }
-    setAllMessages(newMessages.length);
-    newMessages = newMessages.slice(-visibleMessages);
     setMessages(newMessages);
-  }, [selectedContact, selectedGroup, selectedAtendimento, props.tipo, visibleMessages]);
+  }, [contact, visibleMessages]);
+
+
 
 
   const renderMessage = ({ item, index }) => {
     if (index < messages.length - visibleMessages) {
       return null;
     }
-  
+
     let isSentMessage;
     if (selectedContact) {
       isSentMessage = item.from !== selectedContact._id;
     } else if (selectedGroup) {
       isSentMessage = item.from === user._id;
     } else if (selectedAtendimento) {
-      isSentMessage = item.from !== selectedAtendimento.telefone
+      isSentMessage = item.from === user._id;
     }
-  
+
     const messageComponents = {
       file: <FileMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,
       audio: <AudioMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,
     };
-  
+
     const defaultMessageComponent = (
       <MessagesMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />
     );
-   
+
     const MessageComponent = messageComponents[item.msgTypo] || defaultMessageComponent;
-  
+
     return MessageComponent;
   };
-  
+
 
   const loadMoreMessages = () => {
     setVisibleMessages((prevVisibleMessages) => prevVisibleMessages + 10);
@@ -70,13 +78,13 @@ export default function MessageScreen(props) {
 
 
   return (
-    <View style={{ flex: 1, width: '100%' }}>
+    <View style={{ flex: 1, width: "100%" }}>
 
-      <Header />     
+      <Header />
 
-      {visibleMessages < allMessages && (
+      {visibleMessages < messages.length && (
         <TouchableOpacity onPress={loadMoreMessages}>
-          <Icon name='arrow-up-outline' type='ionicon' style={styles.icone} color='#142a4c' />
+          <Icon name='arrow-up-outline' type='ionicon' style={styles.icone} color={"#142a4c"} />
         </TouchableOpacity>
       )}
 
@@ -95,7 +103,8 @@ export default function MessageScreen(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%',
+    width: "100%",
+    // ...
   },
   messageList: {
     flexGrow: 1,
@@ -128,8 +137,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     marginLeft: 10,
-  },
-  contactNameContainer: {
+  }, contactNameContainer: {
     backgroundColor: '#9ac31c',
     padding: 10,
     flexDirection: 'row',
@@ -141,12 +149,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     marginLeft: 10,
-  },
-  icone: {
+  }, icone: {
     margin: 5,
     padding: 3,
     resizeMode: 'stretch',
     alignItems: 'center',
-    color: '#FFF',
-  },
+    color: "#FFF",
+  }
 });
