@@ -1,9 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { UserContext } from '../../../context/UserProvider';
-import { ContactContext } from '../../../context/ContacProvider';
-import { GroupContext } from '../../../context/GroupProvider';
-import { AttendanceContext } from '../../../context/AttendanceProvider';
 import AudioRecorder from './audioRecorder';
 import FileInput from './fileInput';
 import AudioPlayer from './audioPlayer';
@@ -12,9 +9,6 @@ import { Icon } from '@rneui/themed';
 
 export default function MessageSender(props) {
   const { socket, contacts } = useContext(UserContext);
-  const { selectedContact } = useContext(ContactContext);
-  const { selectedGroup } = useContext(GroupContext);
-  const { selectedAtendimento } = useContext(AttendanceContext);
   const [contact, setContact] = useState({});
   const [message, setMessage] = useState('');
   const [typing, setTyping] = useState(false);
@@ -22,25 +16,10 @@ export default function MessageSender(props) {
   const [audio, setAudio] = useState(null);
 
   useEffect(() => {
-    if (selectedContact && props.tipo === 'private') {
-      let newCont = selectedContact ? { ...selectedContact } : {};
-      setContact(newCont);
-    }
-  }, [selectedContact]);
+    let newContact = {...props.contato};
+    setContact(newContact);
+  }, [props.contato]);
 
-  useEffect(() => {
-    if (selectedGroup && props.tipo === 'group') {
-      let newCont = selectedGroup ? { ...selectedGroup } : {};
-      setContact(newCont);
-    }
-  }, [selectedGroup]);
-
-  useEffect(() => {
-    if (selectedAtendimento && props.tipo === 'att') {
-      let newCont = selectedAtendimento ? { ...selectedAtendimento } : {};
-      setContact(newCont);
-    }
-  }, [selectedAtendimento]);
 
   function changeMessage(text) {
     let newMessage = text;

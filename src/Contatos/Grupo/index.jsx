@@ -1,15 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import { GroupContext } from '../../../context/GroupProvider';
-import { UserContext } from '../../../context/UserProvider';
 
 export default function GrupoList() {
   const { groups, setSelectedGroup, socketIo, unseenByGroup } = useContext(GroupContext);
-  const userContext = useContext(UserContext);
   const [grupos, setGrupos] = useState([]);
 
   useEffect(() => {
-    setGrupos(groups);
+    let newGroups = groups ? [...groups] : [];
+    setGrupos(newGroups);
   }, [groups]);
 
   function handleSelectGroup(group) {

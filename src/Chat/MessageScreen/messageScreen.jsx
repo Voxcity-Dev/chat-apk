@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, FlatList, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
+import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { UserContext } from '../../../context/UserProvider';
-import { ContactContext } from '../../../context/ContacProvider';
-import { GroupContext } from '../../../context/GroupProvider';
-import { AttendanceContext } from '../../../context/AttendanceProvider';
 import Header from './header';
 import AudioMsg from './types/audio';
 import FileMsg from './types/file';
@@ -12,49 +9,36 @@ import MessagesMsg from './types/messages';
 
 export default function MessageScreen(props) {
   const { user } = useContext(UserContext);
-  const { selectedContact } = useContext(ContactContext);
-  const { selectedGroup } = useContext(GroupContext);
-  const { selectedAtendimento } = useContext(AttendanceContext);
   const [visibleMessages, setVisibleMessages] = useState(20);
   const [messages, setMessages] = useState([]);
   const [contact, setContact] = useState({});
 
   useEffect(() => {
-    let newContact = {};
-    if (props.tipo === 'private') {
-      newContact = selectedContact
-    } else if (props.tipo === 'group') {
-      newContact = selectedGroup
-    } else if (props.tipo === 'att') {
-      newContact = selectedAtendimento
-    }
+    let newContact = {...props.contato};
     setContact(newContact);
-  })
+  }, [props.contato]);
 
   useEffect(() => {
-    let newMessages = [];
-    newMessages = [...contact.allMessages] || [];
-    if(newMessages.length > 0){
-      newMessages = newMessages.slice(0,visibleMessages)
+    if(contact && visibleMessages && contact.allMessages?.length > 0){
+      let newMessages = [];
+      newMessages = [...contact.allMessages];
+      if(newMessages.length > 0 ){
+        newMessages = newMessages.reverse().slice(0,visibleMessages).reverse()
+      }
+      setMessages(newMessages);
     }
-    setMessages(newMessages);
-  }, [contact, visibleMessages]);
-
-
+  }, [contact]);
 
 
   const renderMessage = ({ item, index }) => {
-    if (index < messages.length - visibleMessages) {
-      return null;
-    }
 
     let isSentMessage;
-    if (selectedContact) {
-      isSentMessage = item.from !== selectedContact._id;
-    } else if (selectedGroup) {
+    if (contact && props.tipo === 'private') {
+      isSentMessage = item.from !== contact._id;
+    }else if (contact && props.tipo === 'group') {
       isSentMessage = item.from === user._id;
-    } else if (selectedAtendimento) {
-      isSentMessage = item.from === user._id;
+    }else if (contact && props.tipo === 'att') {
+      isSentMessage = item.from !== contact.telefone;
     }
 
     const messageComponents = {
@@ -67,13 +51,19 @@ export default function MessageScreen(props) {
     );
 
     const MessageComponent = messageComponents[item.msgTypo] || defaultMessageComponent;
-
     return MessageComponent;
   };
 
 
   const loadMoreMessages = () => {
-    setVisibleMessages((prevVisibleMessages) => prevVisibleMessages + 10);
+    let newVisibleMessages = visibleMessages + 20;
+    let newMessages = [];
+    newMessages = [...contact.allMessages];
+    if(newMessages.length > 0 ){
+      newMessages = newMessages.reverse().slice(0,newVisibleMessages).reverse()
+      setMessages(newMessages);
+      setVisibleMessages(newVisibleMessages);
+    }
   };
 
 
@@ -82,7 +72,7 @@ export default function MessageScreen(props) {
 
       <Header />
 
-      {visibleMessages < messages.length && (
+      {visibleMessages <= messages.length && (
         <TouchableOpacity onPress={loadMoreMessages}>
           <Icon name='arrow-up-outline' type='ionicon' style={styles.icone} color={"#142a4c"} />
         </TouchableOpacity>
@@ -91,7 +81,7 @@ export default function MessageScreen(props) {
       <FlatList
         data={messages}
         renderItem={renderMessage}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => item._id + Math.random()}
         contentContainerStyle={styles.messageList}
       />
 

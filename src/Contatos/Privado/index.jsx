@@ -5,22 +5,22 @@ import { ContactContext } from '../../../context/ContacProvider';
 
 export default function PrivadoList() {
     const userContext = useContext(UserContext);
-    const contactContext = useContext(ContactContext);
-    const [contacts, setContacts] = useState([]);
+    const {contacts,setSelectedContact} = useContext(ContactContext);
+    const [contactsList, setContactsList] = useState([]);
 
     useEffect(() => {
-        let newContacts = contactContext ? [...contactContext.contacts] : [];
-        setContacts(newContacts);
-    }, [contactContext.contacts]);
+        let newContacts = contacts ? [...contacts] : [];
+        setContactsList(newContacts);
+    }, [contacts]);
 
     function handleSelectContact(contact) {
         let selectedContact = { ...contact };
-        contactContext.setSelectedContact(selectedContact);
+        setSelectedContact(selectedContact);
         handleUnseenMessages(contact);
     }
 
     function handleUnseenMessages(contact) {
-        contactContext.contacts.forEach((cont)=> {
+        contacts.forEach((cont)=> {
             if (cont._id === contact._id) {
                 let messagesRead = cont;
                 messagesRead.unseenMessages = 0;
@@ -62,8 +62,8 @@ export default function PrivadoList() {
     return (
         <View style={styles.container}>
             <ScrollView>
-                {contacts ? (
-                    contacts.map((contact, index) => {
+                {contactsList ? (
+                    contactsList.map((contact, index) => {
                         if (userContext.user._id === contact._id) return null;
 
                         return (
