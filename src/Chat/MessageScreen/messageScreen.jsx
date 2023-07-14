@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { UserContext } from '../../../context/UserProvider';
@@ -17,6 +17,7 @@ export default function MessageScreen(props) {
   const { selectedAtendimento } = useContext(AttendanceContext);
   const [visibleMessages, setVisibleMessages] = useState(10);
   const [messages, setMessages] = useState([]);
+  const [allMessages, setAllMessages] = useState([]);
 
 
   useEffect(() => {
@@ -28,9 +29,11 @@ export default function MessageScreen(props) {
     } else if (props.tipo === 'att') {
       newMessages = selectedAtendimento.allMessages || [];
     }
+    setAllMessages(newMessages.length);
+    newMessages = newMessages.slice(-visibleMessages);
     setMessages(newMessages);
-  }, [selectedContact, selectedGroup, selectedAtendimento, props.tipo]);
-  
+  }, [selectedContact, selectedGroup, selectedAtendimento, props.tipo, visibleMessages]);
+
 
   const renderMessage = ({ item, index }) => {
     if (index < messages.length - visibleMessages) {
@@ -67,13 +70,13 @@ export default function MessageScreen(props) {
 
 
   return (
-    <View style={{ flex: 1,width:"100%" }}>
+    <View style={{ flex: 1, width: '100%' }}>
 
       <Header />     
 
-      {visibleMessages < messages.length && (
+      {visibleMessages < allMessages && (
         <TouchableOpacity onPress={loadMoreMessages}>
-          <Icon name='arrow-up-outline' type='ionicon'style={styles.icone} color={"#142a4c"}/>
+          <Icon name='arrow-up-outline' type='ionicon' style={styles.icone} color='#142a4c' />
         </TouchableOpacity>
       )}
 
@@ -92,8 +95,7 @@ export default function MessageScreen(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width:"100%",
-    // ...
+    width: '100%',
   },
   messageList: {
     flexGrow: 1,
@@ -126,7 +128,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     marginLeft: 10,
-  },contactNameContainer:{
+  },
+  contactNameContainer: {
     backgroundColor: '#9ac31c',
     padding: 10,
     flexDirection: 'row',
@@ -138,11 +141,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     marginLeft: 10,
-  },icone:{
+  },
+  icone: {
     margin: 5,
     padding: 3,
     resizeMode: 'stretch',
     alignItems: 'center',
-    color:"#FFF",
-  }
+    color: '#FFF',
+  },
 });

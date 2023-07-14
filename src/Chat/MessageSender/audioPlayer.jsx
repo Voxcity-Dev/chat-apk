@@ -70,26 +70,31 @@ export default function AudioPlayer(props) {
     <View style={styles.container}>
         {props.audio && (
           <>
-                    <TouchableOpacity title="Play Audio" onPress={playAudio}>
-                    <Icon name="play-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-                  </TouchableOpacity>
-                  <TouchableOpacity title="Stop Audio" onPress={stopAudio}>
-                    <Icon name="pause-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-                  </TouchableOpacity>
-                  <Slider
-                      style={styles.slider}
-                      minimumValue={0}
-                      maximumValue={duration}
-                      value={position}
-                      onValueChange={onSeekSliderValueChange}
-                      thumbTintColor="#9ac31c"
-                      minimumTrackTintColor="#9ac31c"
-                      maximumTrackTintColor="#142a4c"
-                    />
-                  <Text style={styles.timeText}>{formatTime(position)} / {formatTime(duration)}</Text>
-                  <TouchableOpacity title="Delete Audio" onPress={deleteAudio} style={{marginLeft:50}}>
-                    <Icon name="trash-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-                  </TouchableOpacity>
+            {isPlaying ? (
+                <TouchableOpacity onPress={stopAudio} >
+                  <Icon name="stop" type="ionicon" size={25} color={'#9ac31c'} />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={playAudio} >
+                  <Icon name="play" type="ionicon" size={25} color={'#9ac31c'} />
+                </TouchableOpacity>
+              )
+            }
+      
+            <Slider
+                style={styles.slider}
+                minimumValue={0}
+                maximumValue={duration}
+                value={position}
+                onValueChange={onSeekSliderValueChange}
+                thumbTintColor="#9ac31c"
+                minimumTrackTintColor="#9ac31c"
+                maximumTrackTintColor="#142a4c"
+              />
+            <Text style={styles.timeText}>{formatTime(position)} / {formatTime(duration)}</Text>
+            <TouchableOpacity title="Delete Audio" onPress={deleteAudio} style={{marginLeft:50}}>
+              <Icon name="trash-sharp" type="ionicon" size={25} color={'#9ac31c'} />
+            </TouchableOpacity>
           </>
         )}
     </View>
