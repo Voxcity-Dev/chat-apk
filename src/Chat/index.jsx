@@ -21,8 +21,7 @@ export default function ChatComponent(props) {
     } else if (props.tipo === 'att') {
       newContact = { ...selectedAtendimento }
     }
-
-    if (contato._id && newContact._id === contato._id) {
+    if (!contato._id || newContact._id === contato._id) {
       setContato(newContact);
     }
   }, [contacts, groups, attendances, selectedContact, selectedGroup, selectedAtendimento]);
