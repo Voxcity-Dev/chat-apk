@@ -36,7 +36,6 @@ export const UserProvider = ({children}) => {
                 if(remindMe){
                     apiUser.get('/mobile/remember')
                         .then(resp => {
-                          console.log(resp.data)
                           AsyncStorage.setItem('@VoxChatToken', resp.data.mobileToken);
                         })
                         .catch(err => {
