@@ -21,7 +21,7 @@ export default function FileInput(props) {
   }
 
   function limitMessage(message) {
-    if (message.length > 30) {
+    if (message.length > 20) {
         return message.substring(0, 30) + '...';
     } else {
         return message;
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 40,
     right: -60,
-    width:390,
+    width:310,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
