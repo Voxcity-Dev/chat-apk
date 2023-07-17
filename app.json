@@ -38,7 +38,8 @@
       "package": "com.VoxChat",
       "permissions": [
         "NOTIFICATIONS"
-      ]
+      ],
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
