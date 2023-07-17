@@ -35,8 +35,8 @@ export const AttendanceProvider = ({children}) => {
 
     useEffect(() => {
         console.log("attendances socket");
-        initSockEvents();
-        return () => {  setOff() }
+       if(userSocket) initSockEvents();
+        return () => {if(userSocket) setOff()};
     }, []);
 
 

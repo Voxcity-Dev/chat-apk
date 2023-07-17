@@ -2,6 +2,7 @@ import { createContext, useState,useEffect } from "react";
 import  io  from "socket.io-client";
 import apiUser from "../apiUser";
 import { REACT_APP_SOCKET_URL } from '@env';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export const UserContext = createContext({});
@@ -15,6 +16,7 @@ export const UserProvider = ({children}) => {
     const [token, setToken] = useState('');
     const [socket, setSocket] = useState(null);
     const [remindMe, setRemindMe] = useState(false);
+
     
     const Logar = async (email,senha,conta) => {
         setLoading(true);
@@ -32,14 +34,10 @@ export const UserProvider = ({children}) => {
                 setSigned(true);
                 setLoading(false);
                 if(remindMe){
-                    apiUser.get('/mobile/remember', {
-                        params: {
-                          accessToken: token
-                        }
-                      })
+                    apiUser.get('/mobile/remember')
                         .then(resp => {
-                          console.log(resp.data);
-
+                          console.log(resp.data)
+                          AsyncStorage.setItem('@VoxChatToken', resp.data.mobileToken);
                         })
                         .catch(err => {
                           console.log(err);
@@ -52,16 +50,12 @@ export const UserProvider = ({children}) => {
         });
     }
 
-    const Deslogar = () => {
+    const deslogar = () => {
         setUser({});
         setSigned(false);
+        AsyncStorage.removeItem('@VoxChatToken');
     }
 
-    // function loadAttendance() {
-    //     apiUser.post('/atendimentos').then(resp => {
-    //         seAttendance(resp.data)
-    //     }).catch(err => {} )
-    // }
 
     function getNotRead(arrMsgs,respUser){
         let count = []      
@@ -132,15 +126,53 @@ export const UserProvider = ({children}) => {
                 })
             setSocket(newSocket);                    
         }  
-      return () => {
-    }
+      return () => {}
     }, [token,setSocket])
 
 
+    async function loadAsyncStorageContent() {
+        try {
+          const value = await AsyncStorage.getItem('@VoxChatToken');
+          if (value !== null) {
+            setToken(value);
+            apiUser.defaults.headers.common['authorization'] = "Bearer " + value;
+            loginWithToken(); // Chamando a função loginWithToken com o valor do token
+          }
+        } catch (error) {
+          console.log('Error reading AsyncStorage:', error);
+        }
+    }
+    
+
+    async function loginWithToken() {
+        setLoading(true);
+        try {
+            // Fazer a chamada para a API passando o token
+            const response = await apiUser.post('/mobile/login');
+            // Verificar se a resposta da API contém dados de usuário e preferências
+            if (response.data.user && response.data.pref) {
+                setToken(response.data.accessToken);
+                setUser(response.data.user);
+                setPref(response.data.pref);
+                await loadMessagesAndSetContacts(response.data.pref.users, response.data.user);
+                setSigned(true);
+            } else {
+                // Se a resposta não contém os dados necessários, fazer o logout
+                deslogar();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        loadAsyncStorageContent();
+    },[])
 
    
     return(
-        <UserContext.Provider value={{signed, user, setUser,Logar,Deslogar,loading,pref,contacts,setContacts,token,socket,setSocket,remindMe,setRemindMe}}>
+        <UserContext.Provider value={{signed, user, setUser,Logar,deslogar,loading,pref,contacts,setContacts,token,socket,setSocket,remindMe,setRemindMe}}>
             {children}
         </UserContext.Provider>
     );

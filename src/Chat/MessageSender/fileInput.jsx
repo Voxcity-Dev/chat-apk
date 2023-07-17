@@ -20,6 +20,14 @@ export default function FileInput(props) {
     props.clearMessage(); 
   }
 
+  function limitMessage(message) {
+    if (message.length > 30) {
+        return message.substring(0, 30) + '...';
+    } else {
+        return message;
+    }
+}
+
   return (
     <>
       <TouchableOpacity style={styles.iconsStyle} onPress={pickDocument}>
@@ -30,7 +38,7 @@ export default function FileInput(props) {
           <View style={styles.filesShow}>
             {props.files.map((file, index) => (
               <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{ color: "#FFF" }}>Arquivo em anexo: {file.name}</Text>
+                <Text style={{ color: "#FFF" }}>Arquivo em anexo: {limitMessage(file.name)}</Text>
                 <TouchableOpacity style={{ margin: 10 }} onPress={() => removeFile(index)}>
                   <Icon name="close-sharp" type="ionicon" size={25} color={"#9ac31c"} />
                 </TouchableOpacity>
@@ -63,8 +71,8 @@ const styles = StyleSheet.create({
   filesShow: {
     position: 'absolute',
     bottom: 40,
-    right: -100,
-    width:350,
+    right: -60,
+    width:390,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
