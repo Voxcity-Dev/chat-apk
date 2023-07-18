@@ -1,8 +1,8 @@
 import React, {  useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
-
+import { Icon } from '@rneui/themed';
 export default function Grupos(props) {
-    const { groups,  searchList, transferContactToGroup,styles } = props;
+    const { groups,  searchList, transferContactToGroup } = props;
     return (
         <ScrollView style={{ width: "100%", height: "30%" }}>
             {
@@ -28,7 +28,7 @@ export default function Grupos(props) {
                     )
 
                 })
-                    : groups?.map((grupo, index) => {
+                    : groups.map((grupo, index) => {
 
                         return (
                             <View key={index} style={styles.blocoContato}>
@@ -54,3 +54,49 @@ export default function Grupos(props) {
         </ScrollView>
   )
 }
+
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: "column",
+        backgroundColor: '#FFF',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignContent: "center",
+        width: "100%",
+    },
+    text: {
+        color: "#142a4c",
+        fontSize: 16,
+        fontWeight: "bold",
+        marginTop: 10,
+        marginLeft: 10,
+        width: "50%",
+        borderBottomWidth: 1,
+        borderColor: "#9ac31c",
+        textAlign: "center"
+    },
+    blocoContato: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "80%",
+        padding: 10,
+        backgroundColor: "#f1f1f1",
+        borderWidth: 1,
+        borderColor: "#142a4c",
+        marginLeft: 50,
+        marginTop: 10,
+        marginBottom: 10,
+        marginRight: 50,
+    },
+    image: {
+        width: 50,
+        height: 50,
+        borderRadius: 50,
+        marginRight: 10,
+    },
+
+});
