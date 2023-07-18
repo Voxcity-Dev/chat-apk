@@ -43,7 +43,7 @@ export const UserProvider = ({children}) => {
         });
     }
 
-    setApp(data){
+    async function setApp(data){
         setUser(data.user);
         setPref(data.pref);
         apiUser.defaults.headers.common['authorization'] = "Bearer " + data.accessToken;
