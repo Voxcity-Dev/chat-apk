@@ -73,7 +73,7 @@ export default function Transferir() {
                 setSearchList([...newSearchList]);
             }
         }
-    }, [search])
+    }, [search, setView, attendances, groups])
 
 
     return (
