@@ -7,7 +7,7 @@ export default function Atendentes(props) {
         <ScrollView style={{ width: "100%", height: "30%" }}>
             {
 
-                searchList.length >0 ?  searchList.map((atendente, index) => {
+                searchList?.length >0 ?  searchList.map((atendente, index) => {
                     return (
                         <View key={index} style={styles.blocoContato}>
                             {
