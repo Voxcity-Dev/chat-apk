@@ -19,8 +19,8 @@ export default function Transferir() {
     const [setView, setSetView] = useState("atendentes");
 
     const views = {
-        atendentes: <Atendentes attendances={attendances} searchList={searchList} transferContactToAtendente={transferContactToAtendente} />,
-        grupos: <Grupos groups={groups} searchList={searchList} transferContactToGroup={transferContactToGroup} />
+        atendentes: <Atendentes attendances={attendances} searchList={searchList} transferContactToAtendente={transferContactToAtendente} styles={styles}/>,
+        grupos: <Grupos groups={groups} searchList={searchList} transferContactToGroup={transferContactToGroup}styles={styles}/>
 
     }
 
@@ -83,7 +83,7 @@ export default function Transferir() {
             <View style={styles.searchBar}>
                 <Icon name="search-outline" type="ionicon" size={30} color={"#9ac31c"} />
                 <TextInput
-                    style={{ width: "80%", height: "100%", marginLeft: 10 }}
+                    style={{ width: "80%", marginLeft: 10 }}
                     placeholder="Pesquisar"
                     onChangeText={(text) => {
                         setSearch(text);

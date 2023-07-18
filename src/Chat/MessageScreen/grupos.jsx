@@ -2,7 +2,7 @@ import React, {  useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 
 export default function Grupos(props) {
-    const { groups,  searchList, transferContactToGroup } = props;
+    const { groups,  searchList, transferContactToGroup,styles } = props;
     return (
         <ScrollView style={{ width: "100%", height: "30%" }}>
             {

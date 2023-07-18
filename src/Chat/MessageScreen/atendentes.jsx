@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 
 export default function Atendentes(props) {
-    const { attendances, searchList, transferContactToAtendente } = props;
+    const { attendances, searchList, transferContactToAtendente,styles } = props;
     return (
         <ScrollView style={{ width: "100%", height: "30%" }}>
             {
