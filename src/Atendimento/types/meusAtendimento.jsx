@@ -1,5 +1,5 @@
 import React,{useContext,useState} from 'react'
-import { View,StyleSheet,Text, TouchableOpacity,Image } from 'react-native';
+import { View,StyleSheet,Text, TouchableOpacity,Image, ScrollView } from 'react-native';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
 //import { Icon } from '@rneui/themed';
 //import NovoAtendimento from './novoAtendimento';
@@ -41,6 +41,7 @@ export default  function MeusAtendimentos (props) {
   return (
    <View style={styles.container}>
     <Text style={styles.text}>Meus Atendimentos</Text>
+    <ScrollView style={{height:"100%"}}>
     {/* {
       novoAtendimento ? <NovoAtendimento setNovoAtendimento={setNovoAtendimento}/> : 
       <View >
@@ -75,6 +76,7 @@ export default  function MeusAtendimentos (props) {
           }
           )
         }
+        </ScrollView>
 
         {
           props.atendimentos.length === 0 ? <Text style={{color:"#142a4c",fontSize:12,textAlign:"center"}}>Nenhum atendimento encontrado</Text> : null
@@ -89,6 +91,7 @@ export default  function MeusAtendimentos (props) {
 const styles = StyleSheet.create({
   container: {
     width:"100%",
+    height:"100%",
     flex: 1,
     backgroundColor: '#FFF',
     color: '#111',
@@ -128,7 +131,7 @@ const styles = StyleSheet.create({
   },    
   contactInfo:{
     width:"100%",
-    height:100,
+    height:110,
     marginLeft:20,
   },
   text:{

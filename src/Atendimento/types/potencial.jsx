@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-import { View,StyleSheet,Text,TouchableOpacity,Image } from 'react-native';
+import { View,StyleSheet,Text,TouchableOpacity,Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from '@rneui/themed';
 import apiUser from '../../../apiUser';
@@ -54,7 +54,8 @@ export default  function AtendimentosPotencial (props) {
   return (
       <View style={styles.container}>
         <Text style={styles.text}>Atendimentos em Potencial</Text>
-        {props.atendimentos.map((att, i) => {
+          <ScrollView style={{height:"100%"}}>
+          {props.atendimentos.map((att, i) => {
           let lastMsgTime = new Date(att.lastMessage.createdAt);
           let formatedDate = timeHasZero(lastMsgTime.getDate()) + "/" + (timeHasZero(lastMsgTime.getMonth()+ 1) ) + "/" + timeHasZero(lastMsgTime.getFullYear())
           let formatedTime = timeHasZero(lastMsgTime.getHours()) + ":" + timeHasZero(lastMsgTime.getMinutes())
@@ -97,6 +98,7 @@ export default  function AtendimentosPotencial (props) {
           );
         })}
   
+          </ScrollView>
         {
         props.atendimentos.length === 0 ? (
           <Text style={{ color: "#142a4c", fontSize: 12, marginTop: 10, marginLeft: 10,textAlign:"center" }}>Nenhum atendimento em espera</Text>) : null
