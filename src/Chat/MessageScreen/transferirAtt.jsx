@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image ,TextInput} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, TextInput } from 'react-native';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
 import { UserContext } from '../../../context/UserProvider';
 import apiUser from '../../../apiUser';
@@ -19,8 +19,8 @@ export default function Transferir() {
     const [setView, setSetView] = useState("atendentes");
 
     const views = {
-        atendentes: <Atendentes attendances={attendances} searchList={searchList} transferContactToAtendente={transferContactToAtendente} styles={styles}/>,
-        grupos: <Grupos groups={groups} searchList={searchList} transferContactToGroup={transferContactToGroup}styles={styles}/>
+        atendentes: <Atendentes attendances={attendances} searchList={searchList} transferContactToAtendente={transferContactToAtendente} styles={styles} />,
+        grupos: <Grupos groups={groups} searchList={searchList} transferContactToGroup={transferContactToGroup} styles={styles} />
 
     }
 
@@ -29,16 +29,8 @@ export default function Transferir() {
         setAttendances([...newUsers]);
         let newGroups = pref.services.voxbot.atendentes
         setGroups([...newGroups]);
-        if(search){
-            if(setView === "atendentes"){
-                let newSearchList = attendances.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
-                setSearchList([...newSearchList]);
-            }else{
-                let newSearchList = groups.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
-                setSearchList([...newSearchList]);
-            }
-        }
-    }, [pref.users, user,search])
+
+    }, [pref.users, user])
 
     function transferContactToGroup(grupo) {
         let newContact = JSON.parse(JSON.stringify(selectedAtendimento))
@@ -62,7 +54,17 @@ export default function Transferir() {
         navigation.navigate('Atendimento')
     }
 
-   
+    useEffect(() => {
+        if (setView === "atendentes") {
+            let newSearchList = [...attendances] 
+            if(search)newSearchList =attendances.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
+            setSearchList([...newSearchList]);
+        } else {
+            let newSearchList = [...groups] 
+            if(search)newSearchList =groups.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
+            setSearchList([...newSearchList]);
+        }
+    }, [search])
 
     return (
         <View style={styles.container}>
@@ -89,7 +91,7 @@ export default function Transferir() {
                 />
             </View>
             {
-               <>
+                <>
                     {views[setView]}
                 </>
 
