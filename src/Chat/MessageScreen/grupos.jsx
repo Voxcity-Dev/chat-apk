@@ -1,6 +1,6 @@
 import React, {  useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
-
+import { Icon } from '@rneui/themed';
 export default function Grupos(props) {
     const { groups,  searchList, transferContactToGroup,styles } = props;
     return (
@@ -28,7 +28,7 @@ export default function Grupos(props) {
                     )
 
                 })
-                    : groups?.map((grupo, index) => {
+                    : groups.map((grupo, index) => {
 
                         return (
                             <View key={index} style={styles.blocoContato}>

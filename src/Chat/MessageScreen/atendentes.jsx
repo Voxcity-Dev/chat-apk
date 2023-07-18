@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
-
+import { Icon } from '@rneui/themed';
 export default function Atendentes(props) {
     const { attendances, searchList, transferContactToAtendente,styles } = props;
     return (
