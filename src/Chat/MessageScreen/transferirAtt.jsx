@@ -38,7 +38,7 @@ export default function Transferir() {
             if(search)newSearchList =groups.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
             setSearchList([...newSearchList]);
         }
-    }, [pref.users, user,search])
+    }, [pref.users, user,search,setView])
 
     function transferContactToGroup(grupo) {
         let newContact = JSON.parse(JSON.stringify(selectedAtendimento))
