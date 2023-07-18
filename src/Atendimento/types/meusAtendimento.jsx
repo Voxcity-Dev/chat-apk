@@ -7,7 +7,7 @@ import { AttendanceContext } from '../../../context/AttendanceProvider';
 export default function MeusAtendimentos(props) {
   const { setSelectedAtendimento } = useContext(AttendanceContext);
   // const [novoAtendimento, setNovoAtendimento] = useState(false);
-
+  
   function countAndSlice(message) {
     if (!message) return ""
     let count = message.length
