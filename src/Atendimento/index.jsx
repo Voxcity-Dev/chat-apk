@@ -6,7 +6,7 @@ import AtendimentosPotencial from './types/potencial';
 import { AttendanceContext } from '../../context/AttendanceProvider';
 import { UserContext } from '../../context/UserProvider';
 import Chat from '../Chat/index';
-import { Icon } from '@rneui/native';
+import { Icon } from '@rneui/themed';
 export default function Atendimentos(props) {
   const { user } = useContext(UserContext);
   const { attendances, myWaitingAtt, selectedAtendimento, setSelectedAtendimento } = useContext(AttendanceContext);
@@ -17,13 +17,17 @@ export default function Atendimentos(props) {
   const [search, setSearch] = useState('');
   useEffect(() => {
     let newAtendimentos = attendances.filter((att) => att.atendente === user._id)
-    if(search)newAtendimentos = newAtendimentos.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
+    if(search)newAtendimentos = newAtendimentos.filter((att) => att.pushname?.toLowerCase().includes(search.toLowerCase()));
     setAtendimentos(newAtendimentos);
+  //   newContacts = newContacts.filter((contact)=>{
+  //     let val = contact.nome ? contact.nome : contact.pushName ? contact.pushName : contact.telefone;
+  //     return val.toLowerCase().includes(search.toLowerCase());
+  // })
   }, [search,attendances]);
 
   useEffect(() => {
     let newAtendimentosEspera = myWaitingAtt
-    if(search)newAtendimentosEspera = newAtendimentosEspera.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
+    if(search)newAtendimentosEspera = newAtendimentosEspera.filter((att) => att.pushname?.toLowerCase().includes(search.toLowerCase()));
     setAtendimentosEspera(newAtendimentosEspera);
   }, [search,myWaitingAtt]);
 
@@ -31,7 +35,7 @@ export default function Atendimentos(props) {
     let newAttendances = attendances.filter((att) => {
       return !att.waiting && !att.atendente && att.historico[att.historico.length - 1]?.action !== 'Finalizado' && new Date(att.lastMessage?.createdAt).getTime() > new Date(Date.now() - (1000 * 60 * 60 * 24)).getTime()
     });
-    if(search)newAttendances = newAttendances.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
+    if(search)newAttendances = newAttendances.filter((att) => att.pushname?.toLowerCase().includes(search.toLowerCase()));
     setAtendimentosPotencial(newAttendances);
   }, [search,attendances]);
 

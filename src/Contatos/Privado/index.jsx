@@ -13,9 +13,7 @@ export default function PrivadoList() {
     useEffect(() => {
         let newContacts = contacts ? [...contacts] : [];
         if(search){
-            newContacts = newContacts.filter((contact)=>{
-                return contact.name.toLowerCase().includes(search.toLowerCase());
-            })
+            newContacts = newContacts.filter((contact) => contact.nome.toLowerCase().includes(search.toLowerCase()));
         }
         setContactsList(newContacts);
 
@@ -53,9 +51,9 @@ export default function PrivadoList() {
           return `${day}/${month}/${year}`;
         } else if(timeDiff >= 24 * 60 * 60 * 1000) {
             // Já passou mais de 24 horas
-            return `Ontem`;
+            return `${"    "}Ontem`;
           } else {
-            return `${"        "}${hours}:${minutes}`;
+            return `${"     "}${hours}:${minutes}`;
           }
       }
 
@@ -137,13 +135,15 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         flex: 1,
-        flexDirection: 'row',
+        flexDirection: 'column',
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
         color: '#FFF',
         padding: 10,
         gap: 20,
+        alignSelf: 'center',
+        alignContent: 'center',
     },
     image: {
         width: 50,
@@ -170,15 +170,24 @@ const styles = StyleSheet.create({
         alignSelf:"flex-end"
     },
     searchContainer: {
-        width: '100%',
-        display: 'flex',
+        width:'70%',
         flexDirection: 'row',
+        justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#fff',
-        borderRadius: 25,
-        padding: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
-        marginBottom: 10,
+        borderWidth: 0.4,
+        borderColor: '#142a4c',
+        height: 40,
+        borderRadius: 5,
+        alignSelf: 'center',
+
     },
+    searchInput: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '90%',
+        height: 40,
+        color: '#142a4c',
+        fontSize: 16,
+    }
 });
