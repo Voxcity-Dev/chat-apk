@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { UserContext } from '../../../context/UserProvider';
 import apiUser from '../../../apiUser';
 import { Icon } from '@rneui/themed';
@@ -59,6 +59,7 @@ export default function AtendimentosEspera(props) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Atendimentos em Espera</Text>
+      <ScrollView style={{ height: "100%" }}>
       {props.atendimentos.map((att, i) => {
         let lastHist = att?.historico[att.historico.length - 1];
         let waitingTime = new Date(lastHist?.data);
@@ -104,6 +105,7 @@ export default function AtendimentosEspera(props) {
           </View>
         );
       })}
+      </ScrollView>
 
       {
       props.atendimentos.length === 0 ? (

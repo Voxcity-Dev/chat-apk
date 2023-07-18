@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
 //import { Icon } from '@rneui/themed';
 //import NovoAtendimento from './novoAtendimento';
@@ -39,9 +39,9 @@ export default function MeusAtendimentos(props) {
 
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Meus Atendimentos</Text>
-      {/* {
+   <View style={styles.container}>
+    <Text style={styles.text}>Meus Atendimentos</Text>
+    {/* {
       novoAtendimento ? <NovoAtendimento setNovoAtendimento={setNovoAtendimento}/> : 
       <View >
         <TouchableOpacity style={styles.buttonBox} onPress={()=>setNovoAtendimento(true)}>
@@ -60,21 +60,21 @@ export default function MeusAtendimentos(props) {
             formatedTime = timeHasZero(lastMsgTime.getHours()) + ":" + timeHasZero(lastMsgTime.getMinutes());
           }
 
-          return (
-            <TouchableOpacity style={styles.contactBox} key={att._id} onPress={() => handleSelectedAtendimento(att)}>
-              {
-                att.foto ? <Image source={{ uri: att.foto }} style={styles.image} /> : <Image source={require('../../../assets/avatar2.png')} style={styles.image} />
-              }
-              <View style={styles.contactInfo}>
-                <Text style={styles.buttonText}>{nameInsert(att)}</Text>
-                <Text style={{ color: "#142a4c", fontSize: 12 }}>{countAndSlice(att.lastMessage?.message)}</Text>
-                <Text style={{ color: "#142a4c", fontSize: 12 }}>{formatedDate} {formatedTime}</Text>
-              </View>
-            </TouchableOpacity>
+            return (
+              <TouchableOpacity style={styles.contactBox} key={att._id} onPress={ () => handleSelectedAtendimento(att) }>
+                {
+                  att.foto ? <Image source={{ uri: att.foto }} style={styles.image}/> : <Image source={require('../../../assets/avatar2.png')} style={styles.image}/> 
+                }
+                <View style={styles.contactInfo}>
+                  <Text style={styles.buttonText}>{nameInsert(att)}</Text>
+                  <Text style={{color:"#142a4c",fontSize:12}}>{countAndSlice(att.lastMessage?.message)}</Text>
+                  <Text style={{color:"#142a4c",fontSize:12}}>{formatedDate} {formatedTime}</Text>
+                </View>
+              </TouchableOpacity>
+            )
+          }
           )
         }
-        )
-      }
 
       {
         props.atendimentos.length === 0 ? <Text style={{ color: "#142a4c", fontSize: 12, textAlign: "center" }}>Nenhum atendimento encontrado</Text> : null
@@ -88,7 +88,7 @@ export default function MeusAtendimentos(props) {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width:"100%",
     flex: 1,
     backgroundColor: '#FFF',
     color: '#111',
@@ -117,19 +117,19 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   contactBox: {
-    width: "100%",
-    height: 80,
-    display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    flexDirection: "row",
-    color: "#142a4c",
-    padding: 10,
-  },
-  contactInfo: {
-    width: "100%",
-    height: 100,
-    marginLeft: 20,
+    width:"100%",
+    height:80,
+    display:"flex",
+    alignItems:"flex-start",
+    justifyContent:"flex-start",
+    flexDirection:"row",
+    color:"#142a4c",
+    padding:10,
+  },    
+  contactInfo:{
+    width:"100%",
+    height:100,
+    marginLeft:20,
   },
   text: {
     color: "#142a4c",
