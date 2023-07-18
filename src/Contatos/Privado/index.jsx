@@ -7,11 +7,18 @@ export default function PrivadoList() {
     const userContext = useContext(UserContext);
     const {contacts,setSelectedContact} = useContext(ContactContext);
     const [contactsList, setContactsList] = useState([]);
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
         let newContacts = contacts ? [...contacts] : [];
+        if(search){
+            newContacts = newContacts.filter((contact)=>{
+                return contact.name.toLowerCase().includes(search.toLowerCase());
+            })
+        }
         setContactsList(newContacts);
-    }, [contacts]);
+
+    }, [contacts, search]);
 
     function handleSelectContact(contact) {
         let selectedContact = { ...contact };
@@ -61,6 +68,17 @@ export default function PrivadoList() {
 
     return (
         <View style={styles.container}>
+            <View style={styles.searchContainer}>
+                <Icon name="search" size={20} color="#142a4c" />
+                <TextInput
+                    style={styles.searchInput}
+                    placeholder="Pesquisar"
+                    placeholderTextColor="#142a4c"
+                    onChangeText={(text) => setSearch(text)}
+                    value={search}
+                />
+            </View>
+
             <ScrollView>
                 {contactsList ? (
                     contactsList.map((contact, index) => {
@@ -149,5 +167,17 @@ const styles = StyleSheet.create({
         color: 'gray',
         fontSize: 14,
         alignSelf:"flex-end"
+    },
+    searchContainer: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        borderRadius: 25,
+        padding: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        marginBottom: 10,
     },
 });
