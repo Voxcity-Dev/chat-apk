@@ -31,10 +31,10 @@ export default function Transferir() {
         setGroups([...newGroups]);
         if(search){
             if(setView === "atendentes"){
-                newSearchList = attendances.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
+                let newSearchList = attendances.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
                 setSearchList([...newSearchList]);
             }else{
-                newSearchList = groups.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
+                let newSearchList = groups.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
                 setSearchList([...newSearchList]);
             }
         }
