@@ -12,11 +12,11 @@ export default function Grupos(props) {
             setList(groups);
         }
     }, [searchList, groups]);
-    
+
     return (
         <ScrollView style={{ width: "100%", height: "30%" }}>
             {
-                searchList?.map((grupo, index) => {
+                list?.map((grupo, index) => {
 
                     return (
                         <View key={index} style={styles.blocoContato}>
