@@ -1,4 +1,5 @@
-import React from 'react'
+import React, {  useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 
 export default function Grupos(props) {
     const { groups,  searchList, transferContactToGroup } = props;
