@@ -18,7 +18,7 @@ export const UserProvider = ({children}) => {
     const [remindMe, setRemindMe] = useState(false);
 
     
-    const Logar = async (email,senha,conta) => {
+    const logar = async (email,senha,conta) => {
         setLoading(true);
         await apiUser.post('/login', {email,senha,conta})
         .then(async (response) => {
@@ -172,7 +172,7 @@ export const UserProvider = ({children}) => {
 
    
     return(
-        <UserContext.Provider value={{signed, user, setUser,Logar,deslogar,loading,pref,contacts,setContacts,token,socket,setSocket,remindMe,setRemindMe}}>
+        <UserContext.Provider value={{signed, user, setUser,logar,deslogar,loading,pref,contacts,setContacts,token,socket,setSocket,remindMe,setRemindMe}}>
             {children}
         </UserContext.Provider>
     );

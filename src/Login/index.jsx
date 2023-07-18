@@ -8,7 +8,7 @@ import Senha from './inputs/senha';
 
 
 export default function Login() {
-  const {Logar,loading,remindMe,setRemindMe} = useContext(UserContext);
+  const {logar,loading,remindMe,setRemindMe} = useContext(UserContext);
   const [login, setLogin] = useState({conta: '', email: '', senha: ''})
   const allInputs = { 
     conta: <Conta captureText={captureText}/>,
@@ -24,7 +24,7 @@ export default function Login() {
   }
 
   function handleLogin() {
-    Logar(login.email, login.senha, login.conta);
+    logar(login.email, login.senha, login.conta);
   }
 
 
