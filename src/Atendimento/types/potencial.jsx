@@ -163,8 +163,8 @@ const styles = StyleSheet.create({
       width: "50%",
     },
     transferContainer:{
-      width: "50%",
-      height: 50,
+      width: "39%",
+      height: 60,
       display: "flex",
       alignItems: "center",
       justifyContent: "flex-start",
