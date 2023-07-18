@@ -1,4 +1,4 @@
-import React, {  useState } from 'react';
+import React, {  useState,useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { Icon } from '@rneui/themed';
 export default function Grupos(props) {
@@ -6,14 +6,17 @@ export default function Grupos(props) {
     const [list, setList] = useState([]);
 
     useEffect(() => {
+        if (searchList.length > 0) {
             setList(searchList);
-       
-    }, [searchList]);
-
+        } else {
+            setList(groups);
+        }
+    }, [searchList, groups]);
+    
     return (
         <ScrollView style={{ width: "100%", height: "30%" }}>
             {
-                list?.map((grupo, index) => {
+                searchList?.map((grupo, index) => {
 
                     return (
                         <View key={index} style={styles.blocoContato}>
