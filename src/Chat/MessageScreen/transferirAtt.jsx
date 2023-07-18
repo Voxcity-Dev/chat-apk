@@ -1,5 +1,5 @@
-import React,{useContext,useEffect,useState} from 'react';
-import { View, Text, StyleSheet,TouchableOpacity, ScrollView,Image } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
 import { UserContext } from '../../../context/UserProvider';
 import apiUser from '../../../apiUser';
@@ -7,20 +7,80 @@ import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 
 export default function Transferir() {
-    const { selectedAtendimento, setSelectedAtendimento} = useContext(AttendanceContext);
-    const { pref,user} = useContext(UserContext);
+    const { selectedAtendimento, setSelectedAtendimento } = useContext(AttendanceContext);
+    const { pref, user } = useContext(UserContext);
     const [attendances, setAttendances] = useState([]);
     const [groups, setGroups] = useState([]);
+    const [search, setSearch] = useState("");
+    const [searchList, setSearchList] = useState([]);
     const navigation = useNavigation();
+    const [setView, setSetView] = useState("atendentes");
+
+    const views = {
+        atendentes: <ScrollView style={{ width: "100%", height: "30%" }}>
+            {
+                attendances?.map((atendente, index) => {
+                    return (
+                        <View key={index} style={styles.blocoContato}>
+                            {
+                                atendente.foto ? (
+                                    <Image source={{ uri: atendente.foto }} style={styles.image} />
+                                ) : (
+                                    <Image source={require("../../../assets/avatar2.png")} style={styles.image} />
+                                )
+                            }
+                            <View style={{ flexDirection: "column" }}>
+                                <Text style={{ color: "#142a4c", fontSize: 16, fontWeight: "bold" }}>{atendente.nome}</Text>
+                                <Text>{atendente.departamentoNome ? atendente.departamentoNome : "Sem departamento"}</Text>
+                                <Text>{atendente.setorNome ? atendente.setorNome : "Sem setor"}</Text>
+                            </View>
+                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => transferContactToAtendente(atendente)}>
+                                <Icon name="arrow-forward-outline" type="ionicon" size={30} color={"#9ac31c"} />
+                            </TouchableOpacity>
+                        </View>
+                    )
+                })
+            }
+        </ScrollView>,
+        grupos: <ScrollView style={{ width: "100%", height: "30%" }}>
+            {
+                groups?.map((grupo, index) => {
+
+                    return (
+                        <View key={index} style={styles.blocoContato}>
+                            {
+                                grupo.foto ? (
+                                    <Image source={{ uri: grupo.foto }} style={styles.image} />
+                                ) : (
+                                    <Image source={require("../../../assets/avatar2.png")} style={styles.image} />
+                                )
+                            }
+                            <View style={{ flexDirection: "column" }}>
+                                <Text style={{ color: "#142a4c", fontSize: 16, fontWeight: "bold" }}>{grupo.nome}</Text>
+                            </View>
+
+                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => transferContactToGroup(grupo)}>
+                                <Icon name="arrow-forward-outline" type="ionicon" color={"#9ac31c"} />
+                            </TouchableOpacity>
+                        </View>
+                    )
+
+                })
+            }
+        </ScrollView>,
+    }
+
+
+
 
     useEffect(() => {
         let newUsers = pref?.users.filter((att) => att.atendente && (att._id !== user._id && att.nome !== "Voxcity"));
         setAttendances(newUsers);
         let newGroups = pref.services.voxbot.atendentes
         setGroups(newGroups);
-    }, [pref.users,user]);
+    }, [pref.users, user]);
 
-    function transferContactToGroup(grupo){
+    function transferContactToGroup(grupo) {
         let newContact = JSON.parse(JSON.stringify(selectedAtendimento))
         apiUser.post("/atendimentos/waiting", { contact: newContact, grupo }).then((res) => {
             console.log(res.data);
@@ -30,7 +90,7 @@ export default function Transferir() {
         navigation.navigate('Atendimento')
     }
 
-    function transferContactToAtendente(atendente){
+    function transferContactToAtendente(atendente) {
         let newContact = JSON.parse(JSON.stringify(selectedAtendimento))
         let newAtt = JSON.parse(JSON.stringify(atendente))
         delete newAtt.allMessages;
@@ -42,71 +102,47 @@ export default function Transferir() {
         navigation.navigate('Atendimento')
     }
 
+    useEffect(() => {
+        let newAttList
+    }, [search])
+
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Selecione um Atendente:</Text>
-            <ScrollView style={{ width: "100%",height:"30%" }}>
-                {
-                    attendances?.map((atendente, index) => {
-                        return (
-                            <View key={index} style={styles.blocoContato}>
-                                {
-                                    atendente.foto ? (
-                                        <Image source={{ uri: atendente.foto }} style={styles.image} />
-                                    ) : (
-                                        <Image source={require("../../../assets/avatar2.png")} style={styles.image} />
-                                    )
-                                }
-                                <View style={{ flexDirection: "column"}}>
-                                    <Text style={{ color: "#142a4c", fontSize: 16, fontWeight: "bold" }}>{atendente.nome}</Text>
-                                    <Text>{atendente.departamentoNome ? atendente.departamentoNome : "Sem departamento"}</Text>
-                                    <Text>{atendente.setorNome ? atendente.setorNome : "Sem setor"}</Text>
-                                </View>
-                                <TouchableOpacity style={{marginLeft:10}} onPress={() => transferContactToAtendente(atendente)}>
-                                    <Icon name="arrow-forward-outline" type="ionicon" size={30} color={"#9ac31c"} />
-                                </TouchableOpacity>
-                            </View>
-                        )
-                    })
-                }
-            </ScrollView>
-
-            <Text style={styles.text}>Selecione um grupo:</Text>
-
-            <ScrollView style={{ width: "100%",height:"30%" }}>               
-                {
-                    groups?.map((grupo, index) => {
-
-                        return(
-                            <View key={index} style={styles.blocoContato}>
-                                {
-                                    grupo.foto ? (
-                                        <Image source={{ uri: grupo.foto }} style={styles.image} />
-                                    ) : (
-                                        <Image source={require("../../../assets/avatar2.png")} style={styles.image} />
-                                    )
-                                }
-                                <View style={{ flexDirection: "column"}}>
-                                    <Text style={{ color: "#142a4c", fontSize: 16, fontWeight: "bold" }}>{grupo.nome}</Text>
-                                </View>
-
-                                <TouchableOpacity style={{marginLeft:10}} onPress={() => transferContactToGroup(grupo)}>
-                                    <Icon name="arrow-forward-outline" type="ionicon" color={"#9ac31c"} />
-                                </TouchableOpacity>
-                            </View>
-                        )
-
-                    })
-                }
-            </ScrollView>
+            <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-around" }}>
+                <TouchableOpacity onPress={() => setSetView("atendentes")}>
+                    <Text style={{ color: setView === "atendentes" ? "#9ac31c" : "#142a4c", fontSize: 16, fontWeight: "bold" }}>Atendentes</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setSetView("grupos")}>
+                    <Text style={{ color: setView === "grupos" ? "#9ac31c" : "#142a4c", fontSize: 16, fontWeight: "bold" }}>Grupos</Text>
+                </TouchableOpacity>
+            </View>
+            <Text style={styles.text}>Pesquise um Atendente:</Text>
+            <View style={styles.searchBar}>
+                <Icon name="search-outline" type="ionicon" size={30} color={"#9ac31c"} />
+                <TextInput
+                    style={{ width: "80%", height: "100%", marginLeft: 10 }}
+                    placeholder="Pesquisar"
+                    onChangeText={(text) => {
+                        setSearch(text);
+                        let newList = attendances.filter((att) => att.nome.toLowerCase().includes(text.toLowerCase()));
+                        setSearchList(newList);
+                    }}
+                    value={search}
+                />
+            </View>
+            {
+                search && <>
+                    {views[setView]}
+                </>
+            }
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {    
+    container: {
         flex: 1,
-        flexDirection: "column", 
+        flexDirection: "column",
         backgroundColor: '#FFF',
         alignItems: 'center',
         justifyContent: 'center',
