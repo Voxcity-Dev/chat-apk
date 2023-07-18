@@ -19,7 +19,28 @@ export default function Transferir() {
     const views = {
         atendentes: <ScrollView style={{ width: "100%", height: "30%" }}>
             {
-                attendances?.map((atendente, index) => {
+
+                search ? searchList.map((atendente, index) => {
+                    return (
+                        <View key={index} style={styles.blocoContato}>
+                            {
+                                atendente.foto ? (
+                                    <Image source={{ uri: atendente.foto }} style={styles.image} />
+                                ) : (
+                                    <Image source={require("../../../assets/avatar2.png")} style={styles.image} />
+                                )
+                            }
+                            <View style={{ flexDirection: "column" }}>
+                                <Text style={{ color: "#142a4c", fontSize: 16, fontWeight: "bold" }}>{atendente.nome}</Text>
+                                <Text>{atendente.departamentoNome ? atendente.departamentoNome : "Sem departamento"}</Text>
+                                <Text>{atendente.setorNome ? atendente.setorNome : "Sem setor"}</Text>
+                            </View>
+                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => transferContactToAtendente(atendente)}>
+                                <Icon name="arrow-forward-outline" type="ionicon" size={30} color={"#9ac31c"} />
+                            </TouchableOpacity>
+                        </View>
+                    )
+                }) : attendances.map((atendente, index) => {
                     return (
                         <View key={index} style={styles.blocoContato}>
                             {
@@ -40,11 +61,12 @@ export default function Transferir() {
                         </View>
                     )
                 })
+
             }
         </ScrollView>,
         grupos: <ScrollView style={{ width: "100%", height: "30%" }}>
             {
-                groups?.map((grupo, index) => {
+                search ? searchList.map((grupo, index) => {
 
                     return (
                         <View key={index} style={styles.blocoContato}>
@@ -66,6 +88,28 @@ export default function Transferir() {
                     )
 
                 })
+                    : groups?.map((grupo, index) => {
+
+                        return (
+                            <View key={index} style={styles.blocoContato}>
+                                {
+                                    grupo.foto ? (
+                                        <Image source={{ uri: grupo.foto }} style={styles.image} />
+                                    ) : (
+                                        <Image source={require("../../../assets/avatar2.png")} style={styles.image} />
+                                    )
+                                }
+                                <View style={{ flexDirection: "column" }}>
+                                    <Text style={{ color: "#142a4c", fontSize: 16, fontWeight: "bold" }}>{grupo.nome}</Text>
+                                </View>
+
+                                <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => transferContactToGroup(grupo)}>
+                                    <Icon name="arrow-forward-outline" type="ionicon" color={"#9ac31c"} />
+                                </TouchableOpacity>
+                            </View>
+                        )
+
+                    })
             }
         </ScrollView>,
     }
@@ -103,7 +147,18 @@ export default function Transferir() {
     }
 
     useEffect(() => {
-        let newAttList
+        if (!search) {
+            setSearchList(attendances)
+        }
+        else if (search && setView === "atendentes") {
+            let newList = attendances.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
+            setSearchList(newList)
+        }
+        else if (search && setView === "grupos") {
+            let newList = groups.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
+            setSearchList(newList)
+        }
+
     }, [search])
 
     return (
@@ -134,6 +189,7 @@ export default function Transferir() {
                 search && <>
                     {views[setView]}
                 </>
+
             }
         </View>
     )
