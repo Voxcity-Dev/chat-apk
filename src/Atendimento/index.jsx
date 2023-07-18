@@ -17,20 +17,23 @@ export default function Atendimentos(props) {
   const [search, setSearch] = useState('');
   useEffect(() => {
     let newAtendimentos = attendances.filter((att) => att.atendente === user._id)
+    if(search)newAtendimentos = newAtendimentos.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
     setAtendimentos(newAtendimentos);
-  }, [attendances]);
+  }, [search,attendances]);
 
   useEffect(() => {
     let newAtendimentosEspera = myWaitingAtt
+    if(search)newAtendimentosEspera = newAtendimentosEspera.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
     setAtendimentosEspera(newAtendimentosEspera);
-  }, [myWaitingAtt]);
+  }, [search,myWaitingAtt]);
 
   useEffect(() => {
     let newAttendances = attendances.filter((att) => {
       return !att.waiting && !att.atendente && att.historico[att.historico.length - 1]?.action !== 'Finalizado' && new Date(att.lastMessage?.createdAt).getTime() > new Date(Date.now() - (1000 * 60 * 60 * 24)).getTime()
     });
+    if(search)newAttendances = newAttendances.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
     setAtendimentosPotencial(newAttendances);
-  }, [attendances]);
+  }, [search,attendances]);
 
 
   const views = {
