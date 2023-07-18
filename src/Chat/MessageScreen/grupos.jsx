@@ -1,4 +1,4 @@
-import React, {  useState,useEffect } from 'react';
+import React, {  useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { Icon } from '@rneui/themed';
 export default function Grupos(props) {
