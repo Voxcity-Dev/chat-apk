@@ -26,13 +26,7 @@ export const UserProvider = ({children}) => {
                 alert(response.data.error);
                 setLoading(false);
             }else{
-                setUser(response.data.user);
-                setPref(response.data.pref);
-                apiUser.defaults.headers.common['authorization'] = "Bearer " + response.data.accessToken;
-                setToken(response.data.accessToken);
-                await loadMessagesAndSetContacts(response.data.pref.users,response.data.user)
-                setSigned(true);
-                setLoading(false);
+                setApp(response.data);
                 if(remindMe){
                     apiUser.get('/mobile/remember')
                         .then(resp => {
@@ -47,6 +41,16 @@ export const UserProvider = ({children}) => {
         .catch((error) => {
             console.log(error);
         });
+    }
+
+    setApp(data){
+        setUser(data.user);
+        setPref(data.pref);
+        apiUser.defaults.headers.common['authorization'] = "Bearer " + data.accessToken;
+        setToken(data.accessToken);
+        await loadMessagesAndSetContacts(data.pref.users,data.user)
+        setSigned(true);
+        setLoading(false);
     }
 
     const deslogar = () => {
@@ -150,11 +154,8 @@ export const UserProvider = ({children}) => {
             const response = await apiUser.post('/mobile/login');
             // Verificar se a resposta da API contém dados de usuário e preferências
             if (response.data.user && response.data.pref) {
-                setToken(response.data.accessToken);
-                setUser(response.data.user);
-                setPref(response.data.pref);
-                await loadMessagesAndSetContacts(response.data.pref.users, response.data.user);
-                setSigned(true);
+                // Se sim, atualizar os estados globais de usuário e preferências
+                setApp(response.data);
             } else {
                 // Se a resposta não contém os dados necessários, fazer o logout
                 deslogar();
