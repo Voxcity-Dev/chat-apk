@@ -4,7 +4,6 @@ import { Icon } from '@rneui/themed';
 export default function Grupos(props) {
     const { groups,  searchList, transferContactToGroup } = props;
     
- 
     
     return (
         <ScrollView style={{ width: "100%", height: "30%" }}>
