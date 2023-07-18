@@ -89,7 +89,7 @@ export default function Transferir() {
                 />
             </View>
             {
-                search && <>
+               <>
                     {views[setView]}
                 </>
 
