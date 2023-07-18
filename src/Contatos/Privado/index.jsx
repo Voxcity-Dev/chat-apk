@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, ScrollView, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, Image, TouchableOpacity,TextInput } from 'react-native';
 import { UserContext } from '../../../context/UserProvider';
 import { ContactContext } from '../../../context/ContacProvider';
+import { Icon } from '@rneui/themed';
 
 export default function PrivadoList() {
     const userContext = useContext(UserContext);
