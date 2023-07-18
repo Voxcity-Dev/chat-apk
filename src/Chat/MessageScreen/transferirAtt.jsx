@@ -24,14 +24,11 @@ export default function Transferir() {
 
     }
 
-
-
-
     useEffect(() => {
         let newUsers = pref?.users.filter((att) => att.atendente && (att._id !== user._id && att.nome !== "Voxcity"));
-        setAttendances(newUsers);
+        setAttendances([...newUsers]);
         let newGroups = pref.services.voxbot.atendentes
-        setGroups(newGroups);
+        setGroups([...newGroups]);
     }, [pref.users, user]);
 
     function transferContactToGroup(grupo) {
