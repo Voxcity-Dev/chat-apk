@@ -57,15 +57,25 @@ export default function Transferir() {
     }
 
     useEffect(() => {
-        if (search && setView === "atendentes") {
-            let newList = attendances.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
-            setSearchList(newList)
+        let newSearchList = [];
+        if(search.length > 0){
+            if(setView === "atendentes"){
+                newSearchList = attendances.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
+                setSearchList([...newSearchList]);
+            }else{
+                newSearchList = groups.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
+                setSearchList([...newSearchList]);
+            }
         }
-        else if (search && setView === "grupos") {
-            let newList = groups.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
-            setSearchList(newList)
+        else{
+            if(setView === "atendentes"){
+                newSearchList = attendances;
+                setSearchList([...newSearchList]);
+            }else{
+                newSearchList = groups;
+                setSearchList([...newSearchList]);
+            }
         }
-
     }, [search])
 
 
