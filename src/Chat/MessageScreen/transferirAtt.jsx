@@ -5,6 +5,8 @@ import { UserContext } from '../../../context/UserProvider';
 import apiUser from '../../../apiUser';
 import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
+import Atendentes from './atendentes';
+import Grupos from './grupos';
 
 export default function Transferir() {
     const { selectedAtendimento, setSelectedAtendimento } = useContext(AttendanceContext);
@@ -17,101 +19,9 @@ export default function Transferir() {
     const [setView, setSetView] = useState("atendentes");
 
     const views = {
-        atendentes: <ScrollView style={{ width: "100%", height: "30%" }}>
-            {
+        atendentes: <Atendentes attendances={attendances} searchList={searchList} transferContactToAtendente />,
+        grupos: <Grupos groups={groups} searchList={searchList} transferContactToGroup={transferContactToGroup} />
 
-                search ? searchList.map((atendente, index) => {
-                    return (
-                        <View key={index} style={styles.blocoContato}>
-                            {
-                                atendente.foto ? (
-                                    <Image source={{ uri: atendente.foto }} style={styles.image} />
-                                ) : (
-                                    <Image source={require("../../../assets/avatar2.png")} style={styles.image} />
-                                )
-                            }
-                            <View style={{ flexDirection: "column" }}>
-                                <Text style={{ color: "#142a4c", fontSize: 16, fontWeight: "bold" }}>{atendente.nome}</Text>
-                                <Text>{atendente.departamentoNome ? atendente.departamentoNome : "Sem departamento"}</Text>
-                                <Text>{atendente.setorNome ? atendente.setorNome : "Sem setor"}</Text>
-                            </View>
-                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => transferContactToAtendente(atendente)}>
-                                <Icon name="arrow-forward-outline" type="ionicon" size={30} color={"#9ac31c"} />
-                            </TouchableOpacity>
-                        </View>
-                    )
-                }) : attendances.map((atendente, index) => {
-                    return (
-                        <View key={index} style={styles.blocoContato}>
-                            {
-                                atendente.foto ? (
-                                    <Image source={{ uri: atendente.foto }} style={styles.image} />
-                                ) : (
-                                    <Image source={require("../../../assets/avatar2.png")} style={styles.image} />
-                                )
-                            }
-                            <View style={{ flexDirection: "column" }}>
-                                <Text style={{ color: "#142a4c", fontSize: 16, fontWeight: "bold" }}>{atendente.nome}</Text>
-                                <Text>{atendente.departamentoNome ? atendente.departamentoNome : "Sem departamento"}</Text>
-                                <Text>{atendente.setorNome ? atendente.setorNome : "Sem setor"}</Text>
-                            </View>
-                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => transferContactToAtendente(atendente)}>
-                                <Icon name="arrow-forward-outline" type="ionicon" size={30} color={"#9ac31c"} />
-                            </TouchableOpacity>
-                        </View>
-                    )
-                })
-
-            }
-        </ScrollView>,
-        grupos: <ScrollView style={{ width: "100%", height: "30%" }}>
-            {
-                search ? searchList.map((grupo, index) => {
-
-                    return (
-                        <View key={index} style={styles.blocoContato}>
-                            {
-                                grupo.foto ? (
-                                    <Image source={{ uri: grupo.foto }} style={styles.image} />
-                                ) : (
-                                    <Image source={require("../../../assets/avatar2.png")} style={styles.image} />
-                                )
-                            }
-                            <View style={{ flexDirection: "column" }}>
-                                <Text style={{ color: "#142a4c", fontSize: 16, fontWeight: "bold" }}>{grupo.nome}</Text>
-                            </View>
-
-                            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => transferContactToGroup(grupo)}>
-                                <Icon name="arrow-forward-outline" type="ionicon" color={"#9ac31c"} />
-                            </TouchableOpacity>
-                        </View>
-                    )
-
-                })
-                    : groups?.map((grupo, index) => {
-
-                        return (
-                            <View key={index} style={styles.blocoContato}>
-                                {
-                                    grupo.foto ? (
-                                        <Image source={{ uri: grupo.foto }} style={styles.image} />
-                                    ) : (
-                                        <Image source={require("../../../assets/avatar2.png")} style={styles.image} />
-                                    )
-                                }
-                                <View style={{ flexDirection: "column" }}>
-                                    <Text style={{ color: "#142a4c", fontSize: 16, fontWeight: "bold" }}>{grupo.nome}</Text>
-                                </View>
-
-                                <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => transferContactToGroup(grupo)}>
-                                    <Icon name="arrow-forward-outline" type="ionicon" color={"#9ac31c"} />
-                                </TouchableOpacity>
-                            </View>
-                        )
-
-                    })
-            }
-        </ScrollView>,
     }
 
 
@@ -147,10 +57,7 @@ export default function Transferir() {
     }
 
     useEffect(() => {
-        if (!search) {
-            setSearchList(attendances)
-        }
-        else if (search && setView === "atendentes") {
+        if (search && setView === "atendentes") {
             let newList = attendances.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
             setSearchList(newList)
         }
@@ -160,6 +67,7 @@ export default function Transferir() {
         }
 
     }, [search])
+
 
     return (
         <View style={styles.container}>
