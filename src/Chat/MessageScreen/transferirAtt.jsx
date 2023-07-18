@@ -19,7 +19,7 @@ export default function Transferir() {
     const [setView, setSetView] = useState("atendentes");
 
     const views = {
-        atendentes: <Atendentes attendances={attendances} searchList={searchList} transferContactToAtendente />,
+        atendentes: <Atendentes attendances={attendances} searchList={searchList} transferContactToAtendente={transferContactToAtendente} />,
         grupos: <Grupos groups={groups} searchList={searchList} transferContactToGroup={transferContactToGroup} />
 
     }

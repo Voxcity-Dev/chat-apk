@@ -2,12 +2,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 
 export default function Atendentes(props) {
-    const { attendances, search, searchList, transferContactToAtendente } = props;
+    const { attendances, searchList, transferContactToAtendente } = props;
     return (
         <ScrollView style={{ width: "100%", height: "30%" }}>
             {
 
-                search !== "" ? searchList.map((atendente, index) => {
+                searchList.length >0 ?  searchList.map((atendente, index) => {
                     return (
                         <View key={index} style={styles.blocoContato}>
                             {
