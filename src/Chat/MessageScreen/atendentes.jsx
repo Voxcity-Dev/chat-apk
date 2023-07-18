@@ -3,20 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'rea
 import { Icon } from '@rneui/themed';
 export default function Atendentes(props) {
     const { attendances, searchList, transferContactToAtendente } = props;
-    const [list, setList] = useState([]);
 
-    useEffect(() => {
-        if (searchList.length > 0) {
-            setList(searchList);
-        } else {
-            setList(attendances);
-        }
-    }, [searchList, attendances]);
+
     return (
         <ScrollView style={{ width: "100%", height: "30%" }}>
             {
 
-                 list?.map((atendente, index) => {
+                searchList?.map((atendente, index) => {
                     return (
                         <View key={index} style={styles.blocoContato}>
                             {
@@ -36,10 +29,10 @@ export default function Atendentes(props) {
                             </TouchableOpacity>
                         </View>
                     )
-                }) 
+                })
             }
         </ScrollView>
-  )
+    )
 }
 
 

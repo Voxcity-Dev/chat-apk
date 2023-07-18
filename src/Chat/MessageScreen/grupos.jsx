@@ -3,15 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'rea
 import { Icon } from '@rneui/themed';
 export default function Grupos(props) {
     const { groups,  searchList, transferContactToGroup } = props;
-    const [list, setList] = useState([]);
-
-    useEffect(() => {
-        if (searchList.length > 0) {
-            setList(searchList);
-        } else {
-            setList(groups);
-        }
-    }, [searchList, groups]);
+    
+ 
     
     return (
         <ScrollView style={{ width: "100%", height: "30%" }}>
