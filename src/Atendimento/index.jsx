@@ -1,13 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet,TextInput } from 'react-native';
 import AtendimentosEspera from './types/espera';
 import MeusAtendimentos from './types/meusAtendimento';
 import AtendimentosPotencial from './types/potencial';
 import { AttendanceContext } from '../../context/AttendanceProvider';
 import { UserContext } from '../../context/UserProvider';
 import Chat from '../Chat/index';
-import { Icon, Input } from '@rneui/native';
-
+import { Icon } from '@rneui/native';
 export default function Atendimentos(props) {
   const { user } = useContext(UserContext);
   const { attendances, myWaitingAtt, selectedAtendimento, setSelectedAtendimento } = useContext(AttendanceContext);
