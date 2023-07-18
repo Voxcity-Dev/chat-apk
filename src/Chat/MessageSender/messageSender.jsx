@@ -35,7 +35,7 @@ export default function MessageSender(props) {
 
   function clearMessage() {
     setMessage('');
-    setFiles({});
+    setFiles([]);
     setAudio(null);
   }
 

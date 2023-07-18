@@ -8,7 +8,13 @@ export default function FileInput(props) {
     try {
       let result = await DocumentPicker.getDocumentAsync({});
       if (result.type === "success" && result) {
-        props.setFiles([...props.files, result]); // Adiciona o arquivo selecionado ao array de arquivos
+        let files;
+        if (props.files) {
+          files = [...props.files, result];
+        } else {
+          files = [result];
+        }
+        props.setFiles(files); // Adiciona o arquivo selecionado ao array de arquivos
       }
     } catch (error) {
       console.log('Error picking document:', error);
@@ -16,7 +22,6 @@ export default function FileInput(props) {
   };
 
   const removeFile = (index) => {
-    props.setFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
     props.clearMessage(); 
   }
 
@@ -26,7 +31,7 @@ export default function FileInput(props) {
     } else {
         return message;
     }
-}
+  }
 
   return (
     <>
@@ -72,7 +77,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 40,
     right: -60,
-    width:310,
+    width: 300,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
