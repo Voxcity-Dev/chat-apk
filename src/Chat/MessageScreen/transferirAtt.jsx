@@ -138,5 +138,16 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         marginRight: 10,
     },
+    searchBar: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        borderWidth: 0.4,
+        borderColor: '#142a4c',
+        height: 40,
+        borderRadius: 5,
+        margin: 10,
+    }
 
 });
