@@ -29,8 +29,16 @@ export default function Transferir() {
         setAttendances([...newUsers]);
         let newGroups = pref.services.voxbot.atendentes
         setGroups([...newGroups]);
-
-    }, [pref.users, user])
+        if (setView === "atendentes") {
+            let newSearchList = [...attendances] 
+            if(search)newSearchList =attendances.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
+            setSearchList([...newSearchList]);
+        } else {
+            let newSearchList = [...groups] 
+            if(search)newSearchList =groups.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
+            setSearchList([...newSearchList]);
+        }
+    }, [pref.users, user,search])
 
     function transferContactToGroup(grupo) {
         let newContact = JSON.parse(JSON.stringify(selectedAtendimento))
@@ -54,17 +62,6 @@ export default function Transferir() {
         navigation.navigate('Atendimento')
     }
 
-    useEffect(() => {
-        if (setView === "atendentes") {
-            let newSearchList = [...attendances] 
-            if(search)newSearchList =attendances.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
-            setSearchList([...newSearchList]);
-        } else {
-            let newSearchList = [...groups] 
-            if(search)newSearchList =groups.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
-            setSearchList([...newSearchList]);
-        }
-    }, [search])
 
     return (
         <View style={styles.container}>
