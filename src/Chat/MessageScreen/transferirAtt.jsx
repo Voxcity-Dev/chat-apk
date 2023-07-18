@@ -30,12 +30,12 @@ export default function Transferir() {
         let newGroups = pref.services.voxbot.atendentes
         setGroups([...newGroups]);
         if (setView === "atendentes") {
-            let newSearchList = [...attendances] 
-            if(search)newSearchList =attendances.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
+            let newSearchList = [...newUsers] 
+            if(search)newSearchList =newSearchList.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
             setSearchList([...newSearchList]);
         } else {
-            let newSearchList = [...groups] 
-            if(search)newSearchList =groups.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
+            let newSearchList = [...newGroups] 
+            if(search)newSearchList =newSearchList.filter((att) => att.nome.toLowerCase().includes(search.toLowerCase()));
             setSearchList([...newSearchList]);
         }
     }, [pref.users, user,search,setView])
