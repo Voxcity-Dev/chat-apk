@@ -53,10 +53,10 @@ export const UserProvider = ({children}) => {
         setLoading(false);
     }
 
-    const deslogar = () => {
+    const deslogar = async () => {
         setUser({});
         setSigned(false);
-        AsyncStorage.removeItem('@VoxChatToken');
+        await AsyncStorage.removeItem('@VoxChatToken');
     }
 
 
