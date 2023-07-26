@@ -2,11 +2,21 @@ import React,{useState} from 'react'
 import { View,StyleSheet,Text,TouchableOpacity,Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from '@rneui/themed';
-import apiUser from '../../../apiUser';
+import { Alert } from "react-native";
 
 export default  function AtendimentosPotencial (props) {
   const [showCard, setShowCard] = useState({});
   const navigation = useNavigation();
+  const ShowAlert = (title, message) => {
+    Alert.alert(
+        title,
+        message,
+        [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+        ],
+        { cancelable: false }
+    );
+  };
 
   function countAndSlice(message) {
     if (!message) return ""
@@ -25,7 +35,7 @@ export default  function AtendimentosPotencial (props) {
     newContact.historico = history;
     apiUser.post("/atendimentos/pickup", { contact: newContact })
       .then((res) => {
-        alert("Atendimento transferido para seus Atendimentos com sucesso!");
+        ShowAlert("Sucesso", "Atendimento transferido para seus Atendimentos com sucesso!");
       })
       .catch((err) => console.log(err));
   }
@@ -47,7 +57,7 @@ export default  function AtendimentosPotencial (props) {
     }));
 
     if (att.atendente) {
-      alert("Atendimento já está sendo atendido por outro atendente!");
+      ShowAlert("Atenção", "Atendimento já está sendo atendido por outro atendente!");
     }
   }
 

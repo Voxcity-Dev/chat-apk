@@ -3,10 +3,22 @@ import { View, StyleSheet, Text, TouchableOpacity, Image, ScrollView } from 'rea
 import { UserContext } from '../../../context/UserProvider';
 import apiUser from '../../../apiUser';
 import { Icon } from '@rneui/themed';
+import { Alert } from "react-native";
 
 export default function AtendimentosEspera(props) {
   const { userContext } = useContext(UserContext);
   const [showCard, setShowCard] = useState({});
+  const ShowAlert = (title, message) => {
+    Alert.alert(
+        title,
+        message,
+        [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+        ],
+        { cancelable: false }
+    );
+  };
+
 
   function timeHasZero(time) {
     if (time < 10) return "0" + time;
@@ -40,7 +52,7 @@ export default function AtendimentosEspera(props) {
     }));
 
     if (att.atendente) {
-      alert("Atendimento já está sendo atendido por outro atendente!");
+      ShowAlert("Atenção", "Atendimento já foi pego por outro atendente");
     }
   }
 
@@ -51,7 +63,7 @@ export default function AtendimentosEspera(props) {
     newContact.historico = history;
     apiUser.post("/atendimentos/pickup", { contact: newContact })
       .then((res) => {
-        alert("Atendimento transferido com sucesso!");
+        ShowAlert("Sucesso", "Atendimento transferido com sucesso");
       })
       .catch((err) => console.log(err));
   }

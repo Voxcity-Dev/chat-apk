@@ -7,6 +7,7 @@ import ChatComponent from '../../Chat/index';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import apiUser from '../../../apiUser';
+import { Alert } from "react-native";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -22,6 +23,16 @@ export default function ChatPrivado() {
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
+    const ShowAlert = (title, message) => {
+      Alert.alert(
+          title,
+          message,
+          [
+              { text: "OK", onPress: () => console.log("OK Pressed") }
+          ],
+          { cancelable: false }
+      );
+    };
 
 
     useEffect(() => {
@@ -58,7 +69,7 @@ export default function ChatPrivado() {
         .post('/notifications/registerExpoToken', { token })
         .then(response => {
           if (response.data.error) {
-            alert(response.data.error);
+            Alert.alert('Erro', response.data.error);
           } else {
             console.log(response.data);
           }
@@ -103,14 +114,14 @@ async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
+      alert('Falha ao obter permissão para notificações push!');
       return;
     }
     if(finalStatus === 'granted'){
       token = (await Notifications.getDevicePushTokenAsync()).data;
     }
   } else {
-    alert('Must use physical device for Push Notifications');
+    alert('Deve usar um dispositivo físico para testar notificações push!');
   }
 
   return token;

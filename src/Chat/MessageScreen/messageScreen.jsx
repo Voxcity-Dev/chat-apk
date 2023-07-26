@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { UserContext } from '../../../context/UserProvider';
@@ -6,53 +6,64 @@ import Header from './header';
 import AudioMsg from './types/audio';
 import FileMsg from './types/file';
 import MessagesMsg from './types/messages';
+import ImageMsg from './types/image';
+import VideoMsg from './types/video';
 
 export default function MessageScreen(props) {
   const { user } = useContext(UserContext);
-  const [visibleMessages, setVisibleMessages] = useState(20);
+  const [visibleMessages, setVisibleMessages] = useState(30);
   const [messages, setMessages] = useState([]);
   const [contact, setContact] = useState({});
+  const flatListRef = useRef(null);
 
   useEffect(() => {
-    let newContact = {...props.contato};
+    let newContact = { ...props.contato };
     setContact(newContact);
   }, [props.contato]);
 
   useEffect(() => {
-    if(contact && visibleMessages && contact.allMessages?.length > 0){
-      let newMessages = [];
-      newMessages = [...contact.allMessages];
-      if(newMessages.length > 0 ){
-        newMessages = newMessages.reverse().slice(0,visibleMessages).reverse()
+    if (contact && visibleMessages && contact.allMessages?.length > 0) {
+      let newMessages = [...contact.allMessages];
+      if (newMessages.length > 0) {
+        newMessages = newMessages.reverse().slice(0, visibleMessages).reverse();
       }
       setMessages(newMessages);
     }
   }, [contact]);
 
+  useEffect(() => {
+    if (flatListRef.current && messages.length > 0) {
+      flatListRef.current.scrollToIndex({ index: messages.length - 1, animated: true });
+    }
+  }, [messages]);
+
 
   const renderMessage = ({ item, index }) => {
-
+  
     let isSentMessage;
     if (contact && props.tipo === 'private') {
       isSentMessage = item.from !== contact._id;
-    }else if (contact && props.tipo === 'group') {
+    } else if (contact && props.tipo === 'group') {
       isSentMessage = item.from === user._id;
-    }else if (contact && props.tipo === 'att') {
+    } else if (contact && props.tipo === 'att') {
       isSentMessage = item.from !== contact.telefone;
     }
-
+  
     const messageComponents = {
       file: <FileMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,
       audio: <AudioMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,
+      image: <ImageMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,
+      video: <VideoMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,
     };
-
+  
     const defaultMessageComponent = (
       <MessagesMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />
     );
-
+  
     const MessageComponent = messageComponents[item.msgTypo] || defaultMessageComponent;
     return MessageComponent;
   };
+  
 
 
   const loadMoreMessages = () => {
@@ -64,6 +75,16 @@ export default function MessageScreen(props) {
       setMessages(newMessages);
       setVisibleMessages(newVisibleMessages);
     }
+  };
+
+  const getItemLayout = (data, index) => {
+    const itemHeight = 100;
+    const itemSeparator = 8;
+    return {
+      length: itemHeight,
+      offset: (itemHeight + itemSeparator) * index,
+      index,
+    };
   };
 
 
@@ -79,10 +100,13 @@ export default function MessageScreen(props) {
       )}
 
       <FlatList
+        ref={flatListRef}
         data={messages}
         renderItem={renderMessage}
-        keyExtractor={(item) => item._id + Math.random()}
+        keyExtractor={(item) => item._id}
         contentContainerStyle={styles.messageList}
+        getItemLayout={getItemLayout}
+        initialScrollIndex={messages.length - 1} // Scroll para ultima mensagem
       />
 
     </View>

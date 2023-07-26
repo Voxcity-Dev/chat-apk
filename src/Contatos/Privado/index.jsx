@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         color: '#FFF',
-        padding: 10,
+        padding: 5,
         gap: 20,
         alignSelf: 'center',
         alignContent: 'center',
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         color: 'gray',
         fontSize: 14,
-        alignSelf:"flex-end"
+        alignSelf:"flex-end",
     },
     searchContainer: {
         width:'70%',

@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Linking, Image } from 'react-native';
-import { Icon } from '@rneui/themed';
+import { View, Text, StyleSheet } from 'react-native';
 import { Video } from 'expo-av';
 
-export default function FileMsg(props) {
+export default function VideoMsg(props) {
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
 
@@ -27,39 +26,20 @@ export default function FileMsg(props) {
       <Text style={{ fontSize: 12, textAlign: 'left' }}>
         {props.item.from === props.user._id ? null : props.item.fromUsername}
       </Text>
-      {props.item.files.map((file, index) => {
-        if (file.type.includes('image')) {
-          return (
-            <TouchableOpacity key={index} onPress={() => Linking.openURL(file.url)}>
-              <Image source={{ uri: file.url }} style={{ width: 100, height: 100 }} />
-              <Text>{file.name || file.type}</Text>
-            </TouchableOpacity>
-          );
-        } else if (file.type.includes('video')) {
-          return (
-            <View key={index} onPress={handlePlayPause}>
+        {
+            props.item.video &&
+            <View onPress={handlePlayPause}>
               <Video
                 ref={videoRef}
-                source={{ uri: file.url }}
+                source={{ uri: props.item.video.url }}
                 style={{ width: 300, height: 200 }}
                 useNativeControls // Use os controles nativos do sistema (Expo AVPlayer)
                 resizeMode="contain" // Ajuste a escala do vídeo para que caiba no player
                 isLooping // Configura o vídeo para reproduzir em loop
               />
-              <Text>{file.name || file.type}</Text>
+              <Text>{props.item.video.name || props.item.video.type}</Text>
             </View>
-          );
-        } else {
-          return (
-            <TouchableOpacity key={index} onPress={() => Linking.openURL(file.url)}>
-              <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                <Icon name="document-text-sharp" type="ionicon" size={20} style={styles.icon} />
-                <Text>{file.name || file.type}</Text>
-              </View>
-            </TouchableOpacity>
-          );
         }
-      })}
     </View>
   );
 }

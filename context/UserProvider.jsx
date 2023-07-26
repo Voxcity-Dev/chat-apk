@@ -3,6 +3,7 @@ import  io  from "socket.io-client";
 import apiUser from "../apiUser";
 import { REACT_APP_SOCKET_URL } from '@env';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
 
 
 export const UserContext = createContext({});
@@ -16,6 +17,16 @@ export const UserProvider = ({children}) => {
     const [token, setToken] = useState('');
     const [socket, setSocket] = useState(null);
     const [remindMe, setRemindMe] = useState(false);
+    const ShowAlert = (title, message) => {
+        Alert.alert(
+            title,
+            message,
+            [
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: false }
+        );
+    };
 
     
     const logar = async (email,senha,conta) => {
@@ -23,7 +34,7 @@ export const UserProvider = ({children}) => {
         await apiUser.post('/login', {email,senha,conta})
         .then(async (response) => {
             if(response.data.error){
-                alert(response.data.error);
+                ShowAlert("Erro",response.data.error);
                 setLoading(false);
             }else{
                 setApp(response.data);

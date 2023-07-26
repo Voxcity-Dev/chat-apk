@@ -6,12 +6,23 @@ import { GroupContext } from '../../../context/GroupProvider';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
 import { useNavigation } from '@react-navigation/native';
 import apiUser from '../../../apiUser';
+import { Alert } from "react-native";
 
 export default function Header() {
   const { selectedContact, setSelectedContact } = useContext(ContactContext);
   const { selectedGroup, setSelectedGroup } = useContext(GroupContext);
   const { selectedAtendimento, setSelectedAtendimento } = useContext(AttendanceContext);
   const navigation = useNavigation();
+  const ShowAlert = (title, message) => {
+    Alert.alert(
+        title,
+        message,
+        [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+        ],
+        { cancelable: false }
+    );
+  };
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
@@ -55,7 +66,7 @@ export default function Header() {
     let newContact = JSON.parse(JSON.stringify(selectedContact));
     delete newContact.allMessages;
     apiUser.post("/atendimentos/finish", { contact: newContact }).then((res) => {
-      alert("Atendimento finalizado com sucesso!");
+      ShowAlert("Sucesso", "Atendimento finalizado com sucesso!");
       setSelectedAtendimento(null);
     });
   }
