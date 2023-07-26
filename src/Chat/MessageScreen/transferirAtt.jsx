@@ -7,6 +7,7 @@ import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import Atendentes from './atendentes';
 import Grupos from './grupos';
+import { Alert } from "react-native";
 
 export default function Transferir() {
     const { selectedAtendimento, setSelectedAtendimento } = useContext(AttendanceContext);
@@ -17,6 +18,16 @@ export default function Transferir() {
     const [searchList, setSearchList] = useState([]);
     const navigation = useNavigation();
     const [setView, setSetView] = useState("atendentes");
+    const ShowAlert = (title, message) => {
+        Alert.alert(
+            title,
+            message,
+            [
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: false }
+        );
+      };
 
     const views = {
         atendentes: <Atendentes attendances={attendances} searchList={searchList} transferContactToAtendente={transferContactToAtendente} styles={styles} />,
@@ -42,10 +53,13 @@ export default function Transferir() {
 
     function transferContactToGroup(grupo) {
         let newContact = JSON.parse(JSON.stringify(selectedAtendimento))
-        apiUser.post("/atendimentos/waiting", { contact: newContact, grupo }).then((res) => {
-            console.log(res.data);
-            alert("Contato transferido para a lista de espera do grupo " + grupo.nome + " com sucesso!");
-        }).catch(err => console.log(err));
+        apiUser.post("/atendimentos/waiting", { contact: newContact, grupo })
+        .then((res) => {
+            ShowAlert("Sucesso", "Contato transferido para a lista de espera do grupo " + grupo.nome + " com sucesso!");
+        }).catch(err => {
+            console.log(err)
+            ShowAlert("Erro", "Erro ao transferir contato para a lista de espera do grupo " + grupo.nome + "!");
+        });
         setSelectedAtendimento(null)
         navigation.navigate('Atendimento')
     }
@@ -56,8 +70,11 @@ export default function Transferir() {
         delete newAtt.allMessages;
         delete newContact.allMessages;
         apiUser.post("/atendimentos/transfer", { contact: newContact, atendente: newAtt }).then((res) => {
-            alert("Contato transferido para o atendente " + atendente.nome + " com sucesso!");
-        }).catch(err => console.log(err));
+            ShowAlert("Sucesso", "Contato transferido para o atendente " + atendente.nome + " com sucesso!");
+        }).catch(err => {
+            console.log(err)
+            ShowAlert("Erro", "Erro ao transferir contato para o atendente " + atendente.nome + "!");
+        });
         setSelectedAtendimento(null)
         navigation.navigate('Atendimento')
     }

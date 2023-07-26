@@ -11,9 +11,10 @@ import VideoMsg from './types/video';
 
 export default function MessageScreen(props) {
   const { user } = useContext(UserContext);
-  const [visibleMessages, setVisibleMessages] = useState(30);
+  const [visibleMessages, setVisibleMessages] = useState(20);
   const [messages, setMessages] = useState([]);
   const [contact, setContact] = useState({});
+  const [scrolling, setScrolling] = useState(false);
   const flatListRef = useRef(null);
 
   useEffect(() => {
@@ -28,15 +29,14 @@ export default function MessageScreen(props) {
         newMessages = newMessages.reverse().slice(0, visibleMessages).reverse();
       }
       setMessages(newMessages);
+      
+      if(!scrolling){
+        setTimeout(() => {
+        scrollToBottom();
+        }, 1000);
+      }
     }
   }, [contact]);
-
-  useEffect(() => {
-    if (flatListRef.current && messages.length > 0) {
-      flatListRef.current.scrollToIndex({ index: messages.length - 1, animated: true });
-    }
-  }, [messages]);
-
 
   const renderMessage = ({ item, index }) => {
   
@@ -59,7 +59,6 @@ export default function MessageScreen(props) {
     const defaultMessageComponent = (
       <MessagesMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />
     );
-  
     const MessageComponent = messageComponents[item.msgTypo] || defaultMessageComponent;
     return MessageComponent;
   };
@@ -74,19 +73,26 @@ export default function MessageScreen(props) {
       newMessages = newMessages.reverse().slice(0,newVisibleMessages).reverse()
       setMessages(newMessages);
       setVisibleMessages(newVisibleMessages);
+      scrollToTop();
     }
   };
 
-  const getItemLayout = (data, index) => {
-    const itemHeight = 100;
-    const itemSeparator = 8;
-    return {
-      length: itemHeight,
-      offset: (itemHeight + itemSeparator) * index,
-      index,
-    };
+  const scrollToBottom = () => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToEnd({ animated: true });
+    }
   };
 
+  const scrollToTop = () => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+      setScrolling(true)
+      setTimeout(() => {
+        setScrolling(false)
+      }, 3000);
+    }
+  };
+  
 
   return (
     <View style={{ flex: 1, width: "100%" }}>
@@ -104,9 +110,7 @@ export default function MessageScreen(props) {
         data={messages}
         renderItem={renderMessage}
         keyExtractor={(item) => item._id}
-        contentContainerStyle={styles.messageList}
-        getItemLayout={getItemLayout}
-        initialScrollIndex={messages.length - 1} // Scroll para ultima mensagem
+        contentContainerStyle={styles.messageList} 
       />
 
     </View>

@@ -39,7 +39,7 @@ export default function ChatPrivado() {
       const registerAndInsertToken = async () => {
         try {
           const token = await registerForPushNotificationsAsync();
-          console.log(token);
+          console.log(token,"token de notificação");
           insertExpoToken(token);
           setExpoPushToken(token);
         } catch (error) {
