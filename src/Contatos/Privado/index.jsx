@@ -52,10 +52,10 @@ export default function PrivadoList() {
         } else if(timeDiff >= 24 * 60 * 60 * 1000) {
             // Já passou mais de 24 horas
             return `${"    "}Ontem`;
-          } else {
-            return `${"     "}${hours}:${minutes}`;
-          }
-      }
+        } else {
+        return `${"     "}${hours}:${minutes}`;
+        }
+    }
 
     function limitMessage(message) {
         if (message.length > 30) {
@@ -107,7 +107,7 @@ export default function PrivadoList() {
                                             <Text></Text>
                                         )}
                                     </View>
-                                    <View style={{width:"70%",flexDirection:"row",marginTop:5,alignSelf:'baseline'}}>
+                                    <View style={{maxWidth:"75%",flexDirection:"row",marginTop:5,alignSelf:'baseline'}}>
                                         {
                                             contact?.lastMessage?.message !== undefined ?
                                             <Text style={styles.lastMessage}>{limitMessage(contact.lastMessage?.message)}</Text>: <Text style={styles.lastMessage}>Inicie uma conversa.</Text>
@@ -133,7 +133,7 @@ export default function PrivadoList() {
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
+        maxWidth:'100%',
         flex: 1,
         flexDirection: 'column',
         backgroundColor: '#fff',

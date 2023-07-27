@@ -59,8 +59,8 @@ export default function MessageScreen(props) {
     const defaultMessageComponent = (
       <MessagesMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />
     );
-    const MessageComponent = messageComponents[item.msgTypo] || defaultMessageComponent;
-    return MessageComponent;
+    
+    return messageComponents[item.msgTypo] || defaultMessageComponent;
   };
   
 

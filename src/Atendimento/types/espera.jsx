@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     width: "50%",
   },
   transferContainer:{
-    width: "50%",
+    maxWidth: "30%",
     height: 50,
     display: "flex",
     alignItems: "center",

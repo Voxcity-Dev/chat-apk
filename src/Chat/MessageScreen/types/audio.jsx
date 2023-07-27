@@ -11,6 +11,28 @@ export default function AudioMsg(props) {
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
 
+  function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const currentDate = new Date();
+    const timeDiff = currentDate.getTime() - date.getTime();
+    const hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+  
+    if (timeDiff >= 48 * 60 * 60 * 1000) {
+      // Já passou mais de 48 horas
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+  
+      return `${day}/${month}/${year}`;
+    } else if(timeDiff >= 24 * 60 * 60 * 1000) {
+        // Já passou mais de 24 horas
+        return `${"    "}Ontem`;
+    } else {
+    return `${"     "}${hours}:${minutes}`;
+    }
+  }
+
   async function playAudio() {
     console.log('Playing audio...');
     try {
@@ -61,6 +83,7 @@ export default function AudioMsg(props) {
     <View key={props.index} style={[styles.messageContainer, props.isSentMessage ? styles.sentMessage : styles.receivedMessage]}>
       <Text style={{ fontSize: 12, textAlign: 'left' }}>{props.item.from === props.user._id ? null : props.item.fromUsername}</Text>
       {audioURI ? (
+        <>
         <View style={styles.audioControls}>
           <TouchableOpacity onPress={isPlaying ? stopAudio : playAudio}>
             <Icon name={isPlaying ? 'pause-sharp' : 'play-sharp'} type="ionicon" size={20} color={"#142a4c"} style={styles.icon} />
@@ -77,6 +100,8 @@ export default function AudioMsg(props) {
             />
           <Text style={styles.timeText}>{formatTime(position)} / {formatTime(duration)}</Text>
         </View>
+        <Text style={{ fontSize: 8, textAlign: 'right',color:'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
+        </>
       ) : null}
     </View>
   );

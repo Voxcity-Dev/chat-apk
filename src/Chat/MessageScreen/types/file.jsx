@@ -19,6 +19,28 @@ export default function FileMsg(props) {
     setIsPlaying(!isPlaying);
   };
 
+  function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const currentDate = new Date();
+    const timeDiff = currentDate.getTime() - date.getTime();
+    const hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+  
+    if (timeDiff >= 48 * 60 * 60 * 1000) {
+      // Já passou mais de 48 horas
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+  
+      return `${day}/${month}/${year}`;
+    } else if(timeDiff >= 24 * 60 * 60 * 1000) {
+        // Já passou mais de 24 horas
+        return `${"    "}Ontem`;
+    } else {
+    return `${"     "}${hours}:${minutes}`;
+    }
+  }
+
   return (
     <View
       key={props.index}
@@ -33,6 +55,7 @@ export default function FileMsg(props) {
             <TouchableOpacity key={index} onPress={() => Linking.openURL(file.url)}>
               <Image source={{ uri: file.url }} style={{ width: 100, height: 100 }} />
               <Text>{file.name || file.type}</Text>
+              <Text style={{ fontSize: 8, textAlign: 'right',color:'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
             </TouchableOpacity>
           );
         } else if (file.type.includes('video')) {
@@ -47,6 +70,7 @@ export default function FileMsg(props) {
                 isLooping // Configura o vídeo para reproduzir em loop
               />
               <Text>{file.name || file.type}</Text>
+              <Text style={{ fontSize: 8, textAlign: 'right',color:'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
             </View>
           );
         } else {
@@ -56,6 +80,7 @@ export default function FileMsg(props) {
                 <Icon name="document-text-sharp" type="ionicon" size={20} style={styles.icon} />
                 <Text>{file.name || file.type}</Text>
               </View>
+              <Text style={{ fontSize: 8, textAlign: 'right',color:'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
             </TouchableOpacity>
           );
         }
