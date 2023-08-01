@@ -18,6 +18,7 @@
     "axios": "^1.4.0",
     "expo": "~48.0.18",
     "expo-av": "~13.2.1",
+    "expo-camera": "~13.2.1",
     "expo-dev-client": "~2.2.1",
     "expo-device": "^5.2.1",
     "expo-document-picker": "~11.2.2",

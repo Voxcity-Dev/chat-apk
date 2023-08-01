@@ -4,6 +4,7 @@ import { UserContext } from '../../../context/UserProvider';
 import AudioRecorder from './audioRecorder';
 import FileInput from './fileInput';
 import AudioPlayer from './audioPlayer';
+import CameraPicker from './cameraPicker';
 import apiUser from '../../../apiUser';
 import { Icon } from '@rneui/themed';
 
@@ -14,6 +15,7 @@ export default function MessageSender(props) {
   const [typing, setTyping] = useState(false);
   const [files, setFiles] = useState([]);
   const [audio, setAudio] = useState(null);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
 
   useEffect(() => {
     let newContact = {...props.contato};
@@ -132,7 +134,7 @@ export default function MessageSender(props) {
       formData.append('audio', audioConfig);
       uploadAudio(formData, props.tipo)
         .then(resp => {
-          setFiles({});
+          setFiles([]);
           setMessage('');
           setAudio(null);
         })
@@ -173,35 +175,32 @@ export default function MessageSender(props) {
             value={message}
             onChangeText={text => changeMessage(text)}
           />
+
+          <View style={styles.fileInputContainer}>
+              <CameraPicker  setIsCameraOpen={setIsCameraOpen} isCameraOpen={isCameraOpen} files={files} setFiles={setFiles}/>
+          </View>
   
           <View style={styles.fileInputContainer}>
             <FileInput files={files} setFiles={setFiles} clearMessage={clearMessage}/>
           </View>
-  
-          {/* <View style={styles.fileInputContainer}>
-            <Icon name="camera-sharp" type="ionicon" size={25} color={'#9ac31c'} />
-          </View> */}
-  
+
         </View>
         )
       }
 
       <View>
 
-        {
-          message.length > 0 || files.length > 0 || audio ?
-              <View style={styles.boxSendButton}>
-              <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-                <Icon name="send-sharp" type="ionicon" color={'#9ac31c'} />
-              </TouchableOpacity>
-            </View>
-            :
-            (
-            <View style={styles.audioRecorderContainer}>
-              <AudioRecorder audio={audio} setAudio={setAudio} />
-            </View>
-          )
-        }
+      {!isCameraOpen && (message.length > 0 || files.length > 0 || audio ? (
+          <View style={styles.boxSendButton}>
+            <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+              <Icon name="send-sharp" type="ionicon" color={'#9ac31c'} />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.audioRecorderContainer}>
+            <AudioRecorder audio={audio} setAudio={setAudio} isCameraOpen={isCameraOpen} />
+          </View>
+        ))}
       </View>
 
     </View>

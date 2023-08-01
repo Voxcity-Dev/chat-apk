@@ -26,7 +26,7 @@ export default function FileInput(props) {
   }
 
   function limitMessage(message) {
-    if (message.length > 20) {
+    if (message?.length > 20) {
         return message.substring(0, 30) + '...';
     } else {
         return message;
@@ -39,9 +39,9 @@ export default function FileInput(props) {
         <Icon name="attach-sharp" type="ionicon" size={25} color={"#9ac31c"} />
       </TouchableOpacity>
       <View style={styles.container}>
-        {props.files.length > 0 && (
+        {props.files?.length > 0 && (
           <View style={styles.filesShow}>
-            {props.files.map((file, index) => (
+            {props.files?.map((file, index) => (
               <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={{ color: "#FFF" }}>Arquivo em anexo: {limitMessage(file.name)}</Text>
                 <TouchableOpacity style={{ margin: 10 }} onPress={() => removeFile(index)}>
