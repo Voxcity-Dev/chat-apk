@@ -1,4 +1,4 @@
-import React, { useState, useRef, } from 'react';
+import React, { useState, useRef} from 'react';
 import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { Camera } from 'expo-camera';
 import { Icon } from '@rneui/themed';
@@ -8,8 +8,6 @@ export default function CameraPicker(props) {
     const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
     const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
     const [isRecording, setIsRecording] = useState(false);
-
-
 
     async function handleCameraIconPress() {
         if (cameraRef.current) {
@@ -88,6 +86,8 @@ export default function CameraPicker(props) {
                             style={styles.camera}
                             type={cameraType}
                             flashMode={flashMode}
+                            ratio="16:9"
+                            autoFocus="on"
                         >
                             <View style={styles.buttonContainer}>
                                 <TouchableOpacity style={styles.closeButton} onPress={handleCameraClose}>
