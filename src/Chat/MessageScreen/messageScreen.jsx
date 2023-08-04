@@ -8,6 +8,8 @@ import FileMsg from './types/file';
 import MessagesMsg from './types/messages';
 import ImageMsg from './types/image';
 import VideoMsg from './types/video';
+import Reply from './types/reply';
+import Forward from './types/forward';
 
 export default function MessageScreen(props) {
   const { user } = useContext(UserContext);
@@ -48,12 +50,21 @@ export default function MessageScreen(props) {
     } else if (contact && props.tipo === 'att') {
       isSentMessage = item.from !== contact.telefone;
     }
+
+    if(item.msgTypo === 'reply' || item.reply?.length > 0){
+      return <Reply key={index} item={item} isSentMessage={isSentMessage} user={user} />
+    }
+
+    if(item.msgTypo === 'forwarding' || item.forwarding?.length > 0){
+      return <Forward key={index} item={item} isSentMessage={isSentMessage} user={user} />
+    }
   
     const messageComponents = {
       file: <FileMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,
       audio: <AudioMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,
       image: <ImageMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,
       video: <VideoMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,
+      reply: <Reply key={index} item={item} isSentMessage={isSentMessage} user={user} />,
     };
   
     const defaultMessageComponent = (

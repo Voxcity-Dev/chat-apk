@@ -5,6 +5,7 @@ import Unsigned from './unsigned';
 import { GroupProvider } from '../context/GroupProvider';
 import { ContacProvider } from '../context/ContacProvider';
 import { AttendanceProvider } from '../context/AttendanceProvider';
+import { ReplyForwardingProvider } from '../context/ReplyForwardingProvider';
 
 
 const AppRoutes = () => {
@@ -16,7 +17,9 @@ const AppRoutes = () => {
             <ContacProvider>
                 <GroupProvider>
                     <AttendanceProvider>
-                        <Signed />
+                        <ReplyForwardingProvider>
+                            <Signed />
+                        </ReplyForwardingProvider>
                     </AttendanceProvider>
                 </GroupProvider>
             </ContacProvider>

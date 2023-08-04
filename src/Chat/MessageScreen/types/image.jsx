@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text, StyleSheet, Linking, Image } from 'react-
 
 
 export default function ImageMsg(props) {
+  
   function formatTimestamp(timestamp) {
     const date = new Date(timestamp);
     const currentDate = new Date();

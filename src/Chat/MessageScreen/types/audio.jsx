@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { Audio } from 'expo-av';
 import Slider from '@react-native-community/slider';
+import HiddenButtons from '../hiddenButtons';
 
 export default function AudioMsg(props) {
   const [audioURI, setAudioURI] = useState(props.item.audio.url);
@@ -10,6 +11,12 @@ export default function AudioMsg(props) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [showOptions, setShowOptions] = useState(false);
+  const replyCor = props.isSentMessage ? '#DCF8C6' : '#EDEDED';
+
+  function showButtons() {
+    setShowOptions(!showOptions);
+  }
 
   function formatTimestamp(timestamp) {
     const date = new Date(timestamp);
@@ -17,19 +24,19 @@ export default function AudioMsg(props) {
     const timeDiff = currentDate.getTime() - date.getTime();
     const hours = date.getHours();
     const minutes = date.getMinutes().toString().padStart(2, '0');
-  
+
     if (timeDiff >= 48 * 60 * 60 * 1000) {
       // Já passou mais de 48 horas
       const day = date.getDate().toString().padStart(2, '0');
       const month = (date.getMonth() + 1).toString().padStart(2, '0');
       const year = date.getFullYear();
-  
+
       return `${day}/${month}/${year}`;
-    } else if(timeDiff >= 24 * 60 * 60 * 1000) {
-        // Já passou mais de 24 horas
-        return `${"    "}Ontem`;
+    } else if (timeDiff >= 24 * 60 * 60 * 1000) {
+      // Já passou mais de 24 horas
+      return `${"    "}Ontem`;
     } else {
-    return `${"     "}${hours}:${minutes}`;
+      return `${"     "}${hours}:${minutes}`;
     }
   }
 
@@ -80,30 +87,35 @@ export default function AudioMsg(props) {
   }
 
   return (
-    <View key={props.index} style={[styles.messageContainer, props.isSentMessage ? styles.sentMessage : styles.receivedMessage]}>
-      <Text style={{ fontSize: 12, textAlign: 'left' }}>{props.item.from === props.user._id ? null : props.item.fromUsername}</Text>
-      {audioURI ? (
-        <>
-        <View style={styles.audioControls}>
-          <TouchableOpacity onPress={isPlaying ? stopAudio : playAudio}>
-            <Icon name={isPlaying ? 'pause-sharp' : 'play-sharp'} type="ionicon" size={20} color={"#142a4c"} style={styles.icon} />
-          </TouchableOpacity>
-          <Slider
-              style={styles.slider}
-              minimumValue={0}
-              maximumValue={duration}
-              value={position}
-              onValueChange={onSeekSliderValueChange}
-              thumbTintColor="#9ac31c"
-              minimumTrackTintColor="#9ac31c"
-              maximumTrackTintColor="#142a4c"
-            />
-          <Text style={styles.timeText}>{formatTime(position)} / {formatTime(duration)}</Text>
-        </View>
-        <Text style={{ fontSize: 8, textAlign: 'right',color:'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
-        </>
-      ) : null}
-    </View>
+    <TouchableOpacity style={{ width: '100%' }} onPress={showButtons}>
+      <View key={props.index} style={[styles.messageContainer, props.isSentMessage ? styles.sentMessage : styles.receivedMessage, props.isReply ? styles.replyMessages : '']}>
+        {showOptions && (
+          <HiddenButtons replyCor={replyCor} />
+        )}
+        <Text style={{ fontSize: 12, textAlign: 'left' }}>{props.item.from === props.user._id ? null : props.item.fromUsername}</Text>
+        {audioURI ? (
+          <>
+            <View style={styles.audioControls}>
+              <TouchableOpacity onPress={isPlaying ? stopAudio : playAudio}>
+                <Icon name={isPlaying ? 'pause-sharp' : 'play-sharp'} type="ionicon" size={20} color={"#142a4c"} style={styles.icon} />
+              </TouchableOpacity>
+              <Slider
+                style={styles.slider}
+                minimumValue={0}
+                maximumValue={duration}
+                value={position}
+                onValueChange={onSeekSliderValueChange}
+                thumbTintColor="#9ac31c"
+                minimumTrackTintColor="#9ac31c"
+                maximumTrackTintColor="#142a4c"
+              />
+              <Text style={styles.timeText}>{formatTime(position)} / {formatTime(duration)}</Text>
+            </View>
+            <Text style={{ fontSize: 8, textAlign: 'right', color: 'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
+          </>
+        ) : null}
+      </View>
+    </TouchableOpacity>
   );
 }
 
@@ -144,5 +156,8 @@ const styles = StyleSheet.create({
   timeText: {
     fontSize: 8,
     textAlign: 'right',
+  },
+  replyMessages: {
+    backgroundColor: '#FFF'
   },
 });

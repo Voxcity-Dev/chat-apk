@@ -2,9 +2,12 @@ import React, { useState, useRef } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Linking, Image } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { Video } from 'expo-av';
+import HiddenButtons from '../hiddenButtons';
 
 export default function FileMsg(props) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+  const replyCor = props.isSentMessage ? '#DCF8C6' : '#EDEDED';
   const videoRef = useRef(null);
 
   const handlePlayPause = async () => {
@@ -25,67 +28,76 @@ export default function FileMsg(props) {
     const timeDiff = currentDate.getTime() - date.getTime();
     const hours = date.getHours();
     const minutes = date.getMinutes().toString().padStart(2, '0');
-  
+
     if (timeDiff >= 48 * 60 * 60 * 1000) {
       // Já passou mais de 48 horas
       const day = date.getDate().toString().padStart(2, '0');
       const month = (date.getMonth() + 1).toString().padStart(2, '0');
       const year = date.getFullYear();
-  
+
       return `${day}/${month}/${year}`;
-    } else if(timeDiff >= 24 * 60 * 60 * 1000) {
-        // Já passou mais de 24 horas
-        return `${"    "}Ontem`;
+    } else if (timeDiff >= 24 * 60 * 60 * 1000) {
+      // Já passou mais de 24 horas
+      return `${"    "}Ontem`;
     } else {
-    return `${"     "}${hours}:${minutes}`;
+      return `${"     "}${hours}:${minutes}`;
     }
   }
 
+  function showButtons() {
+    setShowOptions(!showOptions);
+  }
+
   return (
-    <View
-      key={props.index}
-      style={[styles.messageContainer, props.isSentMessage ? styles.sentMessage : styles.receivedMessage]}
-    >
-      <Text style={{ fontSize: 12, textAlign: 'left' }}>
-        {props.item.from === props.user._id ? null : props.item.fromUsername}
-      </Text>
-      {props.item.files.map((file, index) => {
-        if (file.type.includes('image')) {
-          return (
-            <TouchableOpacity key={index} onPress={() => Linking.openURL(file.url)}>
-              <Image source={{ uri: file.url }} style={{ width: 100, height: 100 }} />
-              <Text>{file.name || file.type}</Text>
-              <Text style={{ fontSize: 8, textAlign: 'right',color:'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
-            </TouchableOpacity>
-          );
-        } else if (file.type.includes('video')) {
-          return (
-            <View key={index} onPress={handlePlayPause}>
-              <Video
-                ref={videoRef}
-                source={{ uri: file.url }}
-                style={{ width: 300, height: 200 }}
-                useNativeControls // Use os controles nativos do sistema (Expo AVPlayer)
-                resizeMode="contain" // Ajuste a escala do vídeo para que caiba no player
-                isLooping // Configura o vídeo para reproduzir em loop
-              />
-              <Text>{file.name || file.type}</Text>
-              <Text style={{ fontSize: 8, textAlign: 'right',color:'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
-            </View>
-          );
-        } else {
-          return (
-            <TouchableOpacity key={index} onPress={() => Linking.openURL(file.url)}>
-              <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                <Icon name="document-text-sharp" type="ionicon" size={20} style={styles.icon} />
+    <TouchableOpacity style={{width:"100%"}} onPress={showButtons}>
+      <View
+        key={props.index}
+        style={[styles.messageContainer, props.isSentMessage ? styles.sentMessage : styles.receivedMessage, props.isReply ? styles.replyMessages : '']}>
+        <Text style={{ fontSize: 12, textAlign: 'left' }}>
+          {props.isReply ? props.item.fromUsername : (props.item.from === props.user._id ? null : props.item.fromUsername)}
+        </Text>
+        {showOptions && (
+          <HiddenButtons replyCor={replyCor} />
+        )}
+        {props.item.files.map((file, index) => {
+          if (file.type.includes('image')) {
+            return (
+              <TouchableOpacity key={index} onPress={() => Linking.openURL(file.url)}>
+                <Image source={{ uri: file.url }} style={{ width: 100, height: 100 }} />
                 <Text>{file.name || file.type}</Text>
+                <Text style={{ fontSize: 8, textAlign: 'right', color: 'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
+              </TouchableOpacity>
+            );
+          } else if (file.type.includes('video')) {
+            return (
+              <View key={index} onPress={handlePlayPause}>
+                <Video
+                  ref={videoRef}
+                  source={{ uri: file.url }}
+                  style={{ width: 300, height: 200 }}
+                  useNativeControls // Use os controles nativos do sistema (Expo AVPlayer)
+                  resizeMode="contain" // Ajuste a escala do vídeo para que caiba no player
+                  isLooping // Configura o vídeo para reproduzir em loop
+                />
+                <Text>{file.name || file.type}</Text>
+                <Text style={{ fontSize: 8, textAlign: 'right', color: 'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
               </View>
-              <Text style={{ fontSize: 8, textAlign: 'right',color:'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
-            </TouchableOpacity>
-          );
-        }
-      })}
-    </View>
+            );
+          } else {
+            return (
+              <TouchableOpacity key={index} onPress={() => Linking.openURL(file.url)}>
+                <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                  <Icon name="document-text-sharp" type="ionicon" size={20} style={styles.icon} />
+                  <Text>{file.name || file.type}</Text>
+                </View>
+                <Text style={{ fontSize: 8, textAlign: 'right', color: 'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
+              </TouchableOpacity>
+            );
+          }
+        })}
+
+      </View>
+    </TouchableOpacity>
   );
 }
 
@@ -104,5 +116,8 @@ const styles = StyleSheet.create({
   receivedMessage: {
     alignSelf: 'flex-start',
     backgroundColor: '#EDEDED',
+  },
+  replyMessages: {
+    backgroundColor: '#FFF'
   },
 });
