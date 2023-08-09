@@ -3,6 +3,14 @@ import { View, TouchableOpacity, Text, StyleSheet, Linking, Image } from 'react-
 
 
 export default function ImageMsg(props) {
+
+  function limitName(name) {
+    if (name.length > 15) {
+      return `${name.substring(0, 15)}...`;
+    } else {
+      return name;
+    }
+  }
   
   function formatTimestamp(timestamp) {
     const date = new Date(timestamp);
@@ -39,7 +47,7 @@ export default function ImageMsg(props) {
           return (
             <TouchableOpacity key={index} onPress={() => Linking.openURL(file.url)}>
               <Image source={{ uri: file.url }} style={{ width: 100, height: 100 }} />
-              <Text>{file.name || file.type}</Text>
+              <Text>{limitName(file.name || file.type)}</Text>
             </TouchableOpacity>
           );
         } 
@@ -54,7 +62,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 12,
-    maxWidth: '80%',
+    maxWidth: '100%',
     marginBottom: 8,
   },
   sentMessage: {

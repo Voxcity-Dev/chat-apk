@@ -5,11 +5,14 @@ import MessageSender from './MessageSender/messageSender';
 import { ContactContext } from '../../context/ContacProvider';
 import { GroupContext } from '../../context/GroupProvider';
 import { AttendanceContext } from '../../context/AttendanceProvider';
+import { ReplyForwardingContext } from '../../context/ReplyForwardingProvider';
+import ForwardTo from './MessageSender/forwardTo';
 
 export default function ChatComponent(props) {
   const { selectedContact, contacts } = useContext(ContactContext);
   const { selectedGroup, groups } = useContext(GroupContext);
   const { selectedAtendimento, attendances } = useContext(AttendanceContext);
+  const { forwardingMessage } = useContext(ReplyForwardingContext);
   const [contato, setContato] = useState({});
 
   useEffect(() => {
@@ -29,9 +32,19 @@ export default function ChatComponent(props) {
   return (
     <View style={{ flex: 1, width: "100%", height: "100%" }}>
 
-      <MessageScreen tipo={props.tipo} contato={contato} />
+      {!forwardingMessage ? (
+        <>
+          <MessageScreen tipo={props.tipo} contato={contato} />
+          <MessageSender tipo={props.tipo} contato={contato} />
+        </>
+        
+      ):(
+        <>
+          <ForwardTo />
+        </>
+      )}
 
-      <MessageSender tipo={props.tipo} contato={contato} />
+      
 
     </View>
   );

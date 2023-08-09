@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { Audio } from 'expo-av';
 import Slider from '@react-native-community/slider';
-import HiddenButtons from '../hiddenButtons';
 
 export default function AudioMsg(props) {
   const [audioURI, setAudioURI] = useState(props.item.audio.url);
@@ -11,12 +10,6 @@ export default function AudioMsg(props) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [showOptions, setShowOptions] = useState(false);
-  const replyCor = props.isSentMessage ? '#DCF8C6' : '#EDEDED';
-
-  function showButtons() {
-    setShowOptions(!showOptions);
-  }
 
   function formatTimestamp(timestamp) {
     const date = new Date(timestamp);
@@ -87,35 +80,30 @@ export default function AudioMsg(props) {
   }
 
   return (
-    <TouchableOpacity style={{ width: '100%' }} onPress={showButtons}>
-      <View key={props.index} style={[styles.messageContainer, props.isSentMessage ? styles.sentMessage : styles.receivedMessage, props.isReply ? styles.replyMessages : '']}>
-        {showOptions && (
-          <HiddenButtons replyCor={replyCor} />
-        )}
-        <Text style={{ fontSize: 12, textAlign: 'left' }}>{props.item.from === props.user._id ? null : props.item.fromUsername}</Text>
-        {audioURI ? (
-          <>
-            <View style={styles.audioControls}>
-              <TouchableOpacity onPress={isPlaying ? stopAudio : playAudio}>
-                <Icon name={isPlaying ? 'pause-sharp' : 'play-sharp'} type="ionicon" size={20} color={"#142a4c"} style={styles.icon} />
-              </TouchableOpacity>
-              <Slider
-                style={styles.slider}
-                minimumValue={0}
-                maximumValue={duration}
-                value={position}
-                onValueChange={onSeekSliderValueChange}
-                thumbTintColor="#9ac31c"
-                minimumTrackTintColor="#9ac31c"
-                maximumTrackTintColor="#142a4c"
-              />
-              <Text style={styles.timeText}>{formatTime(position)} / {formatTime(duration)}</Text>
-            </View>
-            <Text style={{ fontSize: 8, textAlign: 'right', color: 'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
-          </>
-        ) : null}
-      </View>
-    </TouchableOpacity>
+    <View key={props.index} style={[styles.messageContainer, props.isSentMessage ? styles.sentMessage : styles.receivedMessage, props.isReply ? styles.replyMessages : '']}>
+      <Text style={{ fontSize: 12, textAlign: 'left',fontWeight:"bold",color:"#142a4c" }}>{props.item.from === props.user._id ? null : props.item.fromUsername}</Text>
+      {audioURI ? (
+        <>
+          <View style={styles.audioControls}>
+            <TouchableOpacity onPress={isPlaying ? stopAudio : playAudio}>
+              <Icon name={isPlaying ? 'pause-sharp' : 'play-sharp'} type="ionicon" size={20} color={"#142a4c"} style={styles.icon} />
+            </TouchableOpacity>
+            <Slider
+              style={styles.slider}
+              minimumValue={0}
+              maximumValue={duration}
+              value={position}
+              onValueChange={onSeekSliderValueChange}
+              thumbTintColor="#9ac31c"
+              minimumTrackTintColor="#9ac31c"
+              maximumTrackTintColor="#142a4c"
+            />
+            <Text style={styles.timeText}>{formatTime(position)} / {formatTime(duration)}</Text>
+          </View>
+          <Text style={{ fontSize: 8, textAlign: 'right', color: 'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
+        </>
+      ) : null}
+    </View>
   );
 }
 
@@ -126,7 +114,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 12,
-    maxWidth: '80%',
     marginBottom: 8,
   },
   sentMessage: {

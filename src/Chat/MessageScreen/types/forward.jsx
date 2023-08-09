@@ -8,8 +8,6 @@ import MessagesMsg from './messages';
 export default function Forward(props) {
   const { item, index, isSentMessage, user } = props
   const [reply, setReply] = useState({ ...item.forwarding })
-  const [showOptions, setShowOptions] = useState(false);
-  const replyCor = props.isSentMessage ? '#DCF8C6' : '#EDEDED';
 
   useEffect(() => {
     if (item.forwarding) {
@@ -22,17 +20,10 @@ export default function Forward(props) {
     audio: <Audio key={index} item={reply} isReply={true} user={user} />,
   };
 
-  function showButtons() {
-    setShowOptions(!showOptions);
-  }
 
   return (
-    <TouchableOpacity style={{ width: '100%' }} onPress={showButtons}>
       <View key={index} style={[styles.messageContainer, isSentMessage ? styles.sentMessage : styles.receivedMessage]} >
-      {showOptions && (
-          <HiddenButtons replyCor={replyCor} />
-                )}
-        <Text style={{ fontSize: 12, textAlign: 'left', marginBottom: 5 }}>Encaminhada</Text>
+        <Text style={{ fontSize: 12, textAlign: 'left', marginBottom: 5,fontWeight:"bold",color:"#142a4c" }}>Encaminhada</Text>
         {
           reply.msgTypo === 'text' || reply.reply ? <MessagesMsg key={index} item={reply} isReply={true} user={user} /> :
             reply && Types[reply.msgTypo]
@@ -41,7 +32,6 @@ export default function Forward(props) {
           <Text style={{ fontSize: 12 }}>{item?.message}</Text>
         </View>
       </View>
-    </TouchableOpacity>
 
   )
 
@@ -52,16 +42,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 12,
-    maxWidth: '80%',
     marginBottom: 8,
-  },
-  messageContainerReply: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 12,
-    maxWidth: '80%',
-    marginBottom: 8,
-    backgroundColor: '#FFF'
   },
   sentMessage: {
     alignSelf: 'flex-end',

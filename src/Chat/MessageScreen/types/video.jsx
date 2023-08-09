@@ -51,7 +51,7 @@ export default function VideoMsg(props) {
               <Video
                 ref={videoRef}
                 source={{ uri: props.item.video.url }}
-                style={{ width: 300, height: 200 }}
+                style={{ width: 200, height: 200 }}
                 useNativeControls // Use os controles nativos do sistema (Expo AVPlayer)
                 resizeMode="contain" // Ajuste a escala do vídeo para que caiba no player
                 isLooping // Configura o vídeo para reproduzir em loop

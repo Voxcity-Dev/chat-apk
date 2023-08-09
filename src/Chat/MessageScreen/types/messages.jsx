@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import HiddenButtons from '../hiddenButtons';
+import { View, Text, StyleSheet} from 'react-native';
+
 
 export default function MessagesMsg(props) {
-  const [showOptions, setShowOptions] = useState(false);
-  const replyCor = props.isSentMessage ? '#DCF8C6' : '#EDEDED';
 
   function formatTimestamp(timestamp) {
     const date = new Date(timestamp);
@@ -28,34 +26,28 @@ export default function MessagesMsg(props) {
     }
   }
 
-  function showButtons() {
-    setShowOptions(!showOptions);
-  }
 
   return (
-    <TouchableOpacity style={{ width: '100%' }} onPress={showButtons}>
-      <View
-        key={props.index}
-        style={[
-          styles.messageContainer,
-          props.isSentMessage ? styles.sentMessage : styles.receivedMessage,
-          props.isReply ? styles.replyMessages : '',
-        ]}
-      >
-        {showOptions && (
-          <HiddenButtons replyCor={replyCor} />
-        )}
-
-        <Text style={{ fontSize: 12, textAlign: 'left' }}>
-          {props.isReply ? props.item.fromUsername : (props.item.from === props.user._id ? null : props.item.fromUsername)}
-        </Text>
-        <Text style={styles.messageText}>{props.item?.message}</Text>
-        <Text style={{ fontSize: 8, textAlign: 'right', color: 'gray' }}>
-          {formatTimestamp(props.item.createdAt)}
-        </Text>
-      </View>
-    </TouchableOpacity>
+    <View
+      key={props.index}
+      style={[
+        styles.messageContainer,
+        props.isSentMessage ? styles.sentMessage : styles.receivedMessage,
+        props.isReply ? styles.replyMessages : '',
+      ]}
+    >
+      <Text style={{ fontSize: 12, textAlign: 'left' }}>
+        {props.isReply ? props.item.fromUsername : props.item.from === props.user._id ? null : props.item.fromUsername}
+      </Text>
+      <Text selectable={true} style={[styles.messageText, { flexWrap: 'wrap' }]}>
+        {props.item?.message}
+      </Text>
+      <Text style={{ fontSize: 8, textAlign: 'right', color: 'gray' }}>
+        {formatTimestamp(props.item.createdAt)}
+      </Text>
+    </View>
   );
+
 
 
 }
@@ -65,10 +57,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 12,
-    maxWidth: '80%',
     marginBottom: 8,
   },
-  sentMessage: {
+  sentMessage: {  
     alignSelf: 'flex-end',
     backgroundColor: '#DCF8C6',
   },
@@ -81,5 +72,6 @@ const styles = StyleSheet.create({
   },
   replyMessages: {
     backgroundColor: '#FFF',
+    maxWidth: '100%',
   },
 });

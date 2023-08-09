@@ -1,13 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Linking, Image } from 'react-native';
+import { View, Text, StyleSheet, Linking, Image } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { Video } from 'expo-av';
-import HiddenButtons from '../hiddenButtons';
 
 export default function FileMsg(props) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [showOptions, setShowOptions] = useState(false);
-  const replyCor = props.isSentMessage ? '#DCF8C6' : '#EDEDED';
   const videoRef = useRef(null);
 
   const handlePlayPause = async () => {
@@ -44,60 +41,59 @@ export default function FileMsg(props) {
     }
   }
 
-  function showButtons() {
-    setShowOptions(!showOptions);
+  function limitName(name) {
+    if (name.length > 20) {
+      return `${name.substring(0, 20)}...`;
+    } else {
+      return name;
+    }
   }
 
   return (
-    <TouchableOpacity style={{width:"100%"}} onPress={showButtons}>
       <View
         key={props.index}
         style={[styles.messageContainer, props.isSentMessage ? styles.sentMessage : styles.receivedMessage, props.isReply ? styles.replyMessages : '']}>
-        <Text style={{ fontSize: 12, textAlign: 'left' }}>
+        <Text style={{ fontSize: 12, textAlign: 'left',fontWeight:"bold",color:"#142a4c" }}>
           {props.isReply ? props.item.fromUsername : (props.item.from === props.user._id ? null : props.item.fromUsername)}
         </Text>
-        {showOptions && (
-          <HiddenButtons replyCor={replyCor} />
-        )}
         {props.item.files.map((file, index) => {
           if (file.type.includes('image')) {
             return (
-              <TouchableOpacity key={index} onPress={() => Linking.openURL(file.url)}>
+              <View key={index} onPress={() => Linking.openURL(file.url)}>
                 <Image source={{ uri: file.url }} style={{ width: 100, height: 100 }} />
-                <Text>{file.name || file.type}</Text>
+                <Text>{limitName(file.name || file.type)}</Text>
                 <Text style={{ fontSize: 8, textAlign: 'right', color: 'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
-              </TouchableOpacity>
+              </View>
             );
           } else if (file.type.includes('video')) {
             return (
-              <View key={index} onPress={handlePlayPause}>
+              <View key={index} onPress={handlePlayPause} style={{maxWidth:"100%"}}>
                 <Video
                   ref={videoRef}
                   source={{ uri: file.url }}
-                  style={{ width: 300, height: 200 }}
+                  style={{ width: 200, height: 200 }}
                   useNativeControls // Use os controles nativos do sistema (Expo AVPlayer)
                   resizeMode="contain" // Ajuste a escala do vídeo para que caiba no player
                   isLooping // Configura o vídeo para reproduzir em loop
                 />
-                <Text>{file.name || file.type}</Text>
+                <Text>{limitName(file.name || file.type)}</Text>
                 <Text style={{ fontSize: 8, textAlign: 'right', color: 'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
               </View>
             );
           } else {
             return (
-              <TouchableOpacity key={index} onPress={() => Linking.openURL(file.url)}>
+              <View key={index} onPress={() => Linking.openURL(file.url)} style={{width:"80%"}}>
                 <View style={{ flexDirection: 'column', alignItems: 'center' }}>
                   <Icon name="document-text-sharp" type="ionicon" size={20} style={styles.icon} />
-                  <Text>{file.name || file.type}</Text>
+                  <Text>{limitName(file.name || file.type)}</Text>
                 </View>
                 <Text style={{ fontSize: 8, textAlign: 'right', color: 'gray' }}>{formatTimestamp(props.item.createdAt)}</Text>
-              </TouchableOpacity>
+              </View>
             );
           }
         })}
 
       </View>
-    </TouchableOpacity>
   );
 }
 
@@ -106,8 +102,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 12,
-    maxWidth: '80%',
     marginBottom: 8,
+    maxWidth:'90%',
   },
   sentMessage: {
     alignSelf: 'flex-end',

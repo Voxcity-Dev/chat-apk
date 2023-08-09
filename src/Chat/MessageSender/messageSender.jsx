@@ -1,15 +1,18 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { UserContext } from '../../../context/UserProvider';
+import { ReplyForwardingContext } from '../../../context/ReplyForwardingProvider';
 import AudioRecorder from './audioRecorder';
 import FileInput from './fileInput';
 import AudioPlayer from './audioPlayer';
 import CameraPicker from './cameraPicker';
 import apiUser from '../../../apiUser';
 import { Icon } from '@rneui/themed';
+import ReplyMessage  from './replyMessage'
 
 export default function MessageSender(props) {
   const { socket, contacts } = useContext(UserContext);
+  const { forwardingMessage, reset, replyMessage, setReplyMessage } = useContext(ReplyForwardingContext)
   const [contact, setContact] = useState({});
   const [message, setMessage] = useState('');
   const [typing, setTyping] = useState(false);
@@ -18,8 +21,13 @@ export default function MessageSender(props) {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
 
   useEffect(() => {
-    let newContact = {...props.contato};
-    setContact(newContact);
+    if(Array.isArray(props.contato)){
+      let newContact = [...props.contato]
+      setContact(newContact);
+    }else{
+      let newContact = { ...props.contato };
+      setContact(newContact);
+    }
   }, [props.contato]);
 
 
@@ -39,6 +47,7 @@ export default function MessageSender(props) {
     setMessage('');
     setFiles([]);
     setAudio(null);
+    reset()
   }
 
   function messageExist() {
@@ -50,25 +59,48 @@ export default function MessageSender(props) {
 
   function prepareMessageData() {
     let data = {};
-    let deepCloneContact = JSON.parse(JSON.stringify(contact));
-    delete deepCloneContact.allMessages;
-    let expoToken = deepCloneContact.expoToken ? deepCloneContact.expoToken : '';
-    if (props.tipo === 'private')
-      data = { message, audio, files, to: deepCloneContact._id, expoToken: expoToken };
-    let tokens = [];
-    if (props.tipo === 'group') {
-      deepCloneContact.usuarios.forEach(user => {
-        contacts.forEach(contact => {
-          if (contact._id === user) {
-            if (contact.expoToken) tokens.push(contact.expoToken);
-          }
+    if(Array.isArray(contact)){
+      for (let i = 0; i < contact.length; i++) {
+        let deepCloneContact = JSON.parse(JSON.stringify(contact[i]));
+        delete deepCloneContact.allMessages;
+        let expoToken = deepCloneContact.expoToken ? deepCloneContact.expoToken : '';
+        if (props.tipo === 'private') data = { message, audio, files, to: deepCloneContact._id, expoToken: expoToken, forwarding: forwardingMessage, reply: replyMessage };
+        let tokens = [];
+        if (props.tipo === 'group') {
+          deepCloneContact.usuarios.forEach(user => {
+            contacts.forEach(contact => {
+              if (contact._id === user) {
+                if (contact.expoToken) tokens.push(contact.expoToken);
+              }
+            });
+          });
+          data = { message, audio, files, to: deepCloneContact, expoTokens: tokens, forwarding: forwardingMessage, reply: replyMessage };
+        }
+        if (props.tipo === 'att') data = { message, audio, files, to: deepCloneContact, forwarding: forwardingMessage, reply: replyMessage };
+      
+        return { data, deepCloneContact, expoToken, tokens };
+      }
+    }else{
+      let deepCloneContact = JSON.parse(JSON.stringify(contact));
+      delete deepCloneContact.allMessages;
+      let expoToken = deepCloneContact.expoToken ? deepCloneContact.expoToken : '';
+      if (props.tipo === 'private') data = { message, audio, files, to: deepCloneContact._id, expoToken: expoToken, forwarding: forwardingMessage, reply: replyMessage };
+      let tokens = [];
+      if (props.tipo === 'group') {
+        deepCloneContact.usuarios.forEach(user => {
+          contacts.forEach(contact => {
+            if (contact._id === user) {
+              if (contact.expoToken) tokens.push(contact.expoToken);
+            }
+          });
         });
-      });
-      data = { message, audio, files, to: deepCloneContact, expoTokens: tokens };
+        data = { message, audio, files, to: deepCloneContact, expoTokens: tokens, forwarding: forwardingMessage, reply: replyMessage };
+      }
+      if (props.tipo === 'att') data = { message, audio, files, to: deepCloneContact, forwarding: forwardingMessage, reply: replyMessage };
+    
+      return { data, deepCloneContact, expoToken, tokens };
     }
-    if (props.tipo === 'att') data = { message, audio, files, to: deepCloneContact };
-  
-    return { data, deepCloneContact, expoToken, tokens };
+
   }
   
   function uploadAudio(formData, tipo) {
@@ -105,7 +137,7 @@ export default function MessageSender(props) {
   
   function sendMessage(e) {
     e.preventDefault();
-    if (!messageExist()) return;
+    if (!messageExist() && !forwardingMessage) return
   
     const { data, deepCloneContact, expoToken, tokens } = prepareMessageData();
   
@@ -124,7 +156,14 @@ export default function MessageSender(props) {
       formData.append('telefone', deepCloneContact.telefone);
       formData.append('bot', deepCloneContact.bot);
     }
-  
+
+    if (forwardingMessage) {
+      formData.append('forwarding', forwardingMessage)
+    }
+    if (replyMessage) {
+      formData.append('reply', replyMessage)
+    }
+    
     if (audio) {
       let audioConfig = {
         uri: audio,
@@ -150,7 +189,7 @@ export default function MessageSender(props) {
       }
       uploadFiles(formData, props.tipo)
         .then(resp => {
-          setFiles([]); // Alterado para um array vazio
+          setFiles([]); 
           setMessage('');
         })
         .catch(err => console.log(err));
@@ -164,45 +203,44 @@ export default function MessageSender(props) {
 
   return (
     <View style={styles.container}>
-      {
-        audio ? (
-          <AudioPlayer style={styles.inputContainer}audio={audio} setAudio={setAudio} />
-        ) : (
-          <View style={styles.inputContainer}>
+      {audio ? (
+        <AudioPlayer style={styles.inputContainer} audio={audio} setAudio={setAudio} />
+      ) : (
+        <View style={styles.inputContainer}>
           <TextInput
             style={styles.textInput}
             placeholder="Digite uma mensagem"
             value={message}
-            onChangeText={text => changeMessage(text)}
+            onChangeText={(text) => changeMessage(text)}
           />
 
           <View style={styles.fileInputContainer}>
-              <CameraPicker  setIsCameraOpen={setIsCameraOpen} isCameraOpen={isCameraOpen} files={files} setFiles={setFiles}/>
-          </View>
-  
-          <View style={styles.fileInputContainer}>
-            <FileInput files={files} setFiles={setFiles} clearMessage={clearMessage}/>
+            <CameraPicker setIsCameraOpen={setIsCameraOpen} isCameraOpen={isCameraOpen} files={files} setFiles={setFiles} />
           </View>
 
+          <View style={styles.fileInputContainer}>
+            <FileInput files={files} setFiles={setFiles} clearMessage={clearMessage} />
+          </View>
         </View>
-        )
-      }
+      )}
+
 
       <View>
-
-      {!isCameraOpen && (message.length > 0 || files.length > 0 || audio ? (
-          <View style={styles.boxSendButton}>
-            <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-              <Icon name="send-sharp" type="ionicon" color={'#9ac31c'} />
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View style={styles.audioRecorderContainer}>
-            <AudioRecorder audio={audio} setAudio={setAudio} isCameraOpen={isCameraOpen} />
-          </View>
-        ))}
+        {!isCameraOpen &&
+          (message.length > 0 || files.length > 0 || audio ? (
+            <View style={styles.boxSendButton}>
+              <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+                <Icon name="send-sharp" type="ionicon" color={'#9ac31c'} />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.audioRecorderContainer}>
+              <AudioRecorder audio={audio} setAudio={setAudio} isCameraOpen={isCameraOpen} />
+            </View>
+          ))}
       </View>
 
+      <ReplyMessage replyMessage={replyMessage} setReplyMessage={setReplyMessage} />
     </View>
   );
 }
