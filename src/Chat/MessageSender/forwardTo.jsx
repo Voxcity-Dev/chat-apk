@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, TextInput } from 'react-native'
 import { CheckBox } from 'react-native-elements'
 import { UserContext } from '../../../context/UserProvider'
 import { ReplyForwardingContext } from '../../../context/ReplyForwardingProvider'
@@ -15,6 +15,9 @@ export default function ForwardTo() {
     const [selectedItems, setSelectedItems] = useState([])
     const [viewType, setViewType] = useState('private')
     const [to, setTo] = useState([])
+    const [search, setSearch] = useState('')
+    const [filteredData, setFilteredData] = useState([])
+
 
     const views = {
         private: {
@@ -39,7 +42,15 @@ export default function ForwardTo() {
         setTo(selectedItems)
     }, [selectedItems])
 
+    useEffect(() => {
+        const filteredItems = views[viewType].data.filter((item) => {
+            return views[viewType].searchType.some((type) =>
+                item[type] && item[type].toLowerCase().includes(search.toLowerCase())
+            );
+        });
     
+        setFilteredData(filteredItems);
+    }, [search, viewType]);
 
     const handleCheckBoxToggle = (item) => {
         if (selectedItems.includes(item)) {
@@ -49,18 +60,18 @@ export default function ForwardTo() {
         }
     };
 
+    function limitName(name) {
+        if (name.length > 20) {
+            return name.substring(0, 20) + '...'
+        } else {
+            return name
+        }
+    }
 
     function renderizarContatos({ item }) {
 
         return (
             <View style={styles.blocoContato}>
-                <CheckBox
-                    checkedColor='#9ac31c'
-                    uncheckedColor='#142a4c'
-                    textStyle={{ color: "#142a4c" }}
-                    checked={selectedItems.includes(item)} 
-                    onPress={() => handleCheckBoxToggle(item)}
-                />
                 {
                     item.foto ? (
                         <Image source={{ uri: item.foto }} style={styles.image} />
@@ -68,7 +79,15 @@ export default function ForwardTo() {
                         <Image source={require("../../../assets/avatar2.png")} style={styles.image} />
                     )
                 }
-                <Text>{item.nome || item.telefone}</Text>
+                <Text>{limitName(item.nome || item.telefone)}</Text>
+
+                <CheckBox
+                    checkedColor='#9ac31c'
+                    uncheckedColor='#142a4c'
+                    textStyle={{ color: "#142a4c" }}
+                    checked={selectedItems.includes(item)}
+                    onPress={() => handleCheckBoxToggle(item)}
+                />
             </View>
         );
     }
@@ -79,30 +98,39 @@ export default function ForwardTo() {
             {forwardingMessage ? (
                 <>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", height: 50, backgroundColor: "#FFF" }}>
-                        <Text style={{ marginLeft: 10, fontSize: 18, fontWeight: "bold",color: "#142a4c", }}>Encaminhar para:</Text>
-                        <Text style={{ marginRight: 10, fontSize: 18, fontWeight: "bold", color: "#00BFFF" }} onPress={() => setForwardingMessage(null)}>Cancelar</Text>
+                        <Text style={{ marginLeft: 10, fontSize: 18, fontWeight: "bold", color: "#142a4c", }}>Encaminhar para:</Text>
+                        <Text style={{ marginRight: 10, fontSize: 18, fontWeight: "bold", color: "red" }} onPress={() => setForwardingMessage(null)}>Cancelar</Text>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", height: 50, backgroundColor: "#FFF" }}>
                         <TouchableOpacity style={styles.buttonBox} onPress={() => setViewType('private')}>
-                            <Text  style={[styles.buttonText, viewType === 'private' && styles.underBorder]}>Contatos</Text>
+                            <Text style={[styles.buttonText, viewType === 'private' && styles.underBorder]}>Contatos</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity  onPress={() => setViewType('groups')}>
+                        <TouchableOpacity onPress={() => setViewType('groups')}>
                             <Text style={[styles.buttonText, viewType === 'groups' && styles.underBorder]}>Grupos</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.buttonBox} onPress={() => setViewType('att')}>
                             <Text style={[styles.buttonText, viewType === 'att' && styles.underBorder]}>Atendimentos</Text>
                         </TouchableOpacity>
-                        
+
                     </View>
 
-                    <View style={{ flex: 1, width: '100%', height: '100%' }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center",justifyContent:"center", width: "100%", height: 50, backgroundColor: "#FFF" }}>
+                        <TextInput
+                            style={styles.inputText}
+                            placeholder="Pesquisar"
+                            onChangeText={setSearch}
+                            value={search}
+                        />
+                    </View>
+
+                    <View style={{ flex: 1, width: '100%', height: '100%',boxSizing: "border-box" }}>
                         <FlatList
-                            data={views[viewType].data}
+                            data={filteredData}
                             renderItem={renderizarContatos}
                             keyExtractor={(item, index) => index.toString()}
                         />
                     </View>
-                    <MessageSender contato={to} tipo={viewType}/>
+                    <MessageSender contato={to} tipo={viewType} />
                 </>
             ) : (
                 null
@@ -125,6 +153,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 10,
         marginRight: 50,
+        boxSizing: "border-box"
     },
     image: {
         width: 50,
@@ -152,5 +181,17 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderBottomWidth: 1,
         borderColor: "#9ac31c",
-    }
+    },
+    inputText: {
+        width: "50%",
+        height: 40,
+        borderWidth: 1,
+        borderColor: "#142a4c",
+        borderRadius: 10,
+        padding: 10,
+        marginBottom: 10,
+        marginTop: 10,
+        marginLeft: 10,
+        marginRight: 10,
+    },
 })

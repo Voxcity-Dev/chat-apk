@@ -36,7 +36,7 @@ export default function MessagesMsg(props) {
         props.isReply ? styles.replyMessages : '',
       ]}
     >
-      <Text style={{ fontSize: 12, textAlign: 'left' }}>
+      <Text style={{ fontSize: 12, textAlign: 'left',fontWeight:"bold",color:"#142a4c" }}>
         {props.isReply ? props.item.fromUsername : props.item.from === props.user._id ? null : props.item.fromUsername}
       </Text>
       <Text selectable={true} style={[styles.messageText, { flexWrap: 'wrap' }]}>

@@ -43,9 +43,6 @@ export default function ChatComponent(props) {
           <ForwardTo />
         </>
       )}
-
-      
-
     </View>
   );
 }

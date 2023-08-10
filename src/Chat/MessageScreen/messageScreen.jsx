@@ -140,6 +140,7 @@ export default function MessageScreen(props) {
       image: <ImageMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,
       video: <VideoMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,
       reply: <Reply key={index} item={item} isSentMessage={isSentMessage} user={user} />,
+      forwarding: <Forward key={index} item={item} isSentMessage={isSentMessage} user={user} />,
     };
 
     const defaultMessageComponent = (

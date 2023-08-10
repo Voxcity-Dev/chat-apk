@@ -226,8 +226,8 @@ export default function MessageSender(props) {
 
 
       <View>
-        {!isCameraOpen &&
-          (message.length > 0 || files.length > 0 || audio ? (
+        { !isCameraOpen &&
+          (message.length > 0 || files.length > 0 || audio || forwardingMessage ? (
             <View style={styles.boxSendButton}>
               <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
                 <Icon name="send-sharp" type="ionicon" color={'#9ac31c'} />
