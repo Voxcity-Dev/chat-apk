@@ -6,6 +6,7 @@ import { GroupProvider } from '../context/GroupProvider';
 import { ContacProvider } from '../context/ContacProvider';
 import { AttendanceProvider } from '../context/AttendanceProvider';
 import { ReplyForwardingProvider } from '../context/ReplyForwardingProvider';
+import { ProfessionalProvider } from '../context/ProfissionalProvider';
 
 
 const AppRoutes = () => {
@@ -18,7 +19,9 @@ const AppRoutes = () => {
                 <GroupProvider>
                     <AttendanceProvider>
                         <ReplyForwardingProvider>
-                            <Signed />
+                            <ProfessionalProvider>
+                                <Signed />
+                            </ProfessionalProvider>
                         </ReplyForwardingProvider>
                     </AttendanceProvider>
                 </GroupProvider>

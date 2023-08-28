@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, TextInput } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, TextInput,BackHandler } from 'react-native'
 import { CheckBox } from 'react-native-elements'
 import { UserContext } from '../../../context/UserProvider'
 import { ReplyForwardingContext } from '../../../context/ReplyForwardingProvider'
@@ -8,7 +8,7 @@ import { AttendanceContext } from '../../../context/AttendanceProvider'
 import MessageSender from './messageSender'
 
 export default function ForwardTo() {
-    const { setForwardingMessage, forwardingMessage } = useContext(ReplyForwardingContext)
+    const { setForwardingMessage, forwardingMessage, reset } = useContext(ReplyForwardingContext)
     const { contacts, user } = useContext(UserContext)
     const { groups } = useContext(GroupContext)
     const { attendances } = useContext(AttendanceContext)
@@ -17,7 +17,6 @@ export default function ForwardTo() {
     const [to, setTo] = useState([])
     const [search, setSearch] = useState('')
     const [filteredData, setFilteredData] = useState([])
-
 
     const views = {
         private: {
@@ -37,6 +36,20 @@ export default function ForwardTo() {
             searchType: ['telefone', "nome", "pushname"]
         }
     }
+
+    useEffect(() => {
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+        return () => {
+            backHandler.remove();
+        };
+    }, []);
+
+    const handleBackPress = () => {
+        reset()
+        return true;
+    };
+        
 
     useEffect(() => {
         setTo(selectedItems)
