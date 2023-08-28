@@ -65,7 +65,7 @@ export default  function AtendimentosPotencial (props) {
       <View style={styles.container}>
         <Text style={styles.text}>Atendimentos em Potencial</Text>
           <ScrollView style={{height:"100%"}}>
-          {props.atendimentos.map((att, i) => {
+          {props?.atendimentos.map((att, i) => {
           let lastMsgTime = new Date(att.lastMessage.createdAt);
           let formatedDate = timeHasZero(lastMsgTime.getDate()) + "/" + (timeHasZero(lastMsgTime.getMonth()+ 1) ) + "/" + timeHasZero(lastMsgTime.getFullYear())
           let formatedTime = timeHasZero(lastMsgTime.getHours()) + ":" + timeHasZero(lastMsgTime.getMinutes())
