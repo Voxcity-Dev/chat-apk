@@ -134,6 +134,19 @@ export default function MessageScreen(props) {
       )
     }
 
+    if(item.msgTypo === 'file' || item.files?.length > 0){
+      return (
+        <View style={isSentMessage ? styles.wrapperMessage : styles.wrapperMessage2}>
+          <TouchableOpacity onPress={() => forwarding(item)} >
+            <Icon name='arrow-redo' type='ionicon' size={18} style={styles.icone} color={"#142a4c"} />
+          </TouchableOpacity>
+          <Animated.View style={messageStyles} {...panResponder.panHandlers}>
+            <FileMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />
+          </Animated.View>
+        </View>
+      )
+    }
+
     const messageComponents = {
       file: <FileMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,
       audio: <AudioMsg key={index} item={item} isSentMessage={isSentMessage} user={user} />,

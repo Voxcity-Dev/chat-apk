@@ -90,11 +90,11 @@ export default function AgendaSelecionada(props) {
                     renderItem={(item, firstItemInDay) => {
                         return (
                             <View style={styles.itemContainer}>
-                                <View style={{width:"100%",flexDirection:"row"}}>
+                                <View style={{flexDirection:"row"}}>
                                     <View style={{ width: "20%",height:"100%" }}>
                                         <Text style={styles.itemTime}>{item.time} - </Text>
                                     </View>
-                                    <View style={{ flexDirection: "row", width: "60%",gap:10,alignItems:"center" }}>
+                                    <View style={{ flexDirection: "row",gap:10,alignItems:"center" }}>
                                         <Text style={styles.itemTime}>{item.name}</Text>
                                         <Text style={styles.itemTime}>{item.telefone}</Text>
                                     </View>
