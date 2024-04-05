@@ -50,7 +50,7 @@ export const UserProvider = ({children}) => {
             }
         })
         .catch((error) => {
-            console.log(error);
+            console.log('Login Normal',error);
         });
     }
 
@@ -65,6 +65,7 @@ export const UserProvider = ({children}) => {
     }
 
     const deslogar = async () => {
+        setLoading(false);
         setUser({});
         setSigned(false);
         await AsyncStorage.removeItem('@VoxChatToken');
@@ -85,7 +86,7 @@ export const UserProvider = ({children}) => {
                 let contacx = []
                 if(messages.length === 0){                
                     messages = []
-                    contacx =repscontacts.map(contact =>{
+                    contacx = repscontacts.map(contact =>{
                         contact.allMessages = []
                         contact.lastMessage = ""
                         return contact
@@ -148,12 +149,14 @@ export const UserProvider = ({children}) => {
         try {
           const value = await AsyncStorage.getItem('@VoxChatToken');
           if (value !== null) {
+            setLoading(true);
             setToken(value);
             apiUser.defaults.headers.common['authorization'] = "Bearer " + value;
             loginWithToken(); // Chamando a função loginWithToken com o valor do token
           }
         } catch (error) {
           console.log('Error reading AsyncStorage:', error);
+          setLoading(false);
         }
     }
     
@@ -163,7 +166,7 @@ export const UserProvider = ({children}) => {
         try {
             // Fazer a chamada para a API passando o token
             const response = await apiUser.post('/mobile/login');
-            // Verificar se a resposta da API contém dados de usuário e preferências
+            // Verificar se a resposta da API contém dados de usuário e preferência
             if (response.data.user && response.data.pref) {
                 // Se sim, atualizar os estados globais de usuário e preferências
                 setApp(response.data);
@@ -171,10 +174,12 @@ export const UserProvider = ({children}) => {
                 // Se a resposta não contém os dados necessários, fazer o logout
                 deslogar();
             }
+            setLoading(false);
         } catch (error) {
-            console.log(error);
+            console.log('login com token',error);
+            setLoading(false);
         }
-        setLoading(false);
+
     }
 
     useEffect(() => {

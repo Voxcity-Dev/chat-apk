@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, StyleSheet,TextInput } from 'react-native';
+import { View, StyleSheet, TextInput, Text } from 'react-native';
 import AtendimentosEspera from './types/espera';
 import MeusAtendimentos from './types/meusAtendimento';
 import AtendimentosPotencial from './types/potencial';
@@ -17,27 +17,27 @@ export default function Atendimentos(props) {
   const [search, setSearch] = useState('');
   useEffect(() => {
     let newAtendimentos = attendances.filter((att) => att.atendente === user._id)
-    if(search)newAtendimentos = newAtendimentos.filter((att) => att.pushname?.toLowerCase().includes(search.toLowerCase()));
+    if (search) newAtendimentos = newAtendimentos.filter((att) => att.pushname?.toLowerCase().includes(search.toLowerCase()));
     setAtendimentos(newAtendimentos);
-  //   newContacts = newContacts.filter((contact)=>{
-  //     let val = contact.nome ? contact.nome : contact.pushName ? contact.pushName : contact.telefone;
-  //     return val.toLowerCase().includes(search.toLowerCase());
-  // })
-  }, [search,attendances]);
+    //   newContacts = newContacts.filter((contact)=>{
+    //     let val = contact.nome ? contact.nome : contact.pushName ? contact.pushName : contact.telefone;
+    //     return val.toLowerCase().includes(search.toLowerCase());
+    // })
+  }, [search, attendances]);
 
   useEffect(() => {
     let newAtendimentosEspera = myWaitingAtt
-    if(search)newAtendimentosEspera = newAtendimentosEspera.filter((att) => att.pushname?.toLowerCase().includes(search.toLowerCase()));
+    if (search) newAtendimentosEspera = newAtendimentosEspera.filter((att) => att.pushname?.toLowerCase().includes(search.toLowerCase()));
     setAtendimentosEspera(newAtendimentosEspera);
-  }, [search,myWaitingAtt]);
+  }, [search, myWaitingAtt]);
 
   useEffect(() => {
     let newAttendances = attendances.filter((att) => {
       return !att.waiting && !att.atendente && att.historico[att.historico.length - 1]?.action !== 'Finalizado' && new Date(att.lastMessage?.createdAt).getTime() > new Date(Date.now() - (1000 * 60 * 60 * 24)).getTime()
     });
-    if(search)newAttendances = newAttendances.filter((att) => att.pushname?.toLowerCase().includes(search.toLowerCase()));
+    if (search) newAttendances = newAttendances.filter((att) => att.pushname?.toLowerCase().includes(search.toLowerCase()));
     setAtendimentosPotencial(newAttendances);
-  }, [search,attendances]);
+  }, [search, attendances]);
 
 
   const views = {
@@ -48,7 +48,13 @@ export default function Atendimentos(props) {
 
   return (
     <View style={styles.container}>
-
+      {!selectedAtendimento && <Text style={styles.text}>
+        {
+          props.type === "espera" ? "Atendimentos em Espera" :
+            props.type === "potencial" ? "Atendimentos Potenciais" :
+              "Meus Atendimentos"
+        }
+      </Text>}
       {selectedAtendimento ? <Chat tipo={"att"} /> :
         <>
           <View style={styles.searchContainer}>
@@ -90,8 +96,19 @@ const styles = StyleSheet.create({
     width: "80%",
     marginLeft: 10,
     color: "#142a4c",
-  }
-  
+  },
+  text: {
+    color: "#142a4c",
+    fontSize: 16,
+    fontWeight: "bold",
+    marginTop: 10,
+    marginLeft: 10,
+    width: "50%",
+    borderBottomWidth: 1,
+    borderColor: "#9ac31c",
+    textAlign: "center",
+    alignSelf: "center"
+  },
 
 });
 

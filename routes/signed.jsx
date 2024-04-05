@@ -10,6 +10,7 @@ import ChatComponent from "../src/Chat";
 import Contatos from "../src/Contatos";
 import PrivadoList from "../src/Contatos/Privado";
 import Transferir from "../src/Chat/MessageScreen/transferirAtt";
+import NovoAtendimento from "../src/Atendimento/types/novoAtendimento";
 import { UserContext } from "../context/UserProvider";
 
 const AuthStack = createNativeStackNavigator();
@@ -111,6 +112,18 @@ export default function Signed() {
                 }
             }} />
             <AuthStack.Screen name="Transferir Atendimento" component={Transferir} options={{
+                headerBackVisible: true,
+                headerStyle: {
+                    backgroundColor: '#142a4c',
+                },
+                headerTitleAlign: 'center',
+                headerTintColor: '#FFF',
+                headerTitleStyle: {
+                    fontWeight: 'bold'
+                },
+                headerRight: () => renderLogout()
+            }} />
+            <AuthStack.Screen name="Novo Atendimento" component={NovoAtendimento} options={{
                 headerBackVisible: true,
                 headerStyle: {
                     backgroundColor: '#142a4c',

@@ -70,7 +70,6 @@ export default function AtendimentosEspera(props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Atendimentos em Espera</Text>
       <ScrollView style={{ height: "100%" }}>
       {props.atendimentos.map((att, i) => {
         let lastHist = att?.historico[att.historico.length - 1];

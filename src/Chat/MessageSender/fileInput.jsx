@@ -7,10 +7,10 @@ export default function FileInput(props) {
   const pickDocument = async () => {
     try {
       let result = await DocumentPicker.getDocumentAsync({});
-      if (result.type === "success" && result) {
+      if (result.assets) {
         let files;
         if (props.files) {
-          files = [...props.files, result];
+          files = [...props.files, ...result.assets];
         } else {
           files = [result];
         }

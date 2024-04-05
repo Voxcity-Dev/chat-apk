@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, View,Image, TouchableOpacity,Text,ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { UserContext } from '../../context/UserProvider';
 import Conta from './inputs/conta';
@@ -8,12 +8,12 @@ import Senha from './inputs/senha';
 
 
 export default function Login() {
-  const {logar,loading,remindMe,setRemindMe} = useContext(UserContext);
-  const [login, setLogin] = useState({conta: '', email: '', senha: ''})
-  const allInputs = { 
-    conta: <Conta captureText={captureText}/>,
-    email: <Email captureText={captureText}/>,
-    senha: <Senha captureText={captureText}/>,
+  const { logar, loading, remindMe, setRemindMe , signed} = useContext(UserContext);
+  const [login, setLogin] = useState({ conta: '', email: '', senha: '' })
+  const allInputs = {
+    conta: <Conta captureText={captureText} />,
+    email: <Email captureText={captureText} />,
+    senha: <Senha captureText={captureText} />,
   };
 
   function captureText(text, name) {
@@ -32,14 +32,19 @@ export default function Login() {
     setRemindMe(!remindMe);
   };
 
-  
+
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/VOX-LOGO-Vertical.png')} style={{width: "50%",height:100, maxHeight:400}}/>
       {
-        Object.keys(allInputs).map((key,index) => {
+        loading && !signed ? (
+          <Image source={require('../../assets/splash.png')} style={{ width: "100%", maxHeight: 400 }} />
+        ): (
+          <>
+          <Image source = { require('../../assets/VOX-LOGO-Vertical.png') } style = {{ width: "50%", height: 100, maxHeight: 400 }} />
+      {
+        Object.keys(allInputs).map((key, index) => {
           return (
-            <View key={index} style={{width:"100%"}}>
+            <View key={index} style={{ width: "100%" }}>
               {allInputs[key]}
             </View>
           );
@@ -47,24 +52,25 @@ export default function Login() {
       }
 
       <TouchableOpacity style={styles.btnEntrar} onPress={handleLogin}>
-        {loading ? <ActivityIndicator size="small" color="#9ac31c" /> : <Text style={{color:"#FFF"}}>Entrar</Text>}
+        {loading ? <ActivityIndicator size="small" color="#9ac31c" /> : <Text style={{ color: "#FFF" }}>Entrar</Text>}
       </TouchableOpacity>
 
-      <View style={{display:"flex",flexDirection:"row",alignItems:"center",marginTop:10}}>
+      <View style={{ display: "flex", flexDirection: "row", alignItems: "center", marginTop: 10 }}>
         <CheckBox
           center
           title='Lembrar-me'
           checkedColor='#9ac31c'
           uncheckedColor='#142a4c'
-          containerStyle={{backgroundColor:"#FFF",borderWidth:0}}
-          textStyle={{color:"#142a4c"}}
+          containerStyle={{ backgroundColor: "#FFF", borderWidth: 0 }}
+          textStyle={{ color: "#142a4c" }}
           checked={remindMe}
           onPress={handleCheckBoxToggle}
         />
       </View>
-
-      
-    </View>
+    </>
+  )
+}
+    </View >
 
   );
 }
@@ -76,15 +82,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     color: '#FFF',
-    gap:20,
+    gap: 20,
   },
-  btnEntrar:{
-    width:"95%",
-    height:40,
-    color:"#FFF",
-    backgroundColor:"#142a4c",
-    padding:10,
-    alignItems:"center",
-    marginTop:10,
+  btnEntrar: {
+    width: "95%",
+    height: 40,
+    color: "#FFF",
+    backgroundColor: "#142a4c",
+    padding: 10,
+    alignItems: "center",
+    marginTop: 10,
   },
 });

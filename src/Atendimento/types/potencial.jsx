@@ -63,7 +63,6 @@ export default  function AtendimentosPotencial (props) {
 
   return (
       <View style={styles.container}>
-        <Text style={styles.text}>Atendimentos em Potencial</Text>
           <ScrollView style={{height:"100%"}}>
           {props?.atendimentos.map((att, i) => {
           let lastMsgTime = new Date(att.lastMessage.createdAt);

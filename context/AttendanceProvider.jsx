@@ -16,6 +16,16 @@ export const AttendanceProvider = ({children}) => {
     const userSocket = context.socket;
     const [myWaitingAtt, setMyWaitingAtt] = useState([]);
     const [selectedAtendimento, setSelectedAtendimento] = useState(null);
+    const [instancesContactsList, setInstancesContactsList] = useState([]);
+
+    useEffect(() => {
+        let newContacts = [...attendances]
+        newContacts.map((contact) => {
+            const { pushname, telefone, nome, _id, foto } = contact;
+            return ({ pushname, telefone, nome, _id, foto })
+        })
+        setInstancesContactsList(newContacts);
+    },[attendances]);
 
     useEffect(() => {
         loadAttsAndMessages();
@@ -212,7 +222,7 @@ export const AttendanceProvider = ({children}) => {
         setAttendances(newAttendances)
     },[attendances, context])
 
-    const newContactAtt =useCallback((contact) => {      
+    const newContactAtt =useCallback((contact) => {     
         let newAttendances = [...attendances];
         if (newAttendances.some(att => att.telefone === contact.telefone)) {
             newAttendances.forEach((att) => {
@@ -247,7 +257,7 @@ export const AttendanceProvider = ({children}) => {
     },[attendances, context])
 
     return (
-        <AttendanceContext.Provider value={{attendances, socket: userSocket,myHistoric, waitingAttendances,myWaitingAtt,selectedAtendimento,setSelectedAtendimento}}>
+        <AttendanceContext.Provider value={{attendances, socket: userSocket,myHistoric, waitingAttendances,myWaitingAtt,selectedAtendimento,setSelectedAtendimento, instancesContactsList}}>
             {children}
         </AttendanceContext.Provider>
     )
