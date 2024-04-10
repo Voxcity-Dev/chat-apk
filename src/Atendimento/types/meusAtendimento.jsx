@@ -1,12 +1,9 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { View, StyleSheet, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
-import { Icon } from '@rneui/themed';
-import { useNavigation } from '@react-navigation/native';
 
 export default function MeusAtendimentos(props) {
   const { setSelectedAtendimento } = useContext(AttendanceContext);
-  const navigation = useNavigation();
 
   function countAndSlice(message) {
     if (!message) return ""
@@ -37,17 +34,8 @@ export default function MeusAtendimentos(props) {
     setSelectedAtendimento(att);
   }
 
-  function navigateToNovoAtendimento() {
-    navigation.navigate('Novo Atendimento')
-  }
-
-
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.buttonBox} onPress={() => navigateToNovoAtendimento()}>
-        <Icon name="add-sharp" type="ionicon" size={25} color={"#fff"} />
-        <Text style={styles.buttonText}>Novo Atendimento</Text>
-      </TouchableOpacity>
 
       <ScrollView style={{ width: "100%" }}>
 
@@ -125,13 +113,13 @@ const styles = StyleSheet.create({
   },
   contactBox: {
     width: "100%",
-    height: 80,
+    height: 85,
     display: "flex",
     alignItems: "flex-start",
     justifyContent: "flex-start",
     flexDirection: "row",
     color: "#142a4c",
-    padding: 10,
+    padding: 5,
     marginTop: 10,
   },
   contactInfo: {

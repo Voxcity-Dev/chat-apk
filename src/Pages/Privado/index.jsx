@@ -90,7 +90,6 @@ export default function ChatPrivado() {
     <View style={styles.container}>
       {selectedContact ? views.chat : views.lista}
       {!selectedContact ? <NavigationBar currentPage='Chat Privado' /> : null}
-
     </View>
 
   )

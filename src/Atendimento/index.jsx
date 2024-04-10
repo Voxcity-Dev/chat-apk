@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, StyleSheet, TextInput, Text } from 'react-native';
+import { View, StyleSheet, TextInput, Text, TouchableOpacity } from 'react-native';
 import AtendimentosEspera from './types/espera';
 import MeusAtendimentos from './types/meusAtendimento';
 import AtendimentosPotencial from './types/potencial';
@@ -7,12 +7,15 @@ import { AttendanceContext } from '../../context/AttendanceProvider';
 import { UserContext } from '../../context/UserProvider';
 import Chat from '../Chat/index';
 import { Icon } from '@rneui/themed';
+import { useNavigation } from '@react-navigation/native';
+
 export default function Atendimentos(props) {
   const { user } = useContext(UserContext);
   const { attendances, myWaitingAtt, selectedAtendimento, setSelectedAtendimento } = useContext(AttendanceContext);
   const [atendimentos, setAtendimentos] = useState([]);
   const [atendimentosEspera, setAtendimentosEspera] = useState([]);
   const [atendimentosPotencial, setAtendimentosPotencial] = useState([]);
+  const navigation = useNavigation();
 
   const [search, setSearch] = useState('');
   useEffect(() => {
@@ -46,6 +49,10 @@ export default function Atendimentos(props) {
     "meus": <MeusAtendimentos atendimentos={atendimentos} />
   }
 
+  function navigateToNewAttendance() {
+    navigation.navigate('Novo Atendimento')
+  }
+
   return (
     <View style={styles.container}>
       {!selectedAtendimento && <Text style={styles.text}>
@@ -69,6 +76,14 @@ export default function Atendimentos(props) {
           </View>
           {views[props.type]}
         </>}
+
+      {!selectedAtendimento ? (
+        <TouchableOpacity onPress={navigateToNewAttendance} style={{ width: 70, backgroundColor: "#142a4c", padding: 10, borderRadius: 5, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 60, right: 10 }}>
+          <View style={{ position: 'absolute', zIndex: 2, bottom: 24, left: 22 }}>
+            <Icon type='entypo' name='plus' color="#9ac31c" size={25} />
+          </View>
+          <Icon type='ionicon' name='chatbox' color='#fff' size={45} />
+        </TouchableOpacity>) : null}
     </View>
   )
 }
@@ -79,23 +94,29 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF',
     color: '#111',
+    position: 'relative',
+    gap: 3,
   },
   searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "80%",
-    padding: 10,
-    backgroundColor: "#f1f1f1",
-    borderWidth: 1,
-    borderColor: "#142a4c",
-    marginLeft: 50,
+    width: '92%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderWidth: 0.4,
+    borderColor: '#142a4c',
+    height: 40,
+    borderRadius: 5,
+    alignSelf: 'center',
     marginTop: 10,
   },
   searchInput: {
-    width: "80%",
-    marginLeft: 10,
-    color: "#142a4c",
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '90%',
+    height: 40,
+    color: '#142a4c',
+    fontSize: 16,
   },
   text: {
     color: "#142a4c",
@@ -103,7 +124,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 10,
     marginLeft: 10,
-    width: "50%",
+    width: "60%",
     borderBottomWidth: 1,
     borderColor: "#9ac31c",
     textAlign: "center",

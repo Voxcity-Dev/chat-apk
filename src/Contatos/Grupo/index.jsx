@@ -60,17 +60,19 @@ export default function GrupoList() {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView style={{width:'100%'}}>
         {grupos ? (
           grupos.map((grupo, index) => {
             return (
               <TouchableOpacity
                 style={{
+                  width: '100%',
+                  maxWidth: '100%',
                   display: 'flex',
                   flexDirection: 'row',
                   alignItems: 'center',
                   gap: 10,
-                  padding: 15,
+                  padding: 10,
                 }}
                 key={index}
                 onPress={() => handleSelectGroup(grupo)}
@@ -82,7 +84,7 @@ export default function GrupoList() {
                 )}
                 <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                   <Text style={{ color: '#142a4c', fontSize: 16, fontWeight: '800' }}>{grupo.nome}</Text>
-                  <View style={{ width: '55%', flexDirection: 'row', marginTop: 5,alignSelf:"flex-start" }}>
+                  <View style={{ width:'92%',flexDirection: 'row', marginTop: 5,alignSelf:"flex-start",justifyContent: 'space-between' }}>
                     {grupo.lastMessage?.message !== undefined ? (
                       <Text style={styles.lastMessage}>{limitMessage(grupo.lastMessage.message)}</Text>
                     ) : (
@@ -120,7 +122,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     color: '#FFF',
-    padding: 10,
+    padding: 5,
     gap: 20,
   },
   image: {
@@ -140,7 +142,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   lastMessage: {
-    width: '100%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',

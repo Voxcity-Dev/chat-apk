@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, Alert, FlatList, Image } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, Alert, FlatList, Image, ActivityIndicator } from 'react-native';
+import { Icon } from "@rneui/themed";
 import { ddd } from '../../utils/dddList'
 import { Picker } from '@react-native-picker/picker';
 import { AttendanceContext } from '../../../context/AttendanceProvider';
 import { useNavigation } from '@react-navigation/native';
-import { Icon } from "@rneui/themed";
 import apiUser from '../../../apiUser';
 
 export default function AdicionarContato({ selectedBot }) {
@@ -14,6 +14,7 @@ export default function AdicionarContato({ selectedBot }) {
     const [dddList, setDddList] = useState([]);
     const [error, setError] = useState('');
     const [filteredContacts, setFilteredContacts] = useState([]);
+    const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
 
     useEffect(() => {
@@ -43,16 +44,20 @@ export default function AdicionarContato({ selectedBot }) {
     }, [numero]);
 
     const handleAddContato = () => {
+        setLoading(true);
         if (selectedDDD.length === 0) {
             Alert.alert('Atenção', 'Selecione um DDD');
+            setLoading(false);
             return;
         }
         if (numero.length < 8 || numero.length > 9) {
             Alert.alert('Atenção', 'Número inválido');
+            setLoading(false);
             return;
         }
         if (!selectedBot || selectedBot.length === 0) {
             Alert.alert('Atenção', 'Selecione um bot');
+            setLoading(false);
             return;
         }
         let telefone = `55${selectedDDD}${numero}`;
@@ -60,20 +65,22 @@ export default function AdicionarContato({ selectedBot }) {
             telefone: telefone,
             bot: selectedBot
         }
-        apiUser.post('/aplicativo/atendimento', {contato})
-        .then((response) => {
-            let data = response.data;
-            if(data.error) {
-                Alert.alert('Erro', data.error);
-            }
-            if(data.message) {
-                Alert.alert('Sucesso', data.message);
-                navigation.navigate('Atendimento');
-            }
-        })
-        .catch((error) => {
-            console.error('Erro ao adicionar contato', error);
-        });
+        apiUser.post('/aplicativo/atendimento', { contato })
+            .then((response) => {
+                let data = response.data;
+                if (data.error) {
+                    Alert.alert('Erro', data.error);
+                }
+                if (data.message) {
+                    Alert.alert('Sucesso', data.message);
+                    navigation.navigate('Atendimento');
+                }
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error('Erro ao adicionar contato', error);
+                setLoading(false);
+            });
     }
 
     const handleAddContatoFromList = (item) => {
@@ -90,7 +97,7 @@ export default function AdicionarContato({ selectedBot }) {
     return (
         <View style={styles.container}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, padding: 10 }}>
-                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
+                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 18 }}>
                     <View style={styles.pickerStyle}>
                         <Picker selectedValue={selectedDDD} onValueChange={(itemValue) => setSelectedDDD(itemValue)} >
                             <Picker.Item label="DDD" value="" />
@@ -101,7 +108,7 @@ export default function AdicionarContato({ selectedBot }) {
                             })}
                         </Picker>
                     </View>
-                    <View style={{ width: '62%' }}>
+                    <View style={{ width: '68%' }}>
                         <TextInput
                             style={styles.TextInputS}
                             placeholder="Número"
@@ -117,8 +124,9 @@ export default function AdicionarContato({ selectedBot }) {
 
             </View>
 
-            <TouchableOpacity onPress={handleAddContato} style={{ backgroundColor: "#142a4c", padding: 10, borderRadius: 5, width: 200, alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>Adicionar</Text>
+
+            <TouchableOpacity onPress={handleAddContato} style={{width:'100%',backgroundColor:'#142a4c', padding:10, alignItems:'center'}}>
+                {loading ? <ActivityIndicator size="small" color="#fff" /> : <Text style={{color:'#FFF', fontWeight:600}}>Adicionar</Text>}
             </TouchableOpacity>
 
             {
@@ -141,10 +149,8 @@ export default function AdicionarContato({ selectedBot }) {
                         )}
                     />
                 ) : (
-
-                    <View style={{ width:'100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+                    <View style={{ width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                         <Text style={styles.text}>Para adicionar um contato para um novo atendimento selecione um bot e adicione o ddd + numero válido nos campos acima.</Text>
-                        <Text style={styles.text}>A lista de contatos será exibida apos a escolha do ddd e ser digitado 3 numeros.</Text>
                     </View>
                 )
             }
@@ -155,37 +161,39 @@ export default function AdicionarContato({ selectedBot }) {
 
 const styles = StyleSheet.create({
     container: {
+        width: '100%',
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
         gap: 20,
     },
     text: {
-        fontSize: 20,
+        width: '100%',
+        fontSize: 16,
     },
     pickerStyle: {
-        width: '40%',
-        backgroundColor: "#f5f5f5",
+        width: '32%',
         color: "#142a4c",
-        marginTop: 20,
-        marginLeft: 7,
+        marginTop: 10,
         borderRadius: 5,
-        alignSelf: "center",
-        borderColor: "#142a4c",
-        borderWidth: 1
+        backgroundColor: '#fff',
+        borderWidth: 0.4,
+        borderColor: '#142a4c',
+        height: 40,
+        justifyContent: 'center',
     },
     TextInputS: {
-        width: '96%',
-        height: 55,
-        backgroundColor: "#f5f5f5",
+        width: '100%',
         color: "#142a4c",
-        marginTop: 20,
+        marginTop: 10,
         alignItems: "center",
         justifyContent: "center",
+        backgroundColor: '#fff',
+        borderWidth: 0.4,
+        borderColor: '#142a4c',
+        height: 40,
         borderRadius: 5,
-        borderColor: "#142a4c",
-        borderWidth: 1,
-        padding: 10,
+        paddingLeft: 10,
     }, contactBox: {
         padding: 10,
         borderBottomWidth: 1,
@@ -195,6 +203,4 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 20
     }
-
-
 });

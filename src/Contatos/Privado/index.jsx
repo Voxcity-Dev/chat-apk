@@ -78,14 +78,14 @@ export default function PrivadoList() {
                 />
             </View>
 
-            <ScrollView>
+            <ScrollView style={{width:'100%'}}>
                 {contactsList ? (
                     contactsList.map((contact, index) => {
                         if (userContext.user._id === contact._id) return null;
 
                         return (
                             <TouchableOpacity
-                            style={{display:"flex",flexDirection:"row",alignItems:"center",gap:10,padding:15}}
+                            style={{display:"flex",flexDirection:"row",alignItems:"center",gap:10,padding:10, width:'100%'}}
                                 key={index}
                                 onPress={() => handleSelectContact(contact)}
                             >
@@ -133,6 +133,7 @@ export default function PrivadoList() {
 
 const styles = StyleSheet.create({
     container: {
+        width: '100%',
         maxWidth:'100%',
         flex: 1,
         flexDirection: 'column',
@@ -144,6 +145,7 @@ const styles = StyleSheet.create({
         gap: 20,
         alignSelf: 'center',
         alignContent: 'center',
+        marginTop: 10,
     },
     image: {
         width: 50,
@@ -170,7 +172,7 @@ const styles = StyleSheet.create({
         alignSelf:"flex-end",
     },
     searchContainer: {
-        width:'70%',
+        width:'94%',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -180,7 +182,6 @@ const styles = StyleSheet.create({
         height: 40,
         borderRadius: 5,
         alignSelf: 'center',
-
     },
     searchInput: {
         alignItems: 'center',

@@ -113,12 +113,14 @@ const styles = StyleSheet.create({
     },
     pickerStyle: {
         width: "100%",
-        backgroundColor: "#f5f5f5",
         color: "#142a4c",
         marginTop: 20,
         borderRadius: 5,
         alignSelf: "center",
-        borderColor: "#142a4c",
-        borderWidth: 1
+        backgroundColor: '#fff',
+        borderWidth: 0.4,
+        borderColor: '#142a4c',
+        height: 40,
+        justifyContent: 'center',
     }
 });
