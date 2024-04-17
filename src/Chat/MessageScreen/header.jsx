@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, BackHandler } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { ContactContext } from '../../../context/ContacProvider';
@@ -12,15 +12,16 @@ export default function Header() {
   const { selectedContact, setSelectedContact } = useContext(ContactContext);
   const { selectedGroup, setSelectedGroup } = useContext(GroupContext);
   const { selectedAtendimento, setSelectedAtendimento } = useContext(AttendanceContext);
+  const [errorLoadingImage, setErrorLoadingImage] = useState(false);
   const navigation = useNavigation();
   const ShowAlert = (title, message) => {
     Alert.alert(
-        title,
-        message,
-        [
-            { text: "OK", onPress: () => console.log("OK Pressed") }
-        ],
-        { cancelable: false }
+      title,
+      message,
+      [
+        { text: "OK", onPress: () => console.log("OK Pressed") }
+      ],
+      { cancelable: false }
     );
   };
 
@@ -77,26 +78,26 @@ export default function Header() {
 
   return (
     <View>
-      
+
       {selectedGroup && (
         <View style={styles.groupNameContainer}>
-          <Icon name='arrow-back-outline' type='ionicon'style={styles.icone} color={"#FFF"} onPress={backToGroups}/>
+          <Icon name='arrow-back-outline' type='ionicon' style={styles.icone} color={"#FFF"} onPress={backToGroups} />
           {selectedGroup.foto ? (
             <Image source={{ uri: selectedGroup.foto }} style={{ width: 40, height: 40, borderRadius: 20 }} />) : (
-              <Image source={require('../../../assets/avatar2.png')} style={{ width: 40, height: 40, borderRadius: 20 }} />
-            )
-          }          
+            <Image source={require('../../../assets/avatar2.png')} style={{ width: 40, height: 40, borderRadius: 20 }} />
+          )
+          }
           <Text style={styles.groupNameText}>{selectedGroup.nome}</Text>
         </View>
       )}
 
       {selectedContact && (
         <View style={styles.contactNameContainer}>
-          <Icon name='arrow-back-outline' type='ionicon'style={styles.icone} color={"#FFF"} onPress={backToContacts}/>  
+          <Icon name='arrow-back-outline' type='ionicon' style={styles.icone} color={"#FFF"} onPress={backToContacts} />
           {selectedContact.foto ? (
             <Image source={{ uri: selectedContact.foto }} style={{ width: 40, height: 40, borderRadius: 20 }} />) : (
-              <Image source={require('../../../assets/avatar2.png')} style={{ width: 40, height: 40, borderRadius: 20 }} />
-            )
+            <Image source={require('../../../assets/avatar2.png')} style={{ width: 40, height: 40, borderRadius: 20 }} />
+          )
           }
           <Text style={styles.contactNameText}>{selectedContact.nome} - {selectedContact.status}</Text>
         </View>
@@ -104,17 +105,17 @@ export default function Header() {
 
       {selectedAtendimento && (
         <View style={styles.attNameContainer}>
-          <Icon name='arrow-back-outline' type='ionicon'style={styles.icone} color={"#FFF"} onPress={backToAtendimentos}/>
-          {selectedAtendimento.foto ? (
-            <Image source={{ uri: selectedAtendimento.foto }} style={{ width: 40, height: 40, borderRadius: 20 }} />) : (
-              <Image source={require('../../../assets/avatar2.png')} style={{ width: 40, height: 40, borderRadius: 20 }} />
-            )
-          }
-          <Text style={styles.contactNameText}>{selectedAtendimento.pushname ? selectedAtendimento.pushname : selectedAtendimento.telefone}</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start", width: "80%" }}>
+            <Icon name='arrow-back-outline' type='ionicon' style={styles.icone} color={"#FFF"} onPress={backToAtendimentos} />
+            {
+              !selectedAtendimento.foto || errorLoadingImage ? <Image source={require('../../../assets/avatar2.png')} style={{ width: 40, height: 40, borderRadius: 20 }} /> : <Image source={{ uri: selectedAtendimento.foto }} style={{ width: 40, height: 40, borderRadius: 20 }} onError={(e) => { setErrorLoadingImage(true) }} />
+            }
+            <Text style={styles.contactNameText}>{selectedAtendimento.pushname ? selectedAtendimento.pushname : selectedAtendimento.telefone}</Text>
+          </View>
 
-          <View style={{flexDirection:"row",alignItems:"center",justifyContent:"flex-end",width:"20%",marginLeft:30}}>
-            <Icon name='checkmark-done-outline' type='ionicon' color={"#FFF"} onPress={()=>{finishAtendimento(selectedAtendimento)}}/>
-            <Icon name="swap-horizontal-outline" style={{marginLeft:10,marginRight:0}} type="ionicon" size={25} color={"#FFF"} onPress={()=> transferAtendimento()} />
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end", width: "10%", marginLeft: 30 }}>
+            <Icon name='checkmark-done-outline' type='ionicon' color={"#FFF"} onPress={() => { finishAtendimento(selectedAtendimento) }} />
+            <Icon name="swap-horizontal-outline" style={{ marginLeft: 10, marginRight: 0 }} type="ionicon" size={25} color={"#FFF"} onPress={() => transferAtendimento()} />
           </View>
 
         </View>
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     marginLeft: 10,
-  },contactNameContainer:{
+  }, contactNameContainer: {
     backgroundColor: '#9ac31c',
     padding: 10,
     flexDirection: 'row',
@@ -147,18 +148,18 @@ const styles = StyleSheet.create({
     border: 'none',
   },
   contactNameText: {
-    maxWidth:"60%",
+    maxWidth: "60%",
     color: 'white',
     fontWeight: 'bold',
     fontSize: 18,
     marginLeft: 10,
-  },icone:{
+  }, icone: {
     margin: 5,
     padding: 3,
     resizeMode: 'stretch',
     alignItems: 'center',
-    color:"#FFF",
-  } , overlay: {
+    color: "#FFF",
+  }, overlay: {
     position: 'absolute',
     top: 0,
     left: 0,
@@ -167,11 +168,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     zIndex: 9999,
   },
-  attNameContainer:{
+  attNameContainer: {
     backgroundColor: '#9ac31c',
     padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: "space-between",
     border: 'none',
   },
 });

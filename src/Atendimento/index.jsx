@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { View, StyleSheet, TextInput, Text, TouchableOpacity } from 'react-native';
 import AtendimentosEspera from './types/espera';
 import MeusAtendimentos from './types/meusAtendimento';
@@ -16,8 +16,8 @@ export default function Atendimentos(props) {
   const [atendimentosEspera, setAtendimentosEspera] = useState([]);
   const [atendimentosPotencial, setAtendimentosPotencial] = useState([]);
   const navigation = useNavigation();
-
   const [search, setSearch] = useState('');
+  
   useEffect(() => {
     let newAtendimentos = attendances.filter((att) => att.atendente === user._id)
     if (search) newAtendimentos = newAtendimentos.filter((att) => att.pushname?.toLowerCase().includes(search.toLowerCase()));
@@ -85,6 +85,8 @@ export default function Atendimentos(props) {
           <Icon type='ionicon' name='chatbox' color='#fff' size={45} />
         </TouchableOpacity>) : null}
     </View>
+
+
   )
 }
 

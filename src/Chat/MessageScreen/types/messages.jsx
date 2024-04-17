@@ -55,7 +55,7 @@ export default function MessagesMsg(props) {
 const styles = StyleSheet.create({
   messageContainer: {
     paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingVertical: 6,
     borderRadius: 12,
     marginBottom: 8,
   },

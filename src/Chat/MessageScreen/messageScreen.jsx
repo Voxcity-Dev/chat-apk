@@ -134,7 +134,7 @@ export default function MessageScreen(props) {
       )
     }
 
-    if(item.msgTypo === 'file' || item.files?.length > 0){
+    if (item.msgTypo === 'file' || item.files?.length > 0) {
       return (
         <View style={isSentMessage ? styles.wrapperMessage : styles.wrapperMessage2}>
           <TouchableOpacity onPress={() => forwarding(item)} >
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 12,
-    maxWidth: '100%',
+    maxWidth: '90%',
     marginBottom: 8,
   },
   sentMessage: {

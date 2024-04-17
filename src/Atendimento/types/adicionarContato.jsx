@@ -125,8 +125,8 @@ export default function AdicionarContato({ selectedBot }) {
             </View>
 
 
-            <TouchableOpacity onPress={handleAddContato} style={{width:'100%',backgroundColor:'#142a4c', padding:10, alignItems:'center'}}>
-                {loading ? <ActivityIndicator size="small" color="#fff" /> : <Text style={{color:'#FFF', fontWeight:600}}>Adicionar</Text>}
+            <TouchableOpacity onPress={handleAddContato} style={{ width: '100%', backgroundColor: '#142a4c', padding: 10, alignItems: 'center' }}>
+                {loading ? <ActivityIndicator size="small" color="#fff" /> : <Text style={{ color: '#FFF', fontWeight: 600 }}>Adicionar</Text>}
             </TouchableOpacity>
 
             {
@@ -150,7 +150,7 @@ export default function AdicionarContato({ selectedBot }) {
                     />
                 ) : (
                     <View style={{ width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={styles.text}>Para adicionar um contato para um novo atendimento selecione um bot e adicione o ddd + numero válido nos campos acima.</Text>
+                        <Text style={styles.text}>Insira o número do contato, e clique em adicionar para adicionar uma nova conversa.</Text>
                     </View>
                 )
             }

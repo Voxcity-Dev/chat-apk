@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 12,
     marginBottom: 8,
-    maxWidth:'90%',
+    maxWidth:'95%',
   },
   sentMessage: {
     alignSelf: 'flex-end',
