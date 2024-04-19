@@ -5,7 +5,7 @@
     },
     "name": "Vox Chat",
     "slug": "chat-apk",
-    "version": "2.2.5",
+    "version": "2.2.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -39,7 +39,7 @@
       "permissions": [
         "NOTIFICATIONS"
       ],
-      "versionCode": 15
+      "versionCode": 16
     },
     "web": {
       "favicon": "./assets/favicon.png"

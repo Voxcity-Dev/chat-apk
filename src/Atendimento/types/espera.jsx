@@ -8,7 +8,7 @@ import { Alert } from "react-native";
 export default function AtendimentosEspera(props) {
   const { userContext } = useContext(UserContext);
   const [showCard, setShowCard] = useState({});
-  const [errorLoadingImage, setErrorLoadingImage] = useState(false);
+  const [errorLoadingImages, setErrorLoadingImages] = useState({});
   const ShowAlert = (title, message) => {
     Alert.alert(
       title,
